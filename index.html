@@ -314,7 +314,22 @@
         function showRandomWord() {
             if (!dictionary) return;
             
-            const words = Object.keys(dictionary);
+            // Filter to only unlearned and learning words
+            const words = Object.keys(dictionary).filter(key => {
+                const state = dictionary[key].state;
+                return state === 'not_started' || state === 'learning';
+            });
+            
+            // If no words left to learn, show completion message
+            if (words.length === 0) {
+                conceptDisplay.textContent = '🎉 All words learned!';
+                showSignBtn.style.display = 'none';
+                iframeContainer.classList.remove('visible');
+                correctBtn.disabled = true;
+                wrongBtn.disabled = true;
+                return;
+            }
+            
             const randomKey = words[Math.floor(Math.random() * words.length)];
             currentWord = randomKey;
             
@@ -324,6 +339,9 @@
             // Hide iframe when showing new word
             iframeContainer.classList.remove('visible');
             showSignBtn.textContent = '👁️ Show Sign';
+            showSignBtn.style.display = 'inline-block';
+            correctBtn.disabled = false;
+            wrongBtn.disabled = false;
             
             // Prefetch the page by setting iframe src
             signIframe.src = wordData.url;
@@ -345,12 +363,21 @@
             correctCount++;
             correctCountDisplay.textContent = correctCount;
             
-            // Update state (simple version for MVP)
-            const currentState = dictionary[currentWord].state;
-            if (currentState === 'not_started') {
-                dictionary[currentWord].state = 'learning';
-            } else if (currentState === 'learning') {
-                dictionary[currentWord].state = 'learned';
+            const wordData = dictionary[currentWord];
+            
+            // Initialize correctCount if it doesn't exist
+            if (wordData.correctCount === undefined) {
+                wordData.correctCount = 0;
+            }
+            
+            // Increment correct counter
+            wordData.correctCount++;
+            
+            // Update state based on correct count
+            if (wordData.correctCount >= 2) {
+                wordData.state = 'learned';
+            } else {
+                wordData.state = 'learning';
             }
             
             showRandomWord();
@@ -362,13 +389,11 @@
             wrongCount++;
             wrongCountDisplay.textContent = wrongCount;
             
-            // Update state (simple version for MVP)
-            const currentState = dictionary[currentWord].state;
-            if (currentState === 'learned') {
-                dictionary[currentWord].state = 'learning';
-            } else if (currentState === 'learning') {
-                dictionary[currentWord].state = 'not_started';
-            }
+            const wordData = dictionary[currentWord];
+            
+            // Reset correct counter and set to not_started
+            wordData.correctCount = 0;
+            wordData.state = 'not_started';
             
             showRandomWord();
         }
