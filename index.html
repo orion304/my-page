@@ -376,35 +376,53 @@
         function maybeEnableButtons() {
             if (gapiInited && tokenClient) {
                 googleDriveBtn.disabled = false;
-                // Check if already signed in
+                // Check if we have a saved token
                 checkIfSignedIn();
             }
         }
         
         async function checkIfSignedIn() {
-            const token = gapi.client.getToken();
-            if (token !== null) {
-                // Already signed in, auto-load from Drive
-                isGoogleDriveConnected = true;
-                googleBtnText.textContent = 'Loading from Drive...';
-                googleStatus.textContent = 'Reconnecting...';
-                googleStatus.className = 'google-status';
-                
+            // Try to get saved token from localStorage
+            const savedToken = localStorage.getItem('google_drive_token');
+            
+            if (savedToken) {
                 try {
-                    await loadFromGoogleDrive();
-                    googleBtnText.textContent = '✓ Connected to Google Drive';
-                    googleStatus.textContent = 'Auto-saving enabled';
-                    googleStatus.className = 'google-status success';
-                    googleDriveBtn.disabled = true;
+                    const tokenObj = JSON.parse(savedToken);
+                    
+                    // Check if token is expired
+                    const now = Date.now();
+                    if (tokenObj.expiry && now < tokenObj.expiry) {
+                        // Token is still valid, set it
+                        gapi.client.setToken(tokenObj);
+                        isGoogleDriveConnected = true;
+                        googleBtnText.textContent = 'Loading from Drive...';
+                        googleStatus.textContent = 'Reconnecting...';
+                        googleStatus.className = 'google-status';
+                        
+                        await loadFromGoogleDrive();
+                        googleBtnText.textContent = '✓ Connected to Google Drive';
+                        googleStatus.textContent = 'Auto-saving enabled';
+                        googleStatus.className = 'google-status success';
+                        googleDriveBtn.disabled = true;
+                        return;
+                    } else {
+                        // Token expired, remove it
+                        localStorage.removeItem('google_drive_token');
+                    }
                 } catch (error) {
-                    console.error('Error auto-loading from Drive:', error);
-                    // Token might be expired, let user re-authenticate
-                    isGoogleDriveConnected = false;
-                    googleBtnText.textContent = 'Connect to Google Drive';
-                    googleStatus.textContent = 'Please reconnect';
-                    googleStatus.className = 'google-status';
+                    console.error('Error loading saved token:', error);
+                    localStorage.removeItem('google_drive_token');
                 }
             }
+        }
+        
+        function saveTokenToStorage(token) {
+            // Add expiry time (tokens typically last 1 hour)
+            const tokenWithExpiry = {
+                ...token,
+                expiry: Date.now() + (3600 * 1000) // 1 hour from now
+            };
+            localStorage.setItem('google_drive_token', JSON.stringify(tokenWithExpiry));
         }
         
         // Load Google Identity Services
@@ -534,6 +552,9 @@
                         googleStatus.className = 'google-status error';
                         return;
                     }
+                    
+                    // Save token to localStorage
+                    saveTokenToStorage(resp);
                     
                     isGoogleDriveConnected = true;
                     googleBtnText.textContent = 'Loading from Drive...';
