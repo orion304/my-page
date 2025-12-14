@@ -296,6 +296,52 @@
         .google-status.error {
             color: #dc3545;
         }
+        
+        .progress-section {
+            margin-top: 20px;
+        }
+        
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            min-height: 30px;
+        }
+        
+        .word-badge {
+            background: #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .word-badge.learned {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .word-badge.learning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .word-badge.learning-progress {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .progress-indicator {
+            font-size: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -359,6 +405,24 @@
                 </div>
                 <button class="download-btn" id="download-btn">💾 Download Updated Dictionary</button>
             </div>
+            
+            <div class="stats">
+                <h3>Progress Tracker</h3>
+                
+                <div class="progress-section">
+                    <h4 style="color: #28a745; margin: 15px 0 10px 0;">✓ Learned</h4>
+                    <div class="word-list" id="learned-list">
+                        <em style="color: #999;">No words learned yet</em>
+                    </div>
+                </div>
+                
+                <div class="progress-section">
+                    <h4 style="color: #ffc107; margin: 15px 0 10px 0;">📚 Learning</h4>
+                    <div class="word-list" id="learning-list">
+                        <em style="color: #999;">No words in progress</em>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -397,6 +461,8 @@
         const googleStatus = document.getElementById('google-status');
         const closeIframeBtn = document.getElementById('close-iframe-btn');
         const iframeTitle = document.getElementById('iframe-title');
+        const learnedList = document.getElementById('learned-list');
+        const learningList = document.getElementById('learning-list');
         
         // Initialize Google API
         function gapiLoaded() {
@@ -557,6 +623,48 @@
             
             // Prefetch the page by setting iframe src
             signIframe.src = wordData.url;
+            
+            // Update progress tracker
+            updateProgressTracker();
+        }
+        
+        function updateProgressTracker() {
+            if (!dictionary) return;
+            
+            const learned = [];
+            const learning = [];
+            
+            Object.keys(dictionary).forEach(key => {
+                const word = dictionary[key];
+                if (word.state === 'learned') {
+                    learned.push(word.concept);
+                } else if (word.state === 'learning') {
+                    learning.push({ concept: word.concept, count: word.correctCount || 0 });
+                }
+            });
+            
+            // Update learned list
+            if (learned.length > 0) {
+                learnedList.innerHTML = learned
+                    .map(concept => `<span class="word-badge learned">✓ ${concept}</span>`)
+                    .join('');
+            } else {
+                learnedList.innerHTML = '<em style="color: #999;">No words learned yet</em>';
+            }
+            
+            // Update learning list
+            if (learning.length > 0) {
+                learningList.innerHTML = learning
+                    .map(item => {
+                        const badge = item.count === 1 
+                            ? `<span class="word-badge learning-progress">${item.concept} <span class="progress-indicator">●○</span></span>`
+                            : `<span class="word-badge learning">${item.concept}</span>`;
+                        return badge;
+                    })
+                    .join('');
+            } else {
+                learningList.innerHTML = '<em style="color: #999;">No words in progress</em>';
+            }
         }
         
         function toggleIframe() {
@@ -665,6 +773,7 @@
                 fileNameDisplay.textContent = `Loaded from Google Drive: ${FILE_NAME}`;
                 trainingSection.classList.add('active');
                 totalCountDisplay.textContent = Object.keys(dictionary).length;
+                updateProgressTracker();
                 showRandomWord();
                 
                 googleStatus.textContent = '✓ Dictionary loaded from Drive';
