@@ -507,12 +507,15 @@
                     
                     isGoogleDriveConnected = true;
                     googleBtnText.textContent = 'Loading from Drive...';
+                    googleStatus.textContent = 'Connecting...';
+                    googleStatus.className = 'google-status';
                     
                     try {
                         await loadFromGoogleDrive();
                         googleBtnText.textContent = '✓ Connected to Google Drive';
                         googleStatus.textContent = 'Auto-saving enabled';
                         googleStatus.className = 'google-status success';
+                        googleDriveBtn.disabled = true;
                     } catch (error) {
                         console.error('Error loading from Drive:', error);
                         googleStatus.textContent = 'Error loading from Drive';
@@ -549,31 +552,39 @@
                 });
                 
                 dictionary = JSON.parse(fileResponse.body);
+                fileNameDisplay.textContent = `Loaded from Google Drive: ${FILE_NAME}`;
                 trainingSection.classList.add('active');
                 totalCountDisplay.textContent = Object.keys(dictionary).length;
                 showRandomWord();
             } else {
-                // File doesn't exist, create it with empty dictionary
-                googleStatus.textContent = 'No dictionary found. Upload a file first or create new.';
+                // File doesn't exist - user needs to upload one first
+                googleStatus.textContent = 'No dictionary found in Drive. Upload a file to create one.';
                 googleStatus.className = 'google-status';
+                fileNameDisplay.textContent = 'Upload a JSON file to get started';
             }
         }
         
         async function saveToGoogleDrive() {
-            if (!isGoogleDriveConnected || !dictionary) return;
+            if (!isGoogleDriveConnected || !dictionary) {
+                console.log('Cannot save - not connected or no dictionary');
+                return;
+            }
             
             const content = JSON.stringify(dictionary, null, 2);
-            const blob = new Blob([content], { type: 'application/json' });
             
             try {
                 if (googleDriveFileId) {
                     // Update existing file
-                    await gapi.client.request({
+                    const response = await gapi.client.request({
                         path: `/upload/drive/v3/files/${googleDriveFileId}`,
                         method: 'PATCH',
                         params: { uploadType: 'media' },
                         body: content,
                     });
+                    
+                    console.log('File updated successfully', response);
+                    googleStatus.textContent = '✓ Saved to Drive at ' + new Date().toLocaleTimeString();
+                    googleStatus.className = 'google-status success';
                 } else {
                     // Create new file
                     const metadata = {
@@ -583,7 +594,7 @@
                     
                     const form = new FormData();
                     form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-                    form.append('file', blob);
+                    form.append('file', new Blob([content], { type: 'application/json' }));
                     
                     const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
                         method: 'POST',
@@ -593,13 +604,13 @@
                     
                     const result = await response.json();
                     googleDriveFileId = result.id;
+                    console.log('File created successfully', result);
+                    googleStatus.textContent = '✓ Created and saved to Drive';
+                    googleStatus.className = 'google-status success';
                 }
-                
-                googleStatus.textContent = '✓ Saved to Drive';
-                googleStatus.className = 'google-status success';
             } catch (error) {
                 console.error('Error saving to Drive:', error);
-                googleStatus.textContent = 'Error saving to Drive';
+                googleStatus.textContent = 'Error saving to Drive: ' + error.message;
                 googleStatus.className = 'google-status error';
             }
         }
