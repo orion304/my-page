@@ -492,6 +492,8 @@
                 wordData.state = 'learning';
             }
             
+			saveToGoogleDrive();
+
             showRandomWord();
         }
         
@@ -627,6 +629,8 @@
             wordData.correctCount = 0;
             wordData.state = 'not_started';
             
+			saveToGoogleDrive();
+			
             showRandomWord();
         }
         
