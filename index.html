@@ -573,6 +573,7 @@
                     fileNameDisplay.textContent = `Loaded: ${fileName}`;
                     trainingSection.classList.add('active');
                     totalCountDisplay.textContent = Object.keys(dictionary).length;
+                    updateProgressTracker();
                     showRandomWord();
                     
                     // If connected to Drive, save this dictionary
@@ -677,7 +678,7 @@
             }
         }
         
-        function handleCorrect() {
+        async function handleCorrect() {
             if (!currentWord) return;
             
             correctCount++;
@@ -700,8 +701,25 @@
                 wordData.state = 'learning';
             }
             
-			saveToGoogleDrive();
-
+            await saveToGoogleDrive();
+            
+            showRandomWord();
+        }
+        
+        async function handleWrong() {
+            if (!currentWord) return;
+            
+            wrongCount++;
+            wrongCountDisplay.textContent = wrongCount;
+            
+            const wordData = dictionary[currentWord];
+            
+            // Reset correct counter but keep in learning state
+            wordData.correctCount = 0;
+            wordData.state = 'learning';
+            
+            await saveToGoogleDrive();
+            
             showRandomWord();
         }
         
@@ -835,23 +853,6 @@
                 googleStatus.textContent = 'Error saving to Drive: ' + error.message;
                 googleStatus.className = 'google-status error';
             }
-        }
-        
-        function handleWrong() {
-            if (!currentWord) return;
-            
-            wrongCount++;
-            wrongCountDisplay.textContent = wrongCount;
-            
-            const wordData = dictionary[currentWord];
-            
-            // Reset correct counter and set to not_started
-            wordData.correctCount = 0;
-            wordData.state = 'learning';
-            
-			saveToGoogleDrive();
-			
-            showRandomWord();
         }
         
         function downloadDictionary() {
