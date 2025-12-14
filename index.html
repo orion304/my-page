@@ -376,6 +376,34 @@
         function maybeEnableButtons() {
             if (gapiInited && tokenClient) {
                 googleDriveBtn.disabled = false;
+                // Check if already signed in
+                checkIfSignedIn();
+            }
+        }
+        
+        async function checkIfSignedIn() {
+            const token = gapi.client.getToken();
+            if (token !== null) {
+                // Already signed in, auto-load from Drive
+                isGoogleDriveConnected = true;
+                googleBtnText.textContent = 'Loading from Drive...';
+                googleStatus.textContent = 'Reconnecting...';
+                googleStatus.className = 'google-status';
+                
+                try {
+                    await loadFromGoogleDrive();
+                    googleBtnText.textContent = '✓ Connected to Google Drive';
+                    googleStatus.textContent = 'Auto-saving enabled';
+                    googleStatus.className = 'google-status success';
+                    googleDriveBtn.disabled = true;
+                } catch (error) {
+                    console.error('Error auto-loading from Drive:', error);
+                    // Token might be expired, let user re-authenticate
+                    isGoogleDriveConnected = false;
+                    googleBtnText.textContent = 'Connect to Google Drive';
+                    googleStatus.textContent = 'Please reconnect';
+                    googleStatus.className = 'google-status';
+                }
             }
         }
         
