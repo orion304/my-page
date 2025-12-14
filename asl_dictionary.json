@@ -2,116 +2,162 @@
   "again": {
     "concept": "AGAIN / repeat / re- / over",
     "url": "https://www.lifeprint.com/asl101/pages-signs/a/again.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "deaf": {
     "concept": "DEAF",
     "url": "https://www.lifeprint.com/asl101/pages-signs/d/deaf.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "dont-understand": {
     "concept": "don't-UNDERSTAND",
     "url": "https://www.lifeprint.com/asl101/pages-signs/u/understand.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "hearing": {
     "concept": "HEARING (culturally) / speak / say / public",
     "url": "https://www.lifeprint.com/asl101/pages-signs/h/hearing.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "learn": {
     "concept": "LEARN",
     "url": "https://www.lifeprint.com/asl101/pages-signs/l/learn.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "like": {
     "concept": "LIKE (emotion)",
     "url": "https://www.lifeprint.com/asl101/pages-signs/l/like.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "meaning": {
     "concept": "MEANING",
     "url": "https://www.lifeprint.com/asl101/pages-signs/m/meaning.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "meet": {
     "concept": "MEET",
     "url": "https://www.lifeprint.com/asl101/pages-signs/m/meet.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "name": {
     "concept": "NAME",
     "url": "https://www.lifeprint.com/asl101/pages-signs/n/name.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "nice": {
     "concept": "NICE / clean",
     "url": "https://www.lifeprint.com/asl101/pages-signs/n/nice.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "no": {
     "concept": "NO",
     "url": "https://www.lifeprint.com/asl101/pages-signs/n/no.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "sign": {
     "concept": "SIGN (as in \"signing\")",
     "url": "https://www.lifeprint.com/asl101/pages-signs/s/sign.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "slow": {
     "concept": "SLOW",
     "url": "https://www.lifeprint.com/asl101/pages-signs/s/slow.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "student": {
     "concept": "STUDENT",
     "url": "https://www.lifeprint.com/asl101/pages-signs/s/student.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "teacher": {
     "concept": "TEACHER",
     "url": "https://www.lifeprint.com/asl101/pages-signs/t/teacher.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "thank-you": {
     "concept": "THANK-you",
     "url": "https://www.lifeprint.com/asl101/pages-signs/t/thankyou.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "understand": {
     "concept": "UNDERSTAND",
     "url": "https://www.lifeprint.com/asl101/pages-signs/u/understand.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "what": {
     "concept": "WHAT",
     "url": "https://www.lifeprint.com/asl101/pages-signs/h/huh.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "where": {
     "concept": "WHERE",
     "url": "https://www.lifeprint.com/asl101/pages-signs/w/where.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "who": {
     "concept": "WHO",
     "url": "https://www.lifeprint.com/asl101/pages-signs/w/who.htm",
-    "state": "learning"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "why": {
     "concept": "WHY",
     "url": "https://www.lifeprint.com/asl101/pages-signs/w/why.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "yes": {
     "concept": "YES",
     "url": "https://www.lifeprint.com/asl101/pages-signs/y/yes.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   },
   "your": {
     "concept": "YOUR",
     "url": "https://www.lifeprint.com/asl101/pages-signs/y/your.htm",
-    "state": "not_started"
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
   }
 }
