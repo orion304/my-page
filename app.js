@@ -1,25 +1,37 @@
-
-const vocabKey = "vocabList";
+const vocabKey = "chineseVocabList";
 let list = JSON.parse(localStorage.getItem(vocabKey) || "[]");
 
 function render() {
   const ul = document.getElementById("vocabList");
   ul.innerHTML = "";
-  list.forEach(({ word, meaning }) => {
+  list.forEach(entry => {
     const li = document.createElement("li");
-    li.textContent = `${word} — ${meaning}`;
+    li.innerHTML = `
+      <strong>${entry.hanzi}</strong><br>
+      <em>Pinyin:</em> ${entry.pinyin}<br>
+      <em>Zhuyin:</em> ${entry.zhuyin}<br>
+      <em>IPA:</em> ${entry.ipa}<br>
+      <em>English:</em> ${entry.english}
+    `;
     ul.appendChild(li);
   });
 }
 
 function addWord() {
-  const word = document.getElementById("word").value;
-  const meaning = document.getElementById("meaning").value;
-  if (word && meaning) {
-    list.push({ word, meaning });
-    localStorage.setItem(vocabKey, JSON.stringify(list));
-    render();
+  const hanzi = document.getElementById("hanzi").value;
+  const pinyin = document.getElementById("pinyin").value;
+  const zhuyin = document.getElementById("zhuyin").value;
+  const ipa = document.getElementById("ipa").value;
+  const english = document.getElementById("english").value;
+
+  if (!hanzi || !pinyin || !english) {
+    alert("Hanzi, Pinyin, and English are required.");
+    return;
   }
+
+  list.push({ hanzi, pinyin, zhuyin, ipa, english });
+  localStorage.setItem(vocabKey, JSON.stringify(list));
+  render();
 }
 
 function exportWords() {
@@ -27,7 +39,7 @@ function exportWords() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "vocab.json";
+  a.download = "chinese-vocab.json";
   a.click();
   URL.revokeObjectURL(url);
 }
