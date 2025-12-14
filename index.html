@@ -220,7 +220,6 @@
         }
         
         .google-btn {
-            width: 100%;
             background: #4285f4;
             color: white;
             padding: 12px 30px;
@@ -234,6 +233,7 @@
             justify-content: center;
             gap: 10px;
             transition: background 0.3s;
+            margin: 0 auto;
         }
         
         .google-btn:hover {
@@ -265,9 +265,19 @@
         <h1>🤟 ASL Vocab Trainer</h1>
         
         <div class="upload-section">
+            <h3 style="margin-bottom: 15px; color: #333;">Get Started</h3>
+            
+            <button class="google-btn" id="google-drive-btn" style="margin-bottom: 15px;">
+                <span>📁</span>
+                <span id="google-btn-text">Connect to Google Drive</span>
+            </button>
+            <div class="google-status" id="google-status"></div>
+            
+            <div style="margin: 20px 0; color: #999; font-size: 14px;">— OR —</div>
+            
             <div class="file-input-wrapper">
                 <label for="file-upload" class="file-button">
-                    Load Dictionary
+                    Load Dictionary from File
                 </label>
                 <input id="file-upload" type="file" accept=".json" />
             </div>
@@ -305,14 +315,6 @@
                     </div>
                 </div>
                 <button class="download-btn" id="download-btn">💾 Download Updated Dictionary</button>
-            </div>
-            
-            <div class="google-drive-section">
-                <button class="google-btn" id="google-drive-btn">
-                    <span>📁</span>
-                    <span id="google-btn-text">Connect to Google Drive</span>
-                </button>
-                <div class="google-status" id="google-status"></div>
             </div>
         </div>
     </div>
@@ -401,8 +403,13 @@
                         
                         await loadFromGoogleDrive();
                         googleBtnText.textContent = '✓ Connected to Google Drive';
-                        googleStatus.textContent = 'Auto-saving enabled';
-                        googleStatus.className = 'google-status success';
+                        
+                        // Only show "auto-saving enabled" if we actually loaded a dictionary
+                        if (dictionary) {
+                            googleStatus.textContent = 'Auto-saving enabled';
+                            googleStatus.className = 'google-status success';
+                        }
+                        
                         googleDriveBtn.disabled = true;
                         return;
                     } else {
@@ -564,8 +571,13 @@
                     try {
                         await loadFromGoogleDrive();
                         googleBtnText.textContent = '✓ Connected to Google Drive';
-                        googleStatus.textContent = 'Auto-saving enabled';
-                        googleStatus.className = 'google-status success';
+                        
+                        // Only show "auto-saving enabled" if we actually loaded a dictionary
+                        if (dictionary) {
+                            googleStatus.textContent = 'Auto-saving enabled';
+                            googleStatus.className = 'google-status success';
+                        }
+                        
                         googleDriveBtn.disabled = true;
                     } catch (error) {
                         console.error('Error loading from Drive:', error);
@@ -607,11 +619,14 @@
                 trainingSection.classList.add('active');
                 totalCountDisplay.textContent = Object.keys(dictionary).length;
                 showRandomWord();
+                
+                googleStatus.textContent = '✓ Dictionary loaded from Drive';
+                googleStatus.className = 'google-status success';
             } else {
-                // File doesn't exist - user needs to upload one first
-                googleStatus.textContent = 'No dictionary found in Drive. Upload a file to create one.';
+                // File doesn't exist - user needs to upload one
+                googleStatus.textContent = 'No dictionary found in Drive. Please upload a JSON file below.';
                 googleStatus.className = 'google-status';
-                fileNameDisplay.textContent = 'Upload a JSON file to get started';
+                fileNameDisplay.textContent = 'Upload a JSON file to create your dictionary';
             }
         }
         
