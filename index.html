@@ -95,19 +95,39 @@
             margin-bottom: 20px;
         }
         
-        .link-button {
+        .show-sign-btn {
             display: inline-block;
             background: #28a745;
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
-            text-decoration: none;
+            border: none;
             font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
             transition: background 0.3s;
         }
         
-        .link-button:hover {
+        .show-sign-btn:hover {
             background: #218838;
+        }
+        
+        .iframe-container {
+            margin-top: 20px;
+            display: none;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .iframe-container.visible {
+            display: block;
+        }
+        
+        .iframe-container iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
         }
         
         .action-buttons {
@@ -208,7 +228,10 @@
         <div class="training-section" id="training-section">
             <div class="word-display">
                 <div class="concept" id="current-concept"></div>
-                <a href="#" target="_blank" class="link-button" id="sign-link">View Sign →</a>
+                <button class="show-sign-btn" id="show-sign-btn">👁️ Show Sign</button>
+                <div class="iframe-container" id="iframe-container">
+                    <iframe id="sign-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
+                </div>
             </div>
             
             <div class="action-buttons">
@@ -243,12 +266,15 @@
         let correctCount = 0;
         let wrongCount = 0;
         let fileName = '';
+        let prefetchFrame = null;
         
         const fileUpload = document.getElementById('file-upload');
         const fileNameDisplay = document.getElementById('file-name');
         const trainingSection = document.getElementById('training-section');
         const conceptDisplay = document.getElementById('current-concept');
-        const signLink = document.getElementById('sign-link');
+        const showSignBtn = document.getElementById('show-sign-btn');
+        const iframeContainer = document.getElementById('iframe-container');
+        const signIframe = document.getElementById('sign-iframe');
         const correctBtn = document.getElementById('correct-btn');
         const wrongBtn = document.getElementById('wrong-btn');
         const downloadBtn = document.getElementById('download-btn');
@@ -257,6 +283,7 @@
         const totalCountDisplay = document.getElementById('total-count');
         
         fileUpload.addEventListener('change', handleFileUpload);
+        showSignBtn.addEventListener('click', toggleIframe);
         correctBtn.addEventListener('click', handleCorrect);
         wrongBtn.addEventListener('click', handleWrong);
         downloadBtn.addEventListener('click', downloadDictionary);
@@ -293,7 +320,23 @@
             
             const wordData = dictionary[randomKey];
             conceptDisplay.textContent = wordData.concept;
-            signLink.href = wordData.url;
+            
+            // Hide iframe when showing new word
+            iframeContainer.classList.remove('visible');
+            showSignBtn.textContent = '👁️ Show Sign';
+            
+            // Prefetch the page by setting iframe src
+            signIframe.src = wordData.url;
+        }
+        
+        function toggleIframe() {
+            if (iframeContainer.classList.contains('visible')) {
+                iframeContainer.classList.remove('visible');
+                showSignBtn.textContent = '👁️ Show Sign';
+            } else {
+                iframeContainer.classList.add('visible');
+                showSignBtn.textContent = '🔼 Hide Sign';
+            }
         }
         
         function handleCorrect() {
