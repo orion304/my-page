@@ -119,15 +119,53 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: white;
+            z-index: 1000;
         }
         
         .iframe-container.visible {
-            display: block;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .iframe-header {
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .iframe-header h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+        
+        .close-iframe-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .close-iframe-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
         
         .iframe-container iframe {
             width: 100%;
-            height: 500px;
+            flex: 1;
             border: none;
         }
         
@@ -288,9 +326,14 @@
             <div class="word-display">
                 <div class="concept" id="current-concept"></div>
                 <button class="show-sign-btn" id="show-sign-btn">👁️ Show Sign</button>
-                <div class="iframe-container" id="iframe-container">
-                    <iframe id="sign-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
+            </div>
+            
+            <div class="iframe-container" id="iframe-container">
+                <div class="iframe-header">
+                    <h3 id="iframe-title">Sign Reference</h3>
+                    <button class="close-iframe-btn" id="close-iframe-btn">✕ Close</button>
                 </div>
+                <iframe id="sign-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
             </div>
             
             <div class="action-buttons">
@@ -352,6 +395,8 @@
         const googleDriveBtn = document.getElementById('google-drive-btn');
         const googleBtnText = document.getElementById('google-btn-text');
         const googleStatus = document.getElementById('google-status');
+        const closeIframeBtn = document.getElementById('close-iframe-btn');
+        const iframeTitle = document.getElementById('iframe-title');
         
         // Initialize Google API
         function gapiLoaded() {
@@ -443,6 +488,7 @@
         
         fileUpload.addEventListener('change', handleFileUpload);
         showSignBtn.addEventListener('click', toggleIframe);
+        closeIframeBtn.addEventListener('click', toggleIframe);
         correctBtn.addEventListener('click', handleCorrect);
         wrongBtn.addEventListener('click', handleWrong);
         downloadBtn.addEventListener('click', downloadDictionary);
@@ -500,6 +546,7 @@
             
             const wordData = dictionary[randomKey];
             conceptDisplay.textContent = wordData.concept;
+            iframeTitle.textContent = wordData.concept;
             
             // Hide iframe when showing new word
             iframeContainer.classList.remove('visible');
