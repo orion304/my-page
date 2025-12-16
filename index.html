@@ -559,6 +559,39 @@
         wrongBtn.addEventListener('click', handleWrong);
         downloadBtn.addEventListener('click', downloadDictionary);
         googleDriveBtn.addEventListener('click', handleGoogleDrive);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Only handle shortcuts when training section is active
+            if (!trainingSection.classList.contains('active')) return;
+
+            // Ignore if user is typing in an input field
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            // Spacebar or Numpad 1: Toggle sign visibility
+            if (e.code === 'Space' || e.code === 'Numpad1') {
+                e.preventDefault();
+                if (showSignBtn.style.display !== 'none') {
+                    toggleIframe();
+                }
+            }
+
+            // Right Arrow, Enter, or Numpad 2: Mark correct
+            else if (e.code === 'ArrowRight' || e.code === 'Enter' || e.code === 'Numpad2') {
+                e.preventDefault();
+                if (!correctBtn.disabled) {
+                    handleCorrect();
+                }
+            }
+
+            // Left Arrow, Backspace, or Numpad 3: Mark wrong
+            else if (e.code === 'ArrowLeft' || e.code === 'Backspace' || e.code === 'Numpad3') {
+                e.preventDefault();
+                if (!wrongBtn.disabled) {
+                    handleWrong();
+                }
+            }
+        });
         
         function handleFileUpload(e) {
             const file = e.target.files[0];
