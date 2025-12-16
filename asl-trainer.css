@@ -82,6 +82,22 @@ input[type="file"] {
     background: #5568d3;
 }
 
+.load-default-btn {
+    background: #17a2b8;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.load-default-btn:hover {
+    background: #138496;
+}
+
 .file-name {
     margin-top: 10px;
     color: #666;

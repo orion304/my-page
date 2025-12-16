@@ -2,6 +2,7 @@ const CLIENT_ID = '47759577064-h3pt7ehhl0n3d2i6dm6je5m2ln4iukn4.apps.googleuserc
 const SCOPES = 'https://www.googleapis.com/auth/drive.file';
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
 const FILE_NAME = 'asl_dictionary.json';
+const DEFAULT_DICTIONARY_URL = 'https://raw.githubusercontent.com/orion304/my-page/main/asl_dictionary.json';
 
 let dictionary = null;
 let currentWord = null;
@@ -34,6 +35,7 @@ const closeIframeBtn = document.getElementById('close-iframe-btn');
 const iframeTitle = document.getElementById('iframe-title');
 const learnedList = document.getElementById('learned-list');
 const learningList = document.getElementById('learning-list');
+const loadDefaultBtn = document.getElementById('load-default-btn');
 
 // Initialize Google API
 function gapiLoaded() {
@@ -130,6 +132,7 @@ correctBtn.addEventListener('click', handleCorrect);
 wrongBtn.addEventListener('click', handleWrong);
 downloadBtn.addEventListener('click', downloadDictionary);
 googleDriveBtn.addEventListener('click', handleGoogleDrive);
+loadDefaultBtn.addEventListener('click', loadDefaultDictionary);
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
@@ -191,6 +194,34 @@ function handleFileUpload(e) {
     };
 
     reader.readAsText(file);
+}
+
+async function loadDefaultDictionary() {
+    try {
+        fileNameDisplay.textContent = 'Loading default dictionary...';
+        const response = await fetch(DEFAULT_DICTIONARY_URL);
+
+        if (!response.ok) {
+            throw new Error('Failed to load default dictionary');
+        }
+
+        dictionary = await response.json();
+        fileName = 'asl_dictionary.json';
+        fileNameDisplay.textContent = 'Loaded: Default ASL Dictionary';
+        trainingSection.classList.add('active');
+        totalCountDisplay.textContent = Object.keys(dictionary).length;
+        updateProgressTracker();
+        showRandomWord();
+
+        // If connected to Drive, save this dictionary
+        if (isGoogleDriveConnected) {
+            await saveToGoogleDrive();
+        }
+    } catch (error) {
+        alert('Error loading default dictionary. Please try loading from file instead.');
+        console.error(error);
+        fileNameDisplay.textContent = 'Failed to load default dictionary';
+    }
 }
 
 function showRandomWord() {
