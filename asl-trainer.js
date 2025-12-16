@@ -36,6 +36,9 @@ const iframeTitle = document.getElementById('iframe-title');
 const learnedList = document.getElementById('learned-list');
 const learningList = document.getElementById('learning-list');
 const loadDefaultBtn = document.getElementById('load-default-btn');
+const uploadSection = document.querySelector('.upload-section');
+const changeDictionaryLink = document.getElementById('change-dictionary-link');
+const changeDictionaryBtn = document.getElementById('change-dictionary-btn');
 
 // Initialize Google API
 function gapiLoaded() {
@@ -133,6 +136,10 @@ wrongBtn.addEventListener('click', handleWrong);
 downloadBtn.addEventListener('click', downloadDictionary);
 googleDriveBtn.addEventListener('click', handleGoogleDrive);
 loadDefaultBtn.addEventListener('click', loadDefaultDictionary);
+changeDictionaryBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showUploadSection();
+});
 
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
@@ -182,6 +189,7 @@ function handleFileUpload(e) {
             totalCountDisplay.textContent = Object.keys(dictionary).length;
             updateProgressTracker();
             showRandomWord();
+            hideUploadSection();
 
             // If connected to Drive, save this dictionary
             if (isGoogleDriveConnected) {
@@ -194,6 +202,16 @@ function handleFileUpload(e) {
     };
 
     reader.readAsText(file);
+}
+
+function hideUploadSection() {
+    uploadSection.classList.add('hidden');
+    changeDictionaryLink.style.display = 'block';
+}
+
+function showUploadSection() {
+    uploadSection.classList.remove('hidden');
+    changeDictionaryLink.style.display = 'none';
 }
 
 async function loadDefaultDictionary() {
@@ -212,6 +230,7 @@ async function loadDefaultDictionary() {
         totalCountDisplay.textContent = Object.keys(dictionary).length;
         updateProgressTracker();
         showRandomWord();
+        hideUploadSection();
 
         // If connected to Drive, save this dictionary
         if (isGoogleDriveConnected) {
@@ -428,6 +447,7 @@ async function loadFromGoogleDrive() {
         totalCountDisplay.textContent = Object.keys(dictionary).length;
         updateProgressTracker();
         showRandomWord();
+        hideUploadSection();
 
         googleStatus.textContent = '✓ Dictionary loaded from Drive';
         googleStatus.className = 'google-status success';

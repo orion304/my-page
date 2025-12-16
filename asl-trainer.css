@@ -25,13 +25,22 @@ body {
 
 h1 {
     color: #333;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
     text-align: center;
+}
+
+.footer-links {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
 
 .github-link {
     text-align: center;
-    margin-bottom: 30px;
 }
 
 .github-link a {
@@ -55,6 +64,27 @@ h1 {
     background: #f8f9fa;
     border-radius: 10px;
     text-align: center;
+}
+
+.upload-section.hidden {
+    display: none;
+}
+
+.change-dictionary-link {
+    text-align: center;
+}
+
+.change-dictionary-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.change-dictionary-link a:hover {
+    color: #5568d3;
+    text-decoration: underline;
 }
 
 .file-input-wrapper {

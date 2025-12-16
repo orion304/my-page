@@ -10,12 +10,6 @@
 <body>
     <div class="container">
         <h1>🤟 ASL Vocab Trainer</h1>
-        <div class="github-link">
-            <a href="https://github.com/orion304/my-page" target="_blank" rel="noopener noreferrer">
-                <span>⭐</span>
-                <span>View on GitHub</span>
-            </a>
-        </div>
 
         <div class="upload-section">
             <h3 style="margin-bottom: 15px; color: #333;">Get Started</h3>
@@ -61,7 +55,25 @@
                 <button class="correct-btn" id="correct-btn">✓ Got It</button>
                 <button class="wrong-btn" id="wrong-btn">✗ Didn't Get It</button>
             </div>
-            
+
+            <div class="stats">
+                <h3>Progress Tracker</h3>
+
+                <div class="progress-section">
+                    <h4 style="color: #28a745; margin: 15px 0 10px 0;">✓ Learned</h4>
+                    <div class="word-list" id="learned-list">
+                        <em style="color: #999;">No words learned yet</em>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h4 style="color: #ffc107; margin: 15px 0 10px 0;">📚 Learning</h4>
+                    <div class="word-list" id="learning-list">
+                        <em style="color: #999;">No words in progress</em>
+                    </div>
+                </div>
+            </div>
+
             <div class="stats">
                 <h3>Session Stats</h3>
                 <div class="stats-row">
@@ -80,23 +92,17 @@
                 </div>
                 <button class="download-btn" id="download-btn">💾 Download Updated Dictionary</button>
             </div>
-            
-            <div class="stats">
-                <h3>Progress Tracker</h3>
-                
-                <div class="progress-section">
-                    <h4 style="color: #28a745; margin: 15px 0 10px 0;">✓ Learned</h4>
-                    <div class="word-list" id="learned-list">
-                        <em style="color: #999;">No words learned yet</em>
-                    </div>
-                </div>
-                
-                <div class="progress-section">
-                    <h4 style="color: #ffc107; margin: 15px 0 10px 0;">📚 Learning</h4>
-                    <div class="word-list" id="learning-list">
-                        <em style="color: #999;">No words in progress</em>
-                    </div>
-                </div>
+        </div>
+
+        <div class="footer-links">
+            <div class="change-dictionary-link" id="change-dictionary-link" style="display: none;">
+                <a href="#" id="change-dictionary-btn">📂 Change Dictionary</a>
+            </div>
+            <div class="github-link">
+                <a href="https://github.com/orion304/my-page" target="_blank" rel="noopener noreferrer">
+                    <span>⭐</span>
+                    <span>View on GitHub</span>
+                </a>
             </div>
         </div>
     </div>
