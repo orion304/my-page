@@ -1,0 +1,356 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.github-link {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.github-link a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+}
+
+.github-link a:hover {
+    color: #5568d3;
+    text-decoration: underline;
+}
+
+.upload-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-button {
+    background: #667eea;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    transition: background 0.3s;
+}
+
+.file-button:hover {
+    background: #5568d3;
+}
+
+.file-name {
+    margin-top: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.training-section {
+    display: none;
+}
+
+.training-section.active {
+    display: block;
+}
+
+.word-display {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.concept {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.show-sign-btn {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.show-sign-btn:hover {
+    background: #218838;
+}
+
+.iframe-container {
+    margin-top: 20px;
+    display: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    background: white;
+    z-index: 1000;
+}
+
+.iframe-container.visible {
+    display: flex;
+    flex-direction: column;
+}
+
+.iframe-header {
+    padding: 15px;
+    background: #667eea;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.iframe-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.close-iframe-btn {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.close-iframe-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.iframe-container iframe {
+    width: 100%;
+    flex: 1;
+    border: none;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+button {
+    flex: 1;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.correct-btn {
+    background: #28a745;
+    color: white;
+}
+
+.correct-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.wrong-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.wrong-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.stats {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.download-btn {
+    margin-top: 20px;
+    width: 100%;
+    background: #ffc107;
+    color: #333;
+}
+
+.download-btn:hover {
+    background: #e0a800;
+}
+
+.google-drive-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.google-btn {
+    background: #4285f4;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.3s;
+    margin: 0 auto;
+}
+
+.google-btn:hover {
+    background: #357ae8;
+}
+
+.google-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.google-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.google-status.success {
+    color: #28a745;
+}
+
+.google-status.error {
+    color: #dc3545;
+}
+
+.progress-section {
+    margin-top: 20px;
+}
+
+.word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    min-height: 30px;
+}
+
+.word-badge {
+    background: #e9ecef;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.word-badge.learned {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.word-badge.learning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.word-badge.learning-progress {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.progress-indicator {
+    font-size: 10px;
+    font-weight: bold;
+}

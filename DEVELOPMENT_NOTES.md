@@ -27,10 +27,60 @@ Document for tracking development thoughts, decisions, and the evolution of the 
    - Words you know well appear less often
    - Optimal learning efficiency
 
+2. **Live deployment status indicator**: Poll GitHub Pages API to detect when new deployments are ready
+   - Would use `/repos/orion304/my-page/pages/builds/latest` endpoint
+   - Show notification when new version is deployed
+   - Note: Limited to 1 request/minute without authentication (60/hour rate limit)
+   - Not worth implementing with token auth for this use case
+
+### Long-term Goals: Multi-Language Support
+
+**Phase 1 - Individual Language Support**
+1. **Chinese vocabulary trainer**
+   - Dictionary structure per word: hanzi, pinyin, zhuyin, IPA, english meaning
+   - Same learning mechanics as ASL (state tracking, progress, review mode)
+
+2. **French vocabulary trainer**
+   - Dictionary structure per word: french word, gender (m/f/n), IPA, english meaning
+   - Same learning mechanics as ASL
+
+3. **Language switching**
+   - User can select which language to study
+   - Independent progress tracking per language
+   - Separate Google Drive files or unified format with language tags
+
+**Phase 2 - Cross-Language Integration**
+- **Multi-language simultaneous testing**: Present a word from one language and require identification across multiple languages
+  - Example: Prompt "chien" → User must identify: "dog" (English), "masculine" (gender), "狗/gǒu" (Chinese)
+  - Requires linking vocabulary entries across languages via concept mapping
+  - New data structure needed: concept IDs that link equivalent words across languages
+
+**Architectural Considerations**
+- Need flexible dictionary schema to support different language requirements
+- Consider unified data model vs. language-specific models
+- Cross-language concept mapping will require either manual tagging or external API (translation/concept linking)
+
 ---
 
 ## Ideas & Brainstorming
 
+### Chicago Skyline Interactive Map
+**Goal**: Display Chicago skyline photos taken from balcony with interactive clickable regions
+
+**Features**:
+- Display one or more skyline photos (e.g., `Chicago_evening_SW_skyline.jpg`)
+- Use HTML image maps or SVG overlay to define clickable building regions
+- Hover over buildings to highlight them
+- Click to open link to building information (Wikipedia, architecture sites, etc.)
+- Could include multiple views (different times of day, seasons)
+
+**Technical Approach**:
+- HTML `<map>` and `<area>` tags for clickable regions (simple approach)
+- Or SVG overlay with polygon regions (more flexible, responsive)
+- Tooltip on hover showing building name
+- Links open in new tab to external resources
+
+**Note**: Existing code for this feature exists in prior commits (see commit `74319fc` - "Added another map and some placeholders for future additional views")
 
 ---
 

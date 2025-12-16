@@ -10,10 +10,23 @@ This is an ASL (American Sign Language) vocabulary trainer web application. It's
 
 ### Core Components
 
-**index.html**: Single-page application containing:
-- Inline CSS styles (lines 8-345)
-- Complete application logic in inline JavaScript (lines 429-873)
-- All UI markup
+**index.html**: Main HTML structure containing:
+- External references to CSS (`asl-trainer.css`) and JavaScript (`asl-trainer.js`)
+- All UI markup and structure
+- Minimal inline content for maintainability
+
+**asl-trainer.css**: Application styles including:
+- Layout and typography
+- Component styling (buttons, cards, badges, etc.)
+- Responsive design
+- Animations and transitions
+
+**asl-trainer.js**: Application logic including:
+- Google Drive OAuth integration and persistence
+- Dictionary state management
+- Word selection and progression algorithms
+- Keyboard shortcut handlers
+- UI event handlers and DOM manipulation
 
 **asl_dictionary.json**: Dictionary data structure where each entry contains:
 ```json
@@ -44,8 +57,8 @@ Getting a word wrong resets `correctCount` to 0 and sets state back to `learning
 
 ### Google Drive Integration
 
-- **Client ID**: Hardcoded in index.html:430
-- **File name**: `asl_dictionary.json` (constant in index.html:433)
+- **Client ID**: Hardcoded in asl-trainer.js (line 1)
+- **File name**: `asl_dictionary.json` (constant in asl-trainer.js)
 - **Scope**: `https://www.googleapis.com/auth/drive.file`
 - **Token persistence**: Stored in localStorage with 1-hour expiry
 - **Auto-save**: Triggers on every correct/wrong button click
@@ -66,20 +79,40 @@ The project uses GitLab CI for deployment:
 - Copies all files to `public/` directory for GitLab Pages
 - No build step required (static HTML/CSS/JS)
 
-### Legacy Files
+### Planning and Documentation
 
-- `app.js`: Legacy Chinese vocabulary app (not used in current ASL trainer)
-- `style.css`: Legacy stylesheet (not used, index.html has inline styles)
+- **DEVELOPMENT_NOTES.md**: Active development planning document tracking:
+  - Current goals (immediate, short-term, stretch)
+  - Future multi-language support plans (Chinese, French)
+  - Ideas and brainstorming (including Chicago skyline interactive map)
+  - Technical decisions and architectural notes
+
+### Legacy Files and Historical Code
+
+- **app.js**: Legacy Chinese vocabulary app with structure for: hanzi, pinyin, zhuyin, IPA, english
+  - Not currently used but contains data structure matching planned Chinese language expansion
+- **style.css**: Legacy stylesheet (not used, index.html has inline styles)
+- **Commit 74319fc**: Contains code for Chicago skyline interactive map feature (image maps with clickable building regions)
+  - May be referenced for future implementation
 
 ## Key Behaviors
 
+### Keyboard Shortcuts
+
+The application supports hands-free operation via keyboard shortcuts (asl-trainer.js):
+- **Spacebar** or **Numpad 1**: Toggle show/hide sign
+- **Right Arrow**, **Enter**, or **Numpad 2**: Mark word correct
+- **Left Arrow**, **Backspace**, or **Numpad 3**: Mark word wrong
+- Only active when training section is visible
+- Disabled when typing in input fields
+
 ### Word Selection Algorithm
 
-The `showRandomWord()` function (index.html:592) only shows words with state `not_started` or `learning`. Once all words reach `learned` state, it displays a completion message.
+The `showRandomWord()` function (asl-trainer.js) only shows words with state `not_started` or `learning`. Once all words reach `learned` state, it displays a completion message.
 
 ### Iframe Prefetching
 
-The app prefetches ASL sign reference pages by setting iframe src immediately when displaying a word (index.html:626), improving perceived performance when user clicks "Show Sign".
+The app prefetches ASL sign reference pages by setting iframe src immediately when displaying a word, improving perceived performance when user clicks "Show Sign".
 
 ### Progress Tracking
 
