@@ -7,7 +7,7 @@ Document for tracking development thoughts, decisions, and the evolution of the 
 
 ## Current Goals
 
-### Immediate Goals
+### Completed ✓
 1. **Keyboard shortcuts**: Add keyboard navigation for hands-free operation
    - Spacebar to reveal/hide sign
    - Arrow keys (or other keys) for correct/wrong responses

@@ -246,19 +246,34 @@ async function loadDefaultDictionary() {
 function showRandomWord() {
     if (!dictionary) return;
 
-    // Filter to only unlearned and learning words
+    // Filter to only learning words (not_started means lesson hasn't been unlocked yet)
     const words = Object.keys(dictionary).filter(key => {
         const state = dictionary[key].state;
-        return state === 'not_started' || state === 'learning';
+        return state === 'learning';
     });
 
-    // If no words left to learn, show completion message
+    // If no learning words, check if we need to start a new lesson or if we're done
     if (words.length === 0) {
-        conceptDisplay.textContent = '🎉 All words learned!';
-        showSignBtn.style.display = 'none';
-        iframeContainer.classList.remove('visible');
-        correctBtn.disabled = true;
-        wrongBtn.disabled = true;
+        const nextLesson = getNextLessonNumber();
+
+        if (nextLesson !== null) {
+            // There's a next lesson to start
+            conceptDisplay.innerHTML = `🎉 Lesson Complete!<br><button class="start-lesson-btn" onclick="startLesson(${nextLesson})">📚 Start Lesson ${nextLesson}</button>`;
+            showSignBtn.style.display = 'none';
+            iframeContainer.classList.remove('visible');
+            correctBtn.disabled = true;
+            wrongBtn.disabled = true;
+        } else {
+            // All lessons complete!
+            conceptDisplay.textContent = '🎉 All words learned!';
+            showSignBtn.style.display = 'none';
+            iframeContainer.classList.remove('visible');
+            correctBtn.disabled = true;
+            wrongBtn.disabled = true;
+        }
+
+        // Update progress tracker to reflect lesson completion
+        updateProgressTracker();
         return;
     }
 
@@ -281,6 +296,44 @@ function showRandomWord() {
 
     // Update progress tracker
     updateProgressTracker();
+}
+
+// Get the next lesson number to start (lowest numbered lesson among not_started words)
+function getNextLessonNumber() {
+    if (!dictionary) return null;
+
+    const notStartedLessons = Object.keys(dictionary)
+        .filter(key => dictionary[key].state === 'not_started')
+        .map(key => parseInt(dictionary[key].lesson));
+
+    if (notStartedLessons.length === 0) {
+        return null; // No more lessons
+    }
+
+    return Math.min(...notStartedLessons);
+}
+
+// Start a new lesson by setting all words in that lesson to 'learning' with correctCount 0
+// TODO: In the future, consider moving to metadata-based approach (Option 1) where
+// active lessons are tracked in dictionary._metadata.activeLessons array for more flexibility
+async function startLesson(lessonNumber) {
+    if (!dictionary) return;
+
+    // Find all words in this lesson and set them to learning
+    Object.keys(dictionary).forEach(key => {
+        const word = dictionary[key];
+        if (word.lesson === lessonNumber.toString()) {
+            word.state = 'learning';
+            word.correctCount = 0;
+        }
+    });
+
+    // Save to Google Drive
+    await saveToGoogleDrive();
+
+    // Update UI and show first word
+    updateProgressTracker();
+    showRandomWord();
 }
 
 function updateProgressTracker() {

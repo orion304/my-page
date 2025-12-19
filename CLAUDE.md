@@ -66,6 +66,13 @@ Getting a word wrong resets `correctCount` to 0 and sets state back to `learning
 
 ## Development
 
+### Git Commits
+
+When creating git commits:
+- Use clear, concise commit messages that describe the changes
+- DO NOT add "Generated with Claude Code" or "Co-Authored-By" footers
+- Keep commit messages simple and to the point
+
 ### Local Testing
 
 Since this is a static site, simply open `index.html` in a browser. Note:
