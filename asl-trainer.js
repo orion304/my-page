@@ -14,6 +14,8 @@ let googleDriveFileId = null;
 let isGoogleDriveConnected = false;
 let gapiInited = false;
 let tokenClient = null;
+let isSaving = false;
+let needsAnotherSave = false;
 
 const fileUpload = document.getElementById('file-upload');
 const fileNameDisplay = document.getElementById('file-name');
@@ -385,7 +387,7 @@ function toggleIframe() {
     }
 }
 
-async function handleCorrect() {
+function handleCorrect() {
     if (!currentWord) return;
 
     correctCount++;
@@ -408,12 +410,12 @@ async function handleCorrect() {
         wordData.state = 'learning';
     }
 
-    await saveToGoogleDrive();
+    saveToGoogleDrive();
 
     showRandomWord();
 }
 
-async function handleWrong() {
+function handleWrong() {
     if (!currentWord) return;
 
     wrongCount++;
@@ -425,7 +427,7 @@ async function handleWrong() {
     wordData.correctCount = 0;
     wordData.state = 'learning';
 
-    await saveToGoogleDrive();
+    saveToGoogleDrive();
 
     showRandomWord();
 }
@@ -518,6 +520,15 @@ async function saveToGoogleDrive() {
         return;
     }
 
+    // If already saving, mark that we need another save and return
+    if (isSaving) {
+        needsAnotherSave = true;
+        return;
+    }
+
+    // Start saving
+    isSaving = true;
+
     const content = JSON.stringify(dictionary, null, 2);
 
     try {
@@ -560,6 +571,14 @@ async function saveToGoogleDrive() {
         console.error('Error saving to Drive:', error);
         googleStatus.textContent = 'Error saving to Drive: ' + error.message;
         googleStatus.className = 'google-status error';
+    } finally {
+        isSaving = false;
+
+        // If another save was requested while we were saving, save again
+        if (needsAnotherSave) {
+            needsAnotherSave = false;
+            saveToGoogleDrive();
+        }
     }
 }
 
