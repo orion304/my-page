@@ -257,17 +257,50 @@ function showRandomWord() {
     // If no learning words, check if we need to start a new lesson or if we're done
     if (words.length === 0) {
         const nextLesson = getNextLessonNumber();
+        const learnedWords = Object.keys(dictionary).filter(key => dictionary[key].state === 'learned');
 
         if (nextLesson !== null) {
             // There's a next lesson to start
-            conceptDisplay.innerHTML = `🎉 Lesson Complete!<br><button class="start-lesson-btn" onclick="startLesson(${nextLesson})">📚 Start Lesson ${nextLesson}</button>`;
+            let html = `🎉 Lesson Complete!<br><button class="start-lesson-btn" onclick="startLesson(${nextLesson})">📚 Start Lesson ${nextLesson}</button>`;
+
+            // Also show review option if there are learned words
+            if (learnedWords.length > 0) {
+                const maxReview = learnedWords.length;
+                const defaultReview = Math.min(10, maxReview);
+                html += `<div class="review-section">
+                    <p style="margin-top: 20px; color: #666;">— OR —</p>
+                    <p style="margin-bottom: 10px; font-weight: 600;">Review Learned Words</p>
+                    <div class="review-controls">
+                        <input type="range" id="review-slider" min="10" max="${maxReview}" value="${defaultReview}" oninput="updateReviewCount(this.value)">
+                        <span id="review-count">${defaultReview} words</span>
+                    </div>
+                    <button class="start-review-btn" onclick="startReview()">🔄 Start Review</button>
+                </div>`;
+            }
+
+            conceptDisplay.innerHTML = html;
             showSignBtn.style.display = 'none';
             iframeContainer.classList.remove('visible');
             correctBtn.disabled = true;
             wrongBtn.disabled = true;
         } else {
-            // All lessons complete!
-            conceptDisplay.textContent = '🎉 All words learned!';
+            // No more lessons - check if we can review
+            if (learnedWords.length > 0) {
+                const maxReview = learnedWords.length;
+                const defaultReview = Math.min(10, maxReview);
+                conceptDisplay.innerHTML = `🎉 All Lessons Complete!
+                    <div class="review-section">
+                        <p style="margin-top: 20px; margin-bottom: 10px; font-weight: 600;">Review Learned Words</p>
+                        <div class="review-controls">
+                            <input type="range" id="review-slider" min="10" max="${maxReview}" value="${defaultReview}" oninput="updateReviewCount(this.value)">
+                            <span id="review-count">${defaultReview} words</span>
+                        </div>
+                        <button class="start-review-btn" onclick="startReview()">🔄 Start Review</button>
+                    </div>`;
+            } else {
+                // Truly complete - no lessons and no learned words
+                conceptDisplay.textContent = '🎉 All words learned!';
+            }
             showSignBtn.style.display = 'none';
             iframeContainer.classList.remove('visible');
             correctBtn.disabled = true;
@@ -279,7 +312,13 @@ function showRandomWord() {
         return;
     }
 
-    const randomKey = words[Math.floor(Math.random() * words.length)];
+    // Filter out current word to avoid back-to-back repetition (if we have more than 1 word)
+    let availableWords = words;
+    if (words.length > 1 && currentWord) {
+        availableWords = words.filter(key => key !== currentWord);
+    }
+
+    const randomKey = availableWords[Math.floor(Math.random() * availableWords.length)];
     currentWord = randomKey;
 
     const wordData = dictionary[randomKey];
@@ -332,6 +371,45 @@ async function startLesson(lessonNumber) {
 
     // Save to Google Drive
     await saveToGoogleDrive();
+
+    // Update UI and show first word
+    updateProgressTracker();
+    showRandomWord();
+}
+
+// Update the review count display when slider moves
+function updateReviewCount(value) {
+    const countDisplay = document.getElementById('review-count');
+    if (countDisplay) {
+        countDisplay.textContent = value + ' words';
+    }
+}
+
+// Start a review session with N randomly selected learned words
+function startReview() {
+    if (!dictionary) return;
+
+    const slider = document.getElementById('review-slider');
+    const reviewCount = slider ? parseInt(slider.value) : 10;
+
+    // Get all learned words
+    const learnedWords = Object.keys(dictionary).filter(key => dictionary[key].state === 'learned');
+
+    // Randomly select N words to review
+    const wordsToReview = [];
+    const shuffled = [...learnedWords].sort(() => Math.random() - 0.5);
+    for (let i = 0; i < Math.min(reviewCount, shuffled.length); i++) {
+        wordsToReview.push(shuffled[i]);
+    }
+
+    // Set selected words to learning with correctCount = 1
+    wordsToReview.forEach(key => {
+        dictionary[key].state = 'learning';
+        dictionary[key].correctCount = 1;
+    });
+
+    // Save to Google Drive
+    saveToGoogleDrive();
 
     // Update UI and show first word
     updateProgressTracker();

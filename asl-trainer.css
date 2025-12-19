@@ -419,3 +419,54 @@ button {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
+
+.review-section {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.review-section p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.review-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.review-controls input[type="range"] {
+    width: 150px;
+    cursor: pointer;
+}
+
+.review-controls span {
+    font-weight: bold;
+    color: #667eea;
+    min-width: 70px;
+    text-align: right;
+    font-size: 14px;
+}
+
+.start-review-btn {
+    background: #17a2b8;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.start-review-btn:hover {
+    background: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
