@@ -4,31 +4,50 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an ASL (American Sign Language) vocabulary trainer web application. It's a static site that helps users learn ASL signs through a flashcard-style interface with progress tracking and Google Drive integration for persistence.
+This is a multi-language vocabulary trainer web application. It's a static site that helps users learn vocabulary through interactive training interfaces with progress tracking and Google Drive integration for persistence.
+
+**Currently supports:**
+- **ASL (American Sign Language)**: Video-based sign learning with iframe embeds
+- **Chinese (Mandarin)**: Text input-based testing across hanzi, pinyin, zhuyin, and English
+
+The landing page (index.html) allows users to select which language to study.
 
 ## Architecture
 
 ### Core Components
 
-**index.html**: Main HTML structure containing:
+#### Landing Page
+**index.html**: Language selection landing page
+- Two-column grid with language cards (ASL, Chinese)
+- Links to asl.html and chinese.html
+- Styled with landing.css
+
+**landing.css**: Landing page styles
+- Card-based layout with hover effects
+- Purple gradient background theme
+- Responsive design for mobile
+
+#### ASL Trainer
+**asl.html**: ASL trainer HTML structure containing:
 - External references to CSS (`asl-trainer.css`) and JavaScript (`asl-trainer.js`)
+- Iframe container for video sign references
 - All UI markup and structure
-- Minimal inline content for maintainability
 
-**asl-trainer.css**: Application styles including:
+**asl-trainer.css**: ASL application styles including:
 - Layout and typography
-- Component styling (buttons, cards, badges, etc.)
-- Responsive design
-- Animations and transitions
+- Component styling (buttons, cards, badges, iframe)
+- Purple/blue gradient theme
+- Responsive design and animations
 
-**asl-trainer.js**: Application logic including:
-- Google Drive OAuth integration and persistence
+**asl-trainer.js**: ASL application logic including:
+- Google Drive OAuth integration (localStorage key: `google_drive_token`)
 - Dictionary state management
 - Word selection and progression algorithms
+- Iframe prefetching for performance
 - Keyboard shortcut handlers
 - UI event handlers and DOM manipulation
 
-**asl_dictionary.json**: Dictionary data structure where each entry contains:
+**asl_dictionary.json**: ASL dictionary data structure where each entry contains:
 ```json
 {
   "word-key": {
@@ -41,14 +60,58 @@ This is an ASL (American Sign Language) vocabulary trainer web application. It's
 }
 ```
 
+#### Chinese Trainer
+**chinese.html**: Chinese trainer HTML structure containing:
+- External references to CSS (`chinese-trainer.css`) and JavaScript (`chinese-trainer.js`)
+- Prompt display area showing one random field
+- Three text input fields for user answers
+- Feedback display areas below each input
+
+**chinese-trainer.css**: Chinese application styles including:
+- Layout and typography adapted for text input
+- Input field styling with color feedback (green/red)
+- Red/crimson gradient theme (Chinese flag colors)
+- Responsive design and animations
+
+**chinese-trainer.js**: Chinese application logic including:
+- Google Drive OAuth integration (localStorage key: `google_drive_token_chinese`)
+- Random field selection (hanzi, pinyin, zhuyin, or english as prompt)
+- Answer validation and feedback display
+- Same state progression as ASL
+- Keyboard shortcut handlers adapted for Chinese workflow
+- UI event handlers and DOM manipulation
+
+**chinese_dictionary.json**: Chinese dictionary data structure where each entry contains:
+```json
+{
+  "word-key": {
+    "hanzi": "汉字",
+    "pinyin": "hànzì",
+    "zhuyin": "ㄏㄢˋ ㄗˋ",
+    "ipa": "/xän⁵¹ tsɨ⁵¹/",
+    "english": "Chinese characters",
+    "state": "not_started" | "learning" | "learned",
+    "correctCount": 0,
+    "lesson": "1"
+  }
+}
+```
+
 ### State Management
 
-The application uses localStorage and Google Drive for persistence:
-- **Local storage key**: `chineseVocabList` (legacy from original Chinese vocab app)
-- **Google Drive**: Auto-saves dictionary updates via Google Drive API
-- **Token storage**: Google OAuth tokens stored in localStorage with expiry tracking
+Both trainers use localStorage and Google Drive for persistence:
 
-Word states progress as follows:
+**ASL Trainer:**
+- **Google Drive file**: `asl_dictionary.json`
+- **Token storage**: `google_drive_token` in localStorage with expiry tracking
+- **Auto-save**: Triggers on every correct/wrong button click
+
+**Chinese Trainer:**
+- **Google Drive file**: `chinese_dictionary.json`
+- **Token storage**: `google_drive_token_chinese` in localStorage with expiry tracking
+- **Auto-save**: Triggers on every correct/wrong button click
+
+Word states progress identically in both trainers:
 1. `not_started` → initial state
 2. `learning` → after first correct answer (correctCount: 1)
 3. `learned` → after two consecutive correct answers (correctCount: 2)
@@ -57,10 +120,13 @@ Getting a word wrong resets `correctCount` to 0 and sets state back to `learning
 
 ### Google Drive Integration
 
-- **Client ID**: Hardcoded in asl-trainer.js (line 1)
-- **File name**: `asl_dictionary.json` (constant in asl-trainer.js)
+Both trainers share the same Google OAuth client ID but use separate files:
+
+- **Client ID**: Hardcoded in both trainer JS files (same ID for both)
+- **ASL file name**: `asl_dictionary.json` (constant in asl-trainer.js)
+- **Chinese file name**: `chinese_dictionary.json` (constant in chinese-trainer.js)
 - **Scope**: `https://www.googleapis.com/auth/drive.file`
-- **Token persistence**: Stored in localStorage with 1-hour expiry
+- **Token persistence**: Stored in localStorage with 1-hour expiry (separate keys per trainer)
 - **Auto-save**: Triggers on every correct/wrong button click
 - **File operations**: Uses Google Drive API v3 for create/update/read
 
@@ -106,30 +172,71 @@ The project uses GitLab CI for deployment:
 
 ### Keyboard Shortcuts
 
-The application supports hands-free operation via keyboard shortcuts (asl-trainer.js):
+Both trainers support hands-free operation via keyboard shortcuts:
+
+**ASL Trainer** (asl-trainer.js):
 - **Spacebar** or **Numpad 1**: Toggle show/hide sign
 - **Right Arrow**, **Enter**, or **Numpad 2**: Mark word correct
 - **Left Arrow**, **Backspace**, or **Numpad 3**: Mark word wrong
+
+**Chinese Trainer** (chinese-trainer.js):
+- **Enter** or **Numpad 1**: Check answers (when inputs are visible)
+- **Right Arrow** or **Numpad 2**: Mark word correct (after checking)
+- **Left Arrow**, **Backspace**, or **Numpad 3**: Mark word wrong (after checking)
+
+All shortcuts:
 - Only active when training section is visible
 - Disabled when typing in input fields
 
 ### Word Selection Algorithm
 
-The `showRandomWord()` function (asl-trainer.js) only shows words with state `not_started` or `learning`. Once all words reach `learned` state, it displays a completion message.
+Both trainers use similar word selection logic:
 
-### Iframe Prefetching
+**ASL Trainer**: The `showRandomWord()` function only shows words with state `learning`. Words with `not_started` are organized into lessons that can be started manually. Once all words in active lessons reach `learned` state, it displays lesson completion with options to start next lesson or review.
 
-The app prefetches ASL sign reference pages by setting iframe src immediately when displaying a word, improving perceived performance when user clicks "Show Sign".
+**Chinese Trainer**: The `showRandomWord()` function automatically starts all `not_started` words as `learning` on first load, then randomly selects from `learning` words. Once all words reach `learned` state, it displays a completion message.
+
+Both trainers avoid showing the same word twice in a row when multiple words are available.
+
+### Testing Methods
+
+**ASL Trainer - Video-based Recognition**:
+1. Display concept/word text
+2. User clicks to reveal iframe with sign video
+3. User marks themselves correct/wrong
+
+**Chinese Trainer - Multi-field Text Input**:
+1. Randomly select one field as prompt (hanzi, pinyin, zhuyin, or english)
+2. Display prompt value, show 3 empty input fields for other fields
+3. User fills in all 3 fields
+4. User clicks "Check Answers" to validate
+5. System shows correct/wrong feedback with expected values
+6. User marks themselves correct/wrong based on overall performance
+
+### Iframe Prefetching (ASL Only)
+
+The ASL trainer prefetches sign reference pages by setting iframe src immediately when displaying a word, improving perceived performance when user clicks "Show Sign".
 
 ### Progress Tracking
 
-Two visual lists show learning progress:
-- **Learned**: Words with state `learned` (green badges)
-- **Learning**: Words with state `learning`, showing one or two dots based on correctCount
+Both trainers display two visual lists showing learning progress:
+- **Learned**: Words with state `learned` (green badges with checkmark)
+- **Learning**: Words with state `learning`, showing one or two dots based on correctCount (yellow/cyan badges)
 
-## Modifying the Dictionary
+**ASL Trainer**: Shows `concept` field in badges
+**Chinese Trainer**: Shows `english` field in badges
 
-To add new words or lessons:
-1. Edit `asl_dictionary.json` following the existing structure
-2. Each entry must have: `concept`, `url`, `state`, `correctCount`, `lesson`
-3. The `url` should point to a Lifeprint.com ASL reference page
+## Modifying the Dictionaries
+
+**ASL Dictionary** (`asl_dictionary.json`):
+1. Each entry must have: `concept`, `url`, `state`, `correctCount`, `lesson`
+2. The `url` should point to a Lifeprint.com ASL reference page
+3. The `lesson` field organizes words into manually-started lessons
+
+**Chinese Dictionary** (`chinese_dictionary.json`):
+1. Each entry must have: `hanzi`, `pinyin`, `zhuyin`, `ipa`, `english`, `state`, `correctCount`, `lesson`
+2. Use simplified Chinese characters for `hanzi`
+3. Include tone marks in `pinyin` (e.g., "nǐ hǎo")
+4. Use Bopomofo symbols for `zhuyin` (e.g., "ㄋㄧˇ ㄏㄠˇ")
+5. IPA transcription should use standard Mandarin phonetic notation
+6. The `lesson` field is currently unused (all words auto-start)

@@ -13,6 +13,16 @@ Document for tracking development thoughts, decisions, and the evolution of the 
    - Arrow keys (or other keys) for correct/wrong responses
    - Eliminate need for mouse clicks during practice
 
+2. **Chinese vocabulary trainer** (Phase 1 - Individual Language Support)
+   - Created landing page for language selection (index.html)
+   - Implemented chinese.html trainer with text input-based testing
+   - Built chinese_dictionary.json with 11 starter words (hanzi, pinyin, zhuyin, IPA, english)
+   - Random field prompting: Shows one field (hanzi/pinyin/zhuyin/english), user fills in other three
+   - Answer checking with visual feedback (green=correct, red=wrong, shows expected values)
+   - Same state progression as ASL (not_started → learning → learned)
+   - Google Drive integration with separate storage for Chinese dictionary
+   - Keyboard shortcuts adapted for Chinese workflow
+
 ### Short-term Goals
 1. **Expand vocabulary data**: Incorporate all 60 lessons worth of ASL vocabulary into the trainer
 2. **Lesson tracking**: Implement system to track which lessons have been completed/learned
