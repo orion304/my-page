@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.landing-container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 800px;
+    width: 100%;
+    padding: 60px 40px;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 50px;
+}
+
+.language-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.language-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 40px 30px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s;
+    border: 3px solid transparent;
+    cursor: pointer;
+}
+
+.language-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+.asl-card {
+    border-color: #667eea;
+}
+
+.asl-card:hover {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    border-color: #667eea;
+}
+
+.chinese-card {
+    border-color: #dc3545;
+}
+
+.chinese-card:hover {
+    background: linear-gradient(135deg, #dc354515 0%, #c8233315 100%);
+    border-color: #dc3545;
+}
+
+.card-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+}
+
+.language-card h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.language-card p {
+    font-size: 16px;
+    color: #666;
+}
+
+.footer-info {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e9ecef;
+}
+
+.footer-info a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+}
+
+.footer-info a:hover {
+    color: #5568d3;
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    .language-grid {
+        grid-template-columns: 1fr;
+    }
+}

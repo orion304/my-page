@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL Vocab Trainer</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <link rel="stylesheet" href="asl-trainer.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🤟 ASL Vocab Trainer</h1>
+
+        <div class="upload-section">
+            <h3 style="margin-bottom: 15px; color: #333;">Get Started</h3>
+            
+            <button class="google-btn" id="google-drive-btn" style="margin-bottom: 15px;">
+                <span>📁</span>
+                <span id="google-btn-text">Connect to Google Drive</span>
+            </button>
+            <div class="google-status" id="google-status"></div>
+            
+            <div style="margin: 20px 0; color: #999; font-size: 14px;">— OR —</div>
+
+            <button class="load-default-btn" id="load-default-btn">
+                📚 Load Default ASL Dictionary
+            </button>
+
+            <div style="margin: 20px 0; color: #999; font-size: 14px;">— OR —</div>
+
+            <div class="file-input-wrapper">
+                <label for="file-upload" class="file-button">
+                    Load Dictionary from File
+                </label>
+                <input id="file-upload" type="file" accept=".json" />
+            </div>
+            <div class="file-name" id="file-name">No file loaded</div>
+        </div>
+        
+        <div class="training-section" id="training-section">
+            <div class="word-display">
+                <div class="concept" id="current-concept"></div>
+                <button class="show-sign-btn" id="show-sign-btn">👁️ Show Sign</button>
+            </div>
+            
+            <div class="iframe-container" id="iframe-container">
+                <div class="iframe-header">
+                    <h3 id="iframe-title">Sign Reference</h3>
+                    <button class="close-iframe-btn" id="close-iframe-btn">✕ Close</button>
+                </div>
+                <iframe id="sign-iframe" sandbox="allow-same-origin allow-scripts"></iframe>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="correct-btn" id="correct-btn">✓ Got It</button>
+                <button class="wrong-btn" id="wrong-btn">✗ Didn't Get It</button>
+            </div>
+
+            <div class="stats">
+                <h3>Progress Tracker</h3>
+
+                <div class="progress-section">
+                    <h4 style="color: #ffc107; margin: 15px 0 10px 0;">📚 Learning</h4>
+                    <div class="word-list" id="learning-list">
+                        <em style="color: #999;">No words in progress</em>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h4 style="color: #28a745; margin: 15px 0 10px 0;">✓ Learned</h4>
+                    <div class="word-list" id="learned-list">
+                        <em style="color: #999;">No words learned yet</em>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <h3>Session Stats</h3>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-value" id="correct-count">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="wrong-count">0</div>
+                        <div class="stat-label">Wrong</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-count">0</div>
+                        <div class="stat-label">Total Words</div>
+                    </div>
+                </div>
+                <button class="download-btn" id="download-btn">💾 Download Updated Dictionary</button>
+            </div>
+        </div>
+
+        <div class="footer-links">
+            <div class="change-dictionary-link" id="change-dictionary-link" style="display: none;">
+                <a href="#" id="change-dictionary-btn">📂 Change Dictionary</a>
+            </div>
+            <div class="github-link">
+                <a href="https://github.com/orion304/my-page" target="_blank" rel="noopener noreferrer">
+                    <span>⭐</span>
+                    <span>View on GitHub</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="asl-trainer.js"></script>
+</body>
+</html>
