@@ -1,0 +1,425 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    max-width: 600px;
+    width: 100%;
+    padding: 40px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.footer-links {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.github-link {
+    text-align: center;
+}
+
+.github-link a {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s;
+}
+
+.github-link a:hover {
+    color: #c82333;
+    text-decoration: underline;
+}
+
+.upload-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.upload-section.hidden {
+    display: none;
+}
+
+.change-dictionary-link {
+    text-align: center;
+}
+
+.change-dictionary-link a {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.change-dictionary-link a:hover {
+    color: #c82333;
+    text-decoration: underline;
+}
+
+.file-input-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-button {
+    background: #dc3545;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-block;
+    transition: background 0.3s;
+}
+
+.file-button:hover {
+    background: #c82333;
+}
+
+.load-default-btn {
+    background: #17a2b8;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.load-default-btn:hover {
+    background: #138496;
+}
+
+.file-name {
+    margin-top: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.training-section {
+    display: none;
+}
+
+.training-section.active {
+    display: block;
+}
+
+.word-display {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.prompt-label {
+    font-size: 14px;
+    color: #666;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.prompt-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+.input-section {
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.answer-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    transition: border-color 0.3s;
+}
+
+.answer-input:focus {
+    outline: none;
+    border-color: #dc3545;
+}
+
+.answer-input.correct {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+.answer-input.wrong {
+    border-color: #dc3545;
+    background: #f8d7da;
+}
+
+.answer-feedback {
+    margin-top: 8px;
+    font-size: 14px;
+    min-height: 20px;
+}
+
+.answer-feedback.correct {
+    color: #28a745;
+}
+
+.answer-feedback.wrong {
+    color: #dc3545;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+button {
+    flex: 1;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.check-btn {
+    background: #17a2b8;
+    color: white;
+}
+
+.check-btn:hover {
+    background: #138496;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+.check-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.correct-btn {
+    background: #28a745;
+    color: white;
+}
+
+.correct-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.correct-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.wrong-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.wrong-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.wrong-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.stats {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #dc3545;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.download-btn {
+    margin-top: 20px;
+    width: 100%;
+    background: #ffc107;
+    color: #333;
+}
+
+.download-btn:hover {
+    background: #e0a800;
+}
+
+.google-drive-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.google-btn {
+    background: #4285f4;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.3s;
+    margin: 0 auto;
+}
+
+.google-btn:hover {
+    background: #357ae8;
+}
+
+.google-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.google-status {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+}
+
+.google-status.success {
+    color: #28a745;
+}
+
+.google-status.error {
+    color: #dc3545;
+}
+
+.progress-section {
+    margin-top: 20px;
+}
+
+.word-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    min-height: 30px;
+}
+
+.word-badge {
+    background: #e9ecef;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: #333;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.word-badge.learned {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.word-badge.learning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.word-badge.learning-progress {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.progress-indicator {
+    font-size: 10px;
+    font-weight: bold;
+}

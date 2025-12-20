@@ -1,0 +1,112 @@
+{
+  "waiter": {
+    "hanzi": "服务员",
+    "pinyin": "fúwùyuán",
+    "zhuyin": "ㄈㄨˊ ㄨˋ ㄩㄢˊ",
+    "ipa": "/fu³⁵ u⁵¹ ɥɛn³⁵/",
+    "english": "waiter/waitress",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "coffee": {
+    "hanzi": "咖啡",
+    "pinyin": "kāfēi",
+    "zhuyin": "ㄎㄚ ㄈㄟ",
+    "ipa": "/kʰä⁵⁵ feɪ̯⁵⁵/",
+    "english": "coffee",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "you": {
+    "hanzi": "你",
+    "pinyin": "nǐ",
+    "zhuyin": "ㄋㄧˇ",
+    "ipa": "/ni²¹⁴/",
+    "english": "you",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "tea": {
+    "hanzi": "茶",
+    "pinyin": "chá",
+    "zhuyin": "ㄔㄚˊ",
+    "ipa": "/ʈ͡ʂʰä³⁵/",
+    "english": "tea",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "hello": {
+    "hanzi": "你好",
+    "pinyin": "nǐ hǎo",
+    "zhuyin": "ㄋㄧˇ ㄏㄠˇ",
+    "ipa": "/ni²¹⁴ xɑʊ̯²¹⁴/",
+    "english": "hello",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "teacher": {
+    "hanzi": "老师",
+    "pinyin": "lǎoshī",
+    "zhuyin": "ㄌㄠˇ ㄕ",
+    "ipa": "/lɑʊ̯²¹⁴⁻²¹ ʂʐ̩⁵⁵/",
+    "english": "teacher",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "english": {
+    "hanzi": "英文",
+    "pinyin": "yīngwén",
+    "zhuyin": "ㄧㄥ ㄨㄣˊ",
+    "ipa": "/iŋ⁵⁵ wən³⁵/",
+    "english": "English (language)",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "correct": {
+    "hanzi": "对",
+    "pinyin": "duì",
+    "zhuyin": "ㄉㄨㄟˋ",
+    "ipa": "/tu̯eɪ̯⁵¹/",
+    "english": "correct/yes",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "not": {
+    "hanzi": "不",
+    "pinyin": "bù",
+    "zhuyin": "ㄅㄨˋ",
+    "ipa": "/pu⁵¹/",
+    "english": "not/no",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "doctor": {
+    "hanzi": "医生",
+    "pinyin": "yīshēng",
+    "zhuyin": "ㄧ ㄕㄥ",
+    "ipa": "/i⁵⁵ ʂɤŋ⁵⁵/",
+    "english": "doctor",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "lawyer": {
+    "hanzi": "律师",
+    "pinyin": "lǜshī",
+    "zhuyin": "ㄌㄩˋ ㄕ",
+    "ipa": "/ly⁵¹ ʂʐ̩⁵⁵/",
+    "english": "lawyer",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  }
+}
