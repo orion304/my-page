@@ -423,3 +423,72 @@ button {
     font-size: 10px;
     font-weight: bold;
 }
+
+.ipa-reference {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.ipa-reference h4 {
+    color: #0055A4;
+    font-size: 16px;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.ipa-tables {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.ipa-compact-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.ipa-compact-table th,
+.ipa-compact-table td {
+    border: 1px solid #dee2e6;
+    padding: 4px 6px;
+    text-align: center;
+}
+
+.ipa-compact-table th {
+    background: #e9ecef;
+    font-weight: 600;
+    color: #0055A4;
+}
+
+.ipa-compact-table .base-letter {
+    background: #fff3cd;
+    font-weight: bold;
+    color: #856404;
+}
+
+.ipa-compact-table td {
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
+
+.ipa-compact-table td:empty {
+    background: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    .ipa-tables {
+        grid-template-columns: 1fr;
+    }
+
+    .ipa-compact-table {
+        font-size: 10px;
+    }
+
+    .ipa-compact-table td {
+        font-size: 12px;
+    }
+}
