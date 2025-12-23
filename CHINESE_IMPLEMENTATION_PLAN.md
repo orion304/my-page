@@ -108,10 +108,23 @@ Expand the vocabulary trainer to support Chinese in addition to ASL. Users will 
 
 Potential improvements for Chinese trainer:
 
-1. **Answer flexibility**: Accept variations in pinyin (with/without tone marks, different spacing)
-2. **Expanded vocabulary**: Add more words organized into lessons
-3. **Lesson system**: Implement manual lesson progression like ASL trainer
-4. **Review mode**: Add review functionality for learned words
-5. **Audio pronunciation**: Add native speaker audio for each word
-6. **Handwriting recognition**: Allow drawing hanzi characters as input
-7. **Multiple choice mode**: Offer alternative testing format for beginners
+### High Priority UX Issues
+
+1. **Input Method Editor (IME) Integration** ⚠️
+   - **Current Issue**: Users must type exact characters from dictionary (e.g., "nǐ hǎo" with tone marks, "ㄋㄧˇ ㄏㄠˇ" zhuyin symbols, "你好" hanzi)
+   - **Real-world typing behavior**:
+     - Pinyin: Type "ni3 hao3" (with tone numbers)
+     - Zhuyin: Type "ni hao" and select from zhuyin pictograph suggestions via IME
+     - Hanzi: Type "ni hao" and select character from IME suggestions
+   - **Proposed solution**: When anything but pinyin is prompted, require user to type the pinyin first, which can trigger the appropriate IME for the target field
+   - **Status**: Tabled for future discussion and implementation
+
+### Additional Enhancements
+
+2. **Answer flexibility**: Accept variations in pinyin (with/without tone marks, different spacing)
+3. **Expanded vocabulary**: Add more words organized into lessons
+4. **Lesson system**: Implement manual lesson progression like ASL trainer
+5. **Review mode**: Add review functionality for learned words
+6. **Audio pronunciation**: Add native speaker audio for each word
+7. **Handwriting recognition**: Allow drawing hanzi characters as input
+8. **Multiple choice mode**: Offer alternative testing format for beginners
