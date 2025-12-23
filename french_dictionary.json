@@ -1,0 +1,371 @@
+{
+  "cheval": {
+    "french": "cheval",
+    "ipa": "/ʃə.val/",
+    "english": "horse",
+    "gender": "m",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "tu": {
+    "french": "tu",
+    "ipa": "/ty/",
+    "english": "you",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "manger": {
+    "french": "manger",
+    "ipa": "/mɑ̃.ʒe/",
+    "english": "to eat",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "un": {
+    "french": "un",
+    "ipa": "/ɛ̃/",
+    "english": "a (m)",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "croissant": {
+    "french": "croissant",
+    "ipa": "/kʁwa.sɑ̃/",
+    "english": "croissant",
+    "gender": "m",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "une": {
+    "french": "une",
+    "ipa": "/yn/",
+    "english": "a (f)",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "fille": {
+    "french": "fille",
+    "ipa": "/fij/",
+    "english": "girl",
+    "gender": "f",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "et": {
+    "french": "et",
+    "ipa": "/e/",
+    "english": "and",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "orange": {
+    "french": "orange",
+    "ipa": "/ɔ.ʁɑ̃ʒ/",
+    "english": "orange",
+    "gender": "f",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "chat": {
+    "french": "chat",
+    "ipa": "/ʃa/",
+    "english": "cat",
+    "gender": "m",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "femme": {
+    "french": "femme",
+    "ipa": "/fam/",
+    "english": "woman",
+    "gender": "f",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "etre": {
+    "french": "être",
+    "ipa": "/ɛtʁ/",
+    "english": "to be",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "chien": {
+    "french": "chien",
+    "ipa": "/ʃjɛ̃/",
+    "english": "dog",
+    "gender": "m",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "le": {
+    "french": "le",
+    "ipa": "/lə/",
+    "english": "the (m)",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "la": {
+    "french": "la",
+    "ipa": "/la/",
+    "english": "the (f)",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "les": {
+    "french": "les",
+    "ipa": "/le/",
+    "english": "the (pl)",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "homme": {
+    "french": "homme",
+    "ipa": "/ɔm/",
+    "english": "man",
+    "gender": "m",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "garcon": {
+    "french": "garçon",
+    "ipa": "/ɡaʁ.sɔ̃/",
+    "english": "boy",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "pizza": {
+    "french": "pizza",
+    "ipa": "/pid.za/",
+    "english": "pizza",
+    "gender": "f",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "hamburger": {
+    "french": "hamburger",
+    "ipa": "/ɑ̃.bœʁ.ɡœʁ/",
+    "english": "hamburger",
+    "gender": "m",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "je": {
+    "french": "je",
+    "ipa": "/ʒə/",
+    "english": "I",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "oui": {
+    "french": "oui",
+    "ipa": "/wi/",
+    "english": "yes",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bonjour": {
+    "french": "bonjour",
+    "ipa": "/bɔ̃.ʒuʁ/",
+    "english": "hello",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "cava": {
+    "french": "ça va",
+    "ipa": "/sa va/",
+    "english": "how are you / it goes",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bien": {
+    "french": "bien",
+    "ipa": "/bjɛ̃/",
+    "english": "good",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "comment": {
+    "french": "comment",
+    "ipa": "/kɔ.mɑ̃/",
+    "english": "how",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "merci": {
+    "french": "merci",
+    "ipa": "/mɛʁ.si/",
+    "english": "thanks",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "salut": {
+    "french": "salut",
+    "ipa": "/sa.ly/",
+    "english": "hi",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "toi": {
+    "french": "toi",
+    "ipa": "/twa/",
+    "english": "you (direct object)",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bonsoir": {
+    "french": "bonsoir",
+    "ipa": "/bɔ̃.swaʁ/",
+    "english": "good evening",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "tres": {
+    "french": "très",
+    "ipa": "/tʁɛ/",
+    "english": "very",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "enchante": {
+    "french": "enchanté",
+    "ipa": "/ɑ̃.ʃɑ̃.te/",
+    "english": "nice to meet you",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "moi": {
+    "french": "moi",
+    "ipa": "/mwa/",
+    "english": "me",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "aurevoir": {
+    "french": "au revoir",
+    "ipa": "/o ʁə.vwaʁ/",
+    "english": "goodbye",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bienvenue": {
+    "french": "bienvenue",
+    "ipa": "/bjɛ̃.v(ə).ny/",
+    "english": "welcome",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "abientot": {
+    "french": "à bientôt",
+    "ipa": "/a bjɛ̃.to/",
+    "english": "see you soon",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bonnejournee": {
+    "french": "bonne journée",
+    "ipa": "/bɔn ʒuʁ.ne/",
+    "english": "have a nice day",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "ademain": {
+    "french": "à demain",
+    "ipa": "/a d(ə).mɛ̃/",
+    "english": "see you tomorrow",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bonnenuit": {
+    "french": "bonne nuit",
+    "ipa": "/bɔn nɥi/",
+    "english": "good night",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "bonnesoiree": {
+    "french": "bonne soirée",
+    "ipa": "/bɔn swa.ʁe/",
+    "english": "good evening",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  },
+  "beaucoup": {
+    "french": "beaucoup",
+    "ipa": "/bo.ku/",
+    "english": "a lot",
+    "gender": "",
+    "state": "not_started",
+    "correctCount": 0,
+    "lesson": "1"
+  }
+}

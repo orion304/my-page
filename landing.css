@@ -77,6 +77,15 @@ h1 {
     border-color: #dc3545;
 }
 
+.french-card {
+    border-color: #0055A4;
+}
+
+.french-card:hover {
+    background: linear-gradient(135deg, #0055A415 0%, #EF413515 100%);
+    border-color: #0055A4;
+}
+
 .card-icon {
     font-size: 64px;
     margin-bottom: 20px;
