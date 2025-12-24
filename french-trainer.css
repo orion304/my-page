@@ -173,6 +173,10 @@ input[type="file"] {
     margin-bottom: 20px;
 }
 
+.article-input {
+    max-width: 100px;
+}
+
 .input-group label {
     display: block;
     font-size: 14px;

@@ -22,15 +22,18 @@ const fileNameDisplay = document.getElementById('file-name');
 const trainingSection = document.getElementById('training-section');
 const promptLabel = document.getElementById('prompt-label');
 const promptValue = document.getElementById('prompt-value');
-const inputField1 = document.getElementById('input-field-1');
-const inputField2 = document.getElementById('input-field-2');
-const inputField3 = document.getElementById('input-field-3');
-const inputLabel1 = document.getElementById('input-label-1');
-const inputLabel2 = document.getElementById('input-label-2');
-const inputLabel3 = document.getElementById('input-label-3');
-const feedback1 = document.getElementById('feedback-1');
-const feedback2 = document.getElementById('feedback-2');
-const feedback3 = document.getElementById('feedback-3');
+const inputFieldArticle = document.getElementById('input-field-article');
+const inputFieldFrench = document.getElementById('input-field-french');
+const inputFieldIpa = document.getElementById('input-field-ipa');
+const inputFieldEnglish = document.getElementById('input-field-english');
+const inputGroupArticle = document.getElementById('input-group-article');
+const inputGroupFrench = document.getElementById('input-group-french');
+const inputGroupIpa = document.getElementById('input-group-ipa');
+const inputGroupEnglish = document.getElementById('input-group-english');
+const feedbackArticle = document.getElementById('feedback-article');
+const feedbackFrench = document.getElementById('feedback-french');
+const feedbackIpa = document.getElementById('feedback-ipa');
+const feedbackEnglish = document.getElementById('feedback-english');
 const checkBtn = document.getElementById('check-btn');
 const judgmentButtons = document.getElementById('judgment-buttons');
 const correctBtn = document.getElementById('correct-btn');
@@ -278,39 +281,24 @@ function handleIPAInput(e) {
 
 // Attach IPA converter to input fields that are for IPA
 function attachIPAConverter() {
-    const inputs = [
-        { field: inputField1, label: inputLabel1, group: document.getElementById('input-group-1') },
-        { field: inputField2, label: inputLabel2, group: document.getElementById('input-group-2') },
-        { field: inputField3, label: inputLabel3, group: document.getElementById('input-group-3') }
-    ];
+    // Remove any existing listeners first
+    inputFieldIpa.removeEventListener('input', handleIPAInput);
+    inputFieldIpa.removeEventListener('focus', showIPAReference);
+    inputFieldIpa.removeEventListener('blur', hideIPAReference);
 
-    let hasIPAField = false;
-    let ipaInputGroup = null;
+    // Add IPA converter and show/hide handlers to IPA field
+    inputFieldIpa.addEventListener('input', handleIPAInput);
+    inputFieldIpa.addEventListener('focus', showIPAReference);
+    inputFieldIpa.addEventListener('blur', hideIPAReference);
 
-    inputs.forEach(({ field, label, group }) => {
-        // Remove any existing listeners first
-        field.removeEventListener('input', handleIPAInput);
-        field.removeEventListener('focus', showIPAReference);
-        field.removeEventListener('blur', hideIPAReference);
-
-        // Only add converter and show/hide handlers if this field is for IPA
-        if (label.textContent.includes('IPA')) {
-            field.addEventListener('input', handleIPAInput);
-            field.addEventListener('focus', showIPAReference);
-            field.addEventListener('blur', hideIPAReference);
-            hasIPAField = true;
-            ipaInputGroup = group;
-        }
-    });
-
-    // Move the IPA reference to be right after the IPA input group
-    if (hasIPAField && ipaInputGroup && ipaReference) {
+    // Move the IPA reference to be right after the IPA input group if IPA field is visible
+    if (inputGroupIpa.style.display !== 'none' && ipaReference) {
         // Insert the reference right after the IPA input group
-        if (ipaInputGroup.nextSibling !== ipaReference) {
-            ipaInputGroup.parentNode.insertBefore(ipaReference, ipaInputGroup.nextSibling);
+        if (inputGroupIpa.nextSibling !== ipaReference) {
+            inputGroupIpa.parentNode.insertBefore(ipaReference, inputGroupIpa.nextSibling);
         }
-    } else if (!hasIPAField && ipaReference) {
-        // If there's no IPA field, hide the reference
+    } else if (ipaReference) {
+        // If IPA field is hidden, hide the reference
         ipaReference.style.display = 'none';
     }
 }
@@ -324,7 +312,7 @@ function showIPAReference() {
 function hideIPAReference() {
     // Small delay to allow clicking on the reference table
     setTimeout(() => {
-        if (ipaReference && document.activeElement.dataset.field !== 'ipa') {
+        if (ipaReference && document.activeElement !== inputFieldIpa) {
             ipaReference.style.display = 'none';
         }
     }, 200);
@@ -453,41 +441,47 @@ function showRandomWord() {
     const fieldLabels = {
         'french': 'French',
         'ipa': 'IPA',
-        'english': 'English',
-        'gender': 'Gender (m/f or blank)'
+        'english': 'English'
     };
 
     promptLabel.textContent = fieldLabels[currentPromptField];
     promptLabel.style.display = 'block';
     promptValue.textContent = wordData[currentPromptField];
 
-    // Set up the 3 input fields: the other 2 fields + gender
-    const otherFields = fields.filter(f => f !== currentPromptField);
-    otherFields.push('gender'); // Gender is always an input field
+    // Determine if word has an article (based on gender)
+    const hasArticle = wordData.gender && wordData.gender.trim() !== '';
+    const expectedArticle = hasArticle ? (wordData.gender === 'm' ? 'le' : 'la') : '';
 
-    inputLabel1.textContent = fieldLabels[otherFields[0]];
-    inputLabel2.textContent = fieldLabels[otherFields[1]];
-    inputLabel3.textContent = fieldLabels[otherFields[2]];
+    // Clear all fields
+    inputFieldArticle.value = '';
+    inputFieldFrench.value = '';
+    inputFieldIpa.value = '';
+    inputFieldEnglish.value = '';
 
-    inputField1.value = '';
-    inputField2.value = '';
-    inputField3.value = '';
+    inputFieldArticle.className = 'answer-input article-input';
+    inputFieldFrench.className = 'answer-input';
+    inputFieldIpa.className = 'answer-input';
+    inputFieldEnglish.className = 'answer-input';
 
-    inputField1.className = 'answer-input';
-    inputField2.className = 'answer-input';
-    inputField3.className = 'answer-input';
+    feedbackArticle.textContent = '';
+    feedbackFrench.textContent = '';
+    feedbackIpa.textContent = '';
+    feedbackEnglish.textContent = '';
 
-    feedback1.textContent = '';
-    feedback2.textContent = '';
-    feedback3.textContent = '';
+    feedbackArticle.className = 'answer-feedback';
+    feedbackFrench.className = 'answer-feedback';
+    feedbackIpa.className = 'answer-feedback';
+    feedbackEnglish.className = 'answer-feedback';
 
-    feedback1.className = 'answer-feedback';
-    feedback2.className = 'answer-feedback';
-    feedback3.className = 'answer-feedback';
+    // Show/hide fields in fixed order: Article, French, IPA, English
+    // Hide the field that's being prompted
+    inputGroupArticle.style.display = hasArticle ? 'block' : 'none';
+    inputGroupFrench.style.display = currentPromptField === 'french' ? 'none' : 'block';
+    inputGroupIpa.style.display = currentPromptField === 'ipa' ? 'none' : 'block';
+    inputGroupEnglish.style.display = currentPromptField === 'english' ? 'none' : 'block';
 
-    inputField1.dataset.field = otherFields[0];
-    inputField2.dataset.field = otherFields[1];
-    inputField3.dataset.field = otherFields[2];
+    // Store expected article for validation
+    inputFieldArticle.dataset.expected = expectedArticle;
 
     checkBtn.style.display = 'flex';
     judgmentButtons.style.display = 'none';
@@ -502,8 +496,16 @@ function showRandomWord() {
 
     updateProgressTracker();
 
-    // Focus on the first input field
-    inputField1.focus();
+    // Focus on the first visible input field
+    if (hasArticle) {
+        inputFieldArticle.focus();
+    } else if (currentPromptField !== 'french') {
+        inputFieldFrench.focus();
+    } else if (currentPromptField !== 'ipa') {
+        inputFieldIpa.focus();
+    } else {
+        inputFieldEnglish.focus();
+    }
 }
 
 function checkAnswers() {
@@ -511,19 +513,56 @@ function checkAnswers() {
 
     const wordData = dictionary[currentWord];
 
-    const inputs = [
-        { field: inputField1, feedback: feedback1 },
-        { field: inputField2, feedback: feedback2 },
-        { field: inputField3, feedback: feedback3 }
-    ];
+    // Build list of visible fields to check
+    const fieldsToCheck = [];
 
-    inputs.forEach(({ field, feedback }) => {
-        const fieldName = field.dataset.field;
+    // Article field (if visible)
+    if (inputGroupArticle.style.display !== 'none') {
+        fieldsToCheck.push({
+            field: inputFieldArticle,
+            feedback: feedbackArticle,
+            expected: inputFieldArticle.dataset.expected,
+            name: 'article'
+        });
+    }
+
+    // French field (if visible)
+    if (inputGroupFrench.style.display !== 'none') {
+        fieldsToCheck.push({
+            field: inputFieldFrench,
+            feedback: feedbackFrench,
+            expected: wordData.french,
+            name: 'french'
+        });
+    }
+
+    // IPA field (if visible)
+    if (inputGroupIpa.style.display !== 'none') {
+        fieldsToCheck.push({
+            field: inputFieldIpa,
+            feedback: feedbackIpa,
+            expected: wordData.ipa,
+            name: 'ipa'
+        });
+    }
+
+    // English field (if visible)
+    if (inputGroupEnglish.style.display !== 'none') {
+        fieldsToCheck.push({
+            field: inputFieldEnglish,
+            feedback: feedbackEnglish,
+            expected: wordData.english,
+            name: 'english'
+        });
+    }
+
+    // Validate each visible field
+    fieldsToCheck.forEach(({ field, feedback, expected, name }) => {
         let userAnswer = field.value.trim();
-        let expectedAnswer = wordData[fieldName];
+        let expectedAnswer = expected;
 
         // For IPA fields, strip slashes from both user input and expected answer
-        if (fieldName === 'ipa') {
+        if (name === 'ipa') {
             userAnswer = userAnswer.replace(/^\/|\/$/g, '');
             expectedAnswer = expectedAnswer.replace(/^\/|\/$/g, '');
         }
@@ -531,11 +570,11 @@ function checkAnswers() {
         const isCorrect = userAnswer.toLowerCase() === expectedAnswer.toLowerCase();
 
         if (isCorrect) {
-            field.className = 'answer-input correct';
+            field.className = field === inputFieldArticle ? 'answer-input article-input correct' : 'answer-input correct';
             feedback.textContent = '✓ Correct';
             feedback.className = 'answer-feedback correct';
         } else {
-            field.className = 'answer-input wrong';
+            field.className = field === inputFieldArticle ? 'answer-input article-input wrong' : 'answer-input wrong';
             feedback.textContent = `✗ Expected: ${expectedAnswer}`;
             feedback.className = 'answer-feedback wrong';
         }

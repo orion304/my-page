@@ -343,3 +343,247 @@ Potential improvements for French trainer:
 The French vocabulary trainer has been successfully implemented with enhanced features beyond the original plan. The IPA input system with letter+number shortcuts and visual reference tables makes it practical to practice pronunciation notation. The fully keyboard-driven workflow enables efficient practice sessions without mouse interaction.
 
 The implementation serves as a solid foundation for French language learning and can be easily extended with additional features like audio, conjugations, and themed vocabulary lessons.
+
+---
+
+## Next Steps / Planned Improvements
+
+### 1. Fixed Field Order ✅ COMPLETED
+**Previous Behavior**: Fields were randomly ordered - prompt could be French, IPA, or English, and input fields appeared in random positions.
+
+**Implemented Behavior**:
+- **Fixed order**: French → IPA → English (always in this order)
+- One field will be the prompt (shown at top)
+- The other two fields will be input fields (in consistent positions)
+
+**Example**:
+- If prompted with English "dog", input fields are: French (position 1), IPA (position 2)
+- If prompted with IPA "/ʃjɛ̃/", input fields are: French (position 1), English (position 3)
+- If prompted with French "chien", input fields are: IPA (position 2), English (position 3)
+
+**Rationale**: Consistent field positions make it easier to develop muscle memory and speed up input.
+
+---
+
+### 2. Article Integration ✅ COMPLETED
+**Previous Behavior**: Separate "gender" field that accepted "m", "f", or blank.
+
+**Implemented Behavior**:
+- Replace gender field with "article" field
+- Article field is separate from French word field
+- User enters article (le/la/l'/les/un/une/des) in article textbox
+- Article and French word are validated independently
+
+**Testing Scenarios**:
+
+**Scenario A - Prompted with English "man"**:
+- Prompt shows: "English: man"
+- Input fields: [Article] [French word] [IPA]
+- User types: "le" + "homme" + "/ɔm/"
+- System validates article and word separately
+
+**Scenario B - Prompted with French "homme"**:
+- Prompt shows: "French: homme"
+- Input fields: [Article] [IPA] [English]
+- User types: "le" + "/ɔm/" + "man"
+- Article is validated against expected article for "homme"
+
+**Scenario C - Prompted with IPA "/ɔm/"**:
+- Prompt shows: "IPA: /ɔm/"
+- Input fields: [Article] [French word] [English]
+- User types: "le" + "homme" + "man"
+
+**Words Without Articles**:
+- When French word has no article (gender field is blank), omit the article textbox entirely
+- Example: verbs, adjectives without articles
+- Only show: [French word] [IPA] [English]
+
+**Implementation Notes**:
+- Gender field retained in dictionary structure (m/f/blank)
+- Frontend converts gender to expected article:
+  - m → "le"
+  - f → "la"
+  - blank → hide article field
+- No elision rules (always "le" or "la", never "l'")
+- Simpler implementation, no dictionary migration needed
+
+**Validation Logic**:
+- Article and French word are checked as separate fields
+- Each gets independent feedback (green checkmark or red X)
+- Both must be correct for overall "correct" judgment
+
+**Rationale**:
+- Learning articles is crucial for French (gender/definiteness/number)
+- Typing "le homme" is more natural than typing "m"
+- Reinforces real-world usage patterns
+- Validates article knowledge separately from word knowledge
+
+---
+
+### Implementation Summary
+
+**Changes Made**:
+
+1. **HTML (french.html)**:
+   - Replaced 3 generic input groups with 4 named input groups
+   - Added: `input-group-article`, `input-group-french`, `input-group-ipa`, `input-group-english`
+   - Article field has class `article-input` for narrow styling
+
+2. **CSS (french-trainer.css)**:
+   - Added `.article-input { max-width: 100px; }` for narrow article field
+
+3. **JavaScript (french-trainer.js)**:
+   - Updated field references to use named fields instead of generic inputField1/2/3
+   - Modified `showRandomWord()`:
+     - Fixed field order (Article, French, IPA, English)
+     - Show/hide fields based on prompt and whether word has gender
+     - Convert gender to expected article (m→"le", f→"la")
+     - Focus on first visible input field
+   - Modified `checkAnswers()`:
+     - Build dynamic list of visible fields to validate
+     - Validate article field separately when visible
+     - Maintain article-input class for correct/wrong styling
+   - Modified `attachIPAConverter()`:
+     - Simplified to always attach to inputFieldIpa
+     - Position reference table after IPA group when visible
+   - Modified `hideIPAReference()`:
+     - Check activeElement directly instead of dataset.field
+
+**Result**:
+- Fixed, predictable field order for muscle memory
+- Article validation separate from French word
+- No dictionary changes needed
+- Backward compatible (gender field retained)
+
+**Future Enhancement Ideas**:
+- Could add article validation hints (definite vs indefinite, singular vs plural)
+- Could track article errors separately in statistics
+- Could extend to support plural articles (les/des)
+
+---
+
+### 3. Embed Prompt Among Input Fields ⏳
+**Current Behavior**: Prompt is displayed at the top in a separate "prompt display" area, then all input fields appear below.
+
+**Desired Behavior**: Prompt should appear inline in its natural position among the input fields.
+
+**Examples**:
+
+**Scenario A - Prompted with English "man"**:
+```
+[Article textbox: ___] [French textbox: ___________]
+[IPA textbox: ___________]
+English: man
+```
+Order: Article input → French input → IPA input → English label (prompt)
+
+**Scenario B - Prompted with French "homme"**:
+```
+[Article textbox: ___] French: homme
+[IPA textbox: ___________]
+[English textbox: ___________]
+```
+Order: Article input + French label (prompt) on same row → IPA input → English input
+
+**Scenario C - Prompted with IPA "/ɔm/"**:
+```
+[Article textbox: ___] [French textbox: ___________]
+IPA: /ɔm/
+[English textbox: ___________]
+```
+Order: Article input → French input → IPA label (prompt) → English input
+
+**Scenario D - No article word (e.g., verb "aimer")**:
+If prompted with English "to love":
+```
+[French textbox: ___________]
+[IPA textbox: ___________]
+English: to love
+```
+Order: French input → IPA input → English label (prompt)
+
+**Key Points**:
+- Prompt appears as a label/display in its natural field position
+- Article and French word should appear on the same row (article textbox immediately followed by French field)
+- Other fields appear on their own rows
+- Remove the separate prompt display area at the top
+- More natural flow - reads like: "le [___]" or "[___] homme"
+
+**UI Considerations**:
+- When article + French are both visible, they should be inline on the same row
+- Article textbox narrow (100px), French field takes remaining space
+- Labels for prompts should match the styling of input fields but be read-only
+- Could use a styled div or disabled input to show the prompt value
+
+**Rationale**:
+- More natural reading flow
+- Clearer visual connection between article and French word
+- Reduces eye movement (don't have to look at top, then at inputs)
+- Mimics how you would write/read the phrase naturally
+
+---
+
+### 4. French Diacritics Input Support ⏳
+**Current Behavior**: French textbox accepts any text, requires manual input of special characters (é, à, ç, etc.)
+
+**Desired Behavior**: Real-time character conversion for French diacritics using letter+key shortcuts.
+
+**Proposed Shortcut System**:
+
+Similar to IPA conversion and pinyin tone conversion, use shortcuts like:
+
+**E variants**:
+- `e'` → é (acute)
+- `e`` → è (grave)
+- `e^` → ê (circumflex)
+- `e:` → ë (diaeresis)
+
+**A variants**:
+- `a`` → à (grave)
+- `a^` → â (circumflex)
+
+**I variants**:
+- `i^` → î (circumflex)
+- `i:` → ï (diaeresis)
+
+**O variants**:
+- `o^` → ô (circumflex)
+
+**U variants**:
+- `u`` → ù (grave)
+- `u^` → û (circumflex)
+- `u:` → ü (diaeresis)
+
+**Special characters**:
+- `c,` → ç (c cedilla)
+- `oe` → œ (oe ligature)
+- `ae` → æ (ae ligature)
+
+**Alternative Scheme** (numbers after vowels, like pinyin):
+- `e1` → é, `e2` → è, `e3` → ê, `e4` → ë
+- `a1` → à, `a2` → â
+- `c1` → ç
+- etc.
+
+**Implementation Notes**:
+- Add new `frenchCharMap` similar to `ipaCharMap`
+- Create `convertFrench()` function similar to `convertIPA()`
+- Attach to French input field only
+- Real-time conversion as user types
+- Preserve cursor position during conversion
+- Could add optional reference table like IPA shortcuts (but less critical)
+
+**Example Usage**:
+- Type: `cafe'` → Converts to: `café`
+- Type: `franc,ais` → Converts to: `français`
+- Type: `e'le`ve` → Converts to: `élève`
+
+**Rationale**:
+- Easier than using Alt codes or character picker
+- Consistent with IPA and pinyin conversion patterns
+- Faster workflow for users without French keyboard
+- Reinforces correct spelling with diacritics
+
+**Decision Needed**:
+- Which shortcut scheme to use? (symbols like `e'` vs numbers like `e1`)
+- User's preference?
