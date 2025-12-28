@@ -23,6 +23,83 @@ Document for tracking development thoughts, decisions, and the evolution of the 
    - Google Drive integration with separate storage for Chinese dictionary
    - Keyboard shortcuts adapted for Chinese workflow
 
+### Active Tasks (from Arcturus handoff 2025-12-27)
+
+**Priority 0: French Diacritics Input System** ⚠️ HIGH PRIORITY
+- [ ] Add French accent shortcuts for the French word input field
+- [ ] Similar to pinyin tone system in Chinese trainer
+- **Implementation notes**:
+  - Chinese trainer pattern: `a1` → `ā` (tone marks)
+  - French needs: é, è, ê, ë, à, â, ù, û, ô, î, ï, ç, œ, æ
+  - Suggested shortcuts:
+    - `e'` or `e1` → é (acute)
+    - `e`` or `e2` → è (grave)
+    - `e^` or `e3` → ê (circumflex)
+    - `c,` or `c1` → ç (cedilla)
+    - etc.
+  - Attach converter to French word input field (like `attachIPAConverter()` but for French field)
+  - Reference: `chinese-trainer.js:175-259` for pinyin implementation pattern
+
+**Priority 0: Disable Zhuyin on Front End (Temporary)**
+- [ ] Hide zhuyin field from Chinese trainer testing
+- [ ] Quick fix until full toggle system is built
+- **Implementation notes**:
+  - In `chinese-trainer.js:448`, change fields array from `['hanzi', 'pinyin', 'zhuyin', 'english']` to `['hanzi', 'pinyin', 'english']`
+  - Single line change, immediately effective
+
+**Priority 1: Mobile UX Improvements**
+- [ ] Enter on last textbox validates/checks answers
+- [ ] After validation on mobile, drop focus from textbox (prevents keyboard popping up)
+- **Scope**: French and Chinese trainers
+- **Implementation notes**:
+  - French: Already has Enter handling in input fields (`french-trainer.js:149-159`)
+  - Need to detect "last visible input field" and trigger validation
+  - After `checkAnswers()`, call `document.activeElement.blur()` to drop focus
+  - Consider using `inputmode` attribute for better mobile behavior
+
+**Priority 2: Chinese Trainer - Hanzi Multiple Choice**
+- [ ] Change hanzi input from text field to multiple choice (~10 options)
+- [ ] Include correct answer plus plausible distractors
+- [ ] Keep pinyin as text input
+- **Implementation notes**:
+  - Only affects hanzi field when it's one of the answer fields (not the prompt)
+  - Distractors: Use other hanzi from dictionary, or generate similar-looking characters
+  - UI: Grid of buttons or clickable cards
+  - Need to track selected answer before checking
+  - Consider: Visual similarity algorithm for better distractors
+
+**Priority 3: IPA Tooltips with Pronunciation Guidance**
+- [ ] Add tooltips to every IPA symbol in French trainer reference tables
+- [ ] Each tooltip should include:
+  - Vowel/consonant chart with symbol's location highlighted
+  - English words containing the same sound
+  - Other pronunciation guidance notes
+- **Implementation notes**:
+  - Current tables are in `french.html:72-366`
+  - Options: CSS tooltips (simple), or JS-powered with rich content
+  - For chart highlighting, could use small inline SVG or ASCII art
+  - Data source: Create IPA_PRONUNCIATION_DATA.js with tooltip content per symbol
+  - Consider: Mobile-friendly touch activation for tooltips
+
+**Priority 4: Tilde (~) Diacritic for Nasalized Vowels**
+- [ ] Add tilde as a diacritic option in IPA shortcut system
+- [ ] Update IPA_SHORTCUTS.md with new mappings
+- **Implementation notes**:
+  - Approach: Detect vowel+~ and convert to vowel + combining tilde (U+0303)
+  - Nasalizable vowels: all base vowels plus IPA vowel variants (ɑ, æ, ɐ, ə, ɛ, ɜ, etc.)
+  - Add after the existing letter+number conversions in `convertIPA()`
+  - Example: `a~` → `ã`, `ɛ~` → `ɛ̃`
+
+**Priority 5 (Stretch): Chinese Trainer - Zhuyin Toggle**
+- [ ] Add zhuyin on-screen keyboard as optional feature
+- [ ] Create site-wide toggle to enable/disable zhuyin testing
+- [ ] When disabled, hide zhuyin field from testing
+- **Implementation notes**:
+  - Toggle could be stored in localStorage
+  - Keyboard: Array of zhuyin symbols in standard layout
+  - When toggle off, filter 'zhuyin' from the fields array in `showRandomWord()`
+  - Consider: Settings page or per-trainer settings
+
 ### Short-term Goals
 1. **Expand vocabulary data**: Incorporate all 60 lessons worth of ASL vocabulary into the trainer
 2. **Lesson tracking**: Implement system to track which lessons have been completed/learned

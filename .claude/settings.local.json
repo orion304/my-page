@@ -2,7 +2,11 @@
   "permissions": {
     "allow": [
       "WebSearch",
-      "WebFetch(domain:en.wiktionary.org)"
+      "WebFetch(domain:en.wiktionary.org)",
+      "Read(//D:/repos/arcturus/**)"
     ]
-  }
+  },
+  "additionalDirectories": [
+    "//D:/repos/arcturus"
+  ]
 }
