@@ -31,6 +31,9 @@ const inputLabel3 = document.getElementById('input-label-3');
 const hanziChoices1 = document.getElementById('hanzi-choices-1');
 const hanziChoices2 = document.getElementById('hanzi-choices-2');
 const hanziChoices3 = document.getElementById('hanzi-choices-3');
+const inputGroup1 = document.getElementById('input-group-1');
+const inputGroup2 = document.getElementById('input-group-2');
+const inputGroup3 = document.getElementById('input-group-3');
 const feedback1 = document.getElementById('feedback-1');
 const feedback2 = document.getElementById('feedback-2');
 const feedback3 = document.getElementById('feedback-3');
@@ -525,7 +528,7 @@ function showRandomWord() {
     const wordData = dictionary[randomKey];
 
     // Randomly choose which field to show as prompt
-    const fields = ['hanzi', 'pinyin', 'zhuyin', 'english'];
+    const fields = ['hanzi', 'pinyin', 'english'];
     currentPromptField = fields[Math.floor(Math.random() * fields.length)];
 
     // Display the prompt
@@ -540,49 +543,40 @@ function showRandomWord() {
     promptLabel.style.display = 'block';
     promptValue.textContent = wordData[currentPromptField];
 
-    // Set up the 3 input fields for the other fields
+    // Set up input fields dynamically based on answer fields
     const otherFields = fields.filter(f => f !== currentPromptField);
 
-    inputLabel1.textContent = fieldLabels[otherFields[0]];
-    inputLabel2.textContent = fieldLabels[otherFields[1]];
-    inputLabel3.textContent = fieldLabels[otherFields[2]];
+    const inputGroups = [
+        { group: inputGroup1, label: inputLabel1, field: inputField1, feedback: feedback1, choices: hanziChoices1 },
+        { group: inputGroup2, label: inputLabel2, field: inputField2, feedback: feedback2, choices: hanziChoices2 },
+        { group: inputGroup3, label: inputLabel3, field: inputField3, feedback: feedback3, choices: hanziChoices3 }
+    ];
 
-    inputField1.value = '';
-    inputField2.value = '';
-    inputField3.value = '';
+    // Set up each input group based on available answer fields
+    inputGroups.forEach((input, index) => {
+        if (index < otherFields.length) {
+            const fieldName = otherFields[index];
+            input.group.style.display = 'block';
+            input.label.textContent = fieldLabels[fieldName];
+            input.field.value = '';
+            input.field.className = 'answer-input';
+            input.field.dataset.field = fieldName;
+            input.feedback.textContent = '';
+            input.feedback.className = 'answer-feedback';
 
-    inputField1.className = 'answer-input';
-    inputField2.className = 'answer-input';
-    inputField3.className = 'answer-input';
+            // Reset hanzi choices
+            resetHanziChoices(input.choices, input.field);
 
-    feedback1.textContent = '';
-    feedback2.textContent = '';
-    feedback3.textContent = '';
-
-    feedback1.className = 'answer-feedback';
-    feedback2.className = 'answer-feedback';
-    feedback3.className = 'answer-feedback';
-
-    // Store the field names in the input elements for later checking
-    inputField1.dataset.field = otherFields[0];
-    inputField2.dataset.field = otherFields[1];
-    inputField3.dataset.field = otherFields[2];
-
-    // Reset all hanzi choice grids first
-    resetHanziChoices(hanziChoices1, inputField1);
-    resetHanziChoices(hanziChoices2, inputField2);
-    resetHanziChoices(hanziChoices3, inputField3);
-
-    // Set up hanzi multiple choice if hanzi is one of the answer fields
-    if (otherFields[0] === 'hanzi') {
-        setupHanziChoices(hanziChoices1, inputField1, wordData.hanzi);
-    }
-    if (otherFields[1] === 'hanzi') {
-        setupHanziChoices(hanziChoices2, inputField2, wordData.hanzi);
-    }
-    if (otherFields[2] === 'hanzi') {
-        setupHanziChoices(hanziChoices3, inputField3, wordData.hanzi);
-    }
+            // Set up hanzi multiple choice if this is the hanzi field
+            if (fieldName === 'hanzi') {
+                setupHanziChoices(input.choices, input.field, wordData.hanzi);
+            }
+        } else {
+            // Hide unused input groups
+            input.group.style.display = 'none';
+            input.field.dataset.field = '';
+        }
+    });
 
     // Show check button, hide judgment buttons
     checkBtn.style.display = 'flex';
@@ -613,6 +607,10 @@ function checkAnswers() {
 
     inputs.forEach(({ field, feedback, choices }) => {
         const fieldName = field.dataset.field;
+
+        // Skip hidden/unused input groups
+        if (!fieldName) return;
+
         const expectedAnswer = wordData[fieldName];
 
         // Check if this is a hanzi field with multiple choice

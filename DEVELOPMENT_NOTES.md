@@ -49,17 +49,26 @@ Document for tracking development thoughts, decisions, and the evolution of the 
   - `oe1` → œ, `ae1` → æ (ligatures)
 - Uppercase variants also supported
 
-**Priority 0: Replace Zhuyin with IPA in Chinese Trainer** ⚠️ IN PROGRESS
-- [ ] Remove zhuyin field from Chinese trainer
+**Priority 0: Replace Zhuyin with IPA in Chinese Trainer** 🔧 PARTIAL
+- [x] Remove zhuyin field from Chinese trainer
+- [x] Fix dynamic input group handling (was hardcoded to 3 fields)
 - [ ] Add IPA field in its place
 - [ ] Need phonological map from pinyin (or zhuyin) to IPA
   - Previous research was confusing - need to revisit
   - Mandarin IPA has specific conventions for tones, retroflexes, etc.
-- **Technical blocker**: Code assumes 3 input fields hardcoded. Removing zhuyin broke UI:
-  - Third textbox appeared unlabeled
-  - "Check Answers" didn't transition to judgment buttons
-  - Root cause: `otherFields[2]` is undefined when only 2 answer fields remain
-  - Fix needed: Dynamically show/hide input groups based on number of answer fields
+- **Implementation** (zhuyin removal):
+  - Added `inputGroup1/2/3` element references (`chinese-trainer.js:34-36`)
+  - Refactored `showRandomWord()` to dynamically show/hide input groups (`chinese-trainer.js:549-579`)
+  - Updated `checkAnswers()` to skip hidden fields (`chinese-trainer.js:611-612`)
+  - Changed fields array to `['hanzi', 'pinyin', 'english']` (`chinese-trainer.js:531`)
+
+**Priority 0: Chinese Trainer Keyboard Flow**
+- [ ] Implement same Tab/Enter navigation as French trainer
+- [ ] Tab/Enter moves to next visible input field
+- [ ] Tab/Enter on last field checks answers + blurs
+- [ ] Enter when not in input marks correct
+- [ ] Escape marks wrong
+- **Reference**: French implementation in `french-trainer.js:145-228`
 
 **Priority 1: Mobile UX Improvements** ✓ MOSTLY COMPLETE
 - [x] Tab/Enter navigates to next input field
