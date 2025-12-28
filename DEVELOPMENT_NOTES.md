@@ -49,37 +49,41 @@ Document for tracking development thoughts, decisions, and the evolution of the 
   - `oe1` → œ, `ae1` → æ (ligatures)
 - Uppercase variants also supported
 
-**Priority 0: Disable Zhuyin on Front End (Temporary)**
-- [ ] Hide zhuyin field from Chinese trainer testing
-- [ ] Quick fix until full toggle system is built
-- **Implementation notes**:
-  - In `chinese-trainer.js:448`, change fields array from `['hanzi', 'pinyin', 'zhuyin', 'english']` to `['hanzi', 'pinyin', 'english']`
-  - Single line change, immediately effective
+**Priority 0: Disable Zhuyin on Front End (Temporary)** ✓ COMPLETED
+- [x] Hide zhuyin field from Chinese trainer testing
+- [x] Quick fix until full toggle system is built
+- **Implementation**: Changed fields array in `chinese-trainer.js:528` from `['hanzi', 'pinyin', 'zhuyin', 'english']` to `['hanzi', 'pinyin', 'english']`
 
-**Priority 1: Mobile UX Improvements** 🔧 IN PROGRESS
+**Priority 1: Mobile UX Improvements** ✓ MOSTLY COMPLETE
 - [x] Tab/Enter navigates to next input field
 - [x] Tab/Enter on last field checks answers + blurs (dismisses keyboard)
 - [x] Enter when not in input field marks correct
 - [x] Escape marks wrong (in or out of input field)
-- **Scope**: French trainer first, Chinese later
-- **Revised implementation** (French only so far):
+- **Implementation** (commit 550037b, French only):
   - Added `getVisibleInputFields()` and `getNextVisibleInput()` helpers (`french-trainer.js:145-162`)
   - Tab/Enter in input: navigate to next field, or check+blur if last field (`french-trainer.js:167-185`)
   - Enter/Escape when not in input: judgment handling (`french-trainer.js:199-214`)
-  - Removed blur from `checkAnswers()` - now handled in keyboard handler
-- **Testing**: Awaiting live page verification of French trainer
-- **Previous attempt** (commit dd00a24): Broke desktop Enter/Escape by blurring too early
+- **Status**: Desktop working. Mobile needs further research (see Priority 6).
+- **TODO**: Apply same pattern to Chinese trainer when ready
 
-**Priority 2: Chinese Trainer - Hanzi Multiple Choice**
-- [ ] Change hanzi input from text field to multiple choice (~10 options)
-- [ ] Include correct answer plus plausible distractors
-- [ ] Keep pinyin as text input
-- **Implementation notes**:
-  - Only affects hanzi field when it's one of the answer fields (not the prompt)
-  - Distractors: Use other hanzi from dictionary, or generate similar-looking characters
-  - UI: Grid of buttons or clickable cards
-  - Need to track selected answer before checking
-  - Consider: Visual similarity algorithm for better distractors
+**Priority 6: Android Mobile Keyboard Research**
+- [ ] Research what Android's return/tab/go button does in text fields
+- [ ] Investigate how to intercept or customize mobile keyboard behavior
+- [ ] Find approach to make "check answers" easier on mobile (one-tap after last field)
+- **Context**: Current implementation works on desktop but mobile keyboard behavior differs
+- **Research needed**: Android `enterkeyhint` attribute, `inputmode`, form submission behavior
+
+**Priority 2: Chinese Trainer - Hanzi Multiple Choice** ✓ COMPLETED
+- [x] Change hanzi input from text field to multiple choice (10 options)
+- [x] Include correct answer plus 9 random distractors from dictionary
+- [x] Keep pinyin/zhuyin/english as text input
+- **Implementation**:
+  - HTML: Added `hanzi-choices-N` containers in each input group (`chinese.html:50,56,62`)
+  - CSS: Grid layout 5x2, selection/correct/wrong states (`chinese-trainer.css:427-477`)
+  - JS helpers: `getHanziDistractors()`, `setupHanziChoices()`, `selectHanziChoice()`, `resetHanziChoices()` (`chinese-trainer.js:423-473`)
+  - `showRandomWord()`: Sets up hanzi grid when hanzi is answer field (`chinese-trainer.js:576-585`)
+  - `checkAnswers()`: Handles hanzi choice validation (`chinese-trainer.js:618-638`)
+- **Testing**: Awaiting local verification
 
 **Priority 3: IPA Tooltips with Pronunciation Guidance**
 - [ ] Add tooltips to every IPA symbol in French trainer reference tables

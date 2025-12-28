@@ -28,6 +28,9 @@ const inputField3 = document.getElementById('input-field-3');
 const inputLabel1 = document.getElementById('input-label-1');
 const inputLabel2 = document.getElementById('input-label-2');
 const inputLabel3 = document.getElementById('input-label-3');
+const hanziChoices1 = document.getElementById('hanzi-choices-1');
+const hanziChoices2 = document.getElementById('hanzi-choices-2');
+const hanziChoices3 = document.getElementById('hanzi-choices-3');
 const feedback1 = document.getElementById('feedback-1');
 const feedback2 = document.getElementById('feedback-2');
 const feedback3 = document.getElementById('feedback-3');
@@ -417,6 +420,58 @@ async function loadDefaultDictionary() {
     }
 }
 
+// Generate random hanzi distractors from dictionary
+function getHanziDistractors(correctHanzi, count) {
+    const allHanzi = Object.values(dictionary)
+        .map(entry => entry.hanzi)
+        .filter(h => h !== correctHanzi);
+
+    // Shuffle and take 'count' items
+    const shuffled = allHanzi.sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, count);
+}
+
+// Create hanzi choice grid for a field
+function setupHanziChoices(choicesContainer, inputField, correctHanzi) {
+    const distractors = getHanziDistractors(correctHanzi, 9);
+    const allOptions = [correctHanzi, ...distractors].sort(() => Math.random() - 0.5);
+
+    choicesContainer.innerHTML = '';
+    choicesContainer.dataset.selected = '';
+    choicesContainer.dataset.correct = correctHanzi;
+
+    allOptions.forEach(hanzi => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'hanzi-choice';
+        btn.textContent = hanzi;
+        btn.addEventListener('click', () => selectHanziChoice(choicesContainer, btn, hanzi));
+        choicesContainer.appendChild(btn);
+    });
+
+    // Hide text input, show choices
+    inputField.style.display = 'none';
+    choicesContainer.style.display = 'grid';
+}
+
+// Handle hanzi choice selection
+function selectHanziChoice(container, btn, hanzi) {
+    // Remove selected class from all buttons in this container
+    container.querySelectorAll('.hanzi-choice').forEach(b => b.classList.remove('selected'));
+    // Add selected class to clicked button
+    btn.classList.add('selected');
+    // Store selected value
+    container.dataset.selected = hanzi;
+}
+
+// Reset hanzi choices (hide grid, show input)
+function resetHanziChoices(choicesContainer, inputField) {
+    choicesContainer.style.display = 'none';
+    choicesContainer.innerHTML = '';
+    choicesContainer.dataset.selected = '';
+    inputField.style.display = 'block';
+}
+
 function showRandomWord() {
     if (!dictionary) return;
 
@@ -513,6 +568,22 @@ function showRandomWord() {
     inputField2.dataset.field = otherFields[1];
     inputField3.dataset.field = otherFields[2];
 
+    // Reset all hanzi choice grids first
+    resetHanziChoices(hanziChoices1, inputField1);
+    resetHanziChoices(hanziChoices2, inputField2);
+    resetHanziChoices(hanziChoices3, inputField3);
+
+    // Set up hanzi multiple choice if hanzi is one of the answer fields
+    if (otherFields[0] === 'hanzi') {
+        setupHanziChoices(hanziChoices1, inputField1, wordData.hanzi);
+    }
+    if (otherFields[1] === 'hanzi') {
+        setupHanziChoices(hanziChoices2, inputField2, wordData.hanzi);
+    }
+    if (otherFields[2] === 'hanzi') {
+        setupHanziChoices(hanziChoices3, inputField3, wordData.hanzi);
+    }
+
     // Show check button, hide judgment buttons
     checkBtn.style.display = 'flex';
     judgmentButtons.style.display = 'none';
@@ -535,27 +606,50 @@ function checkAnswers() {
 
     // Check each input field
     const inputs = [
-        { field: inputField1, feedback: feedback1 },
-        { field: inputField2, feedback: feedback2 },
-        { field: inputField3, feedback: feedback3 }
+        { field: inputField1, feedback: feedback1, choices: hanziChoices1 },
+        { field: inputField2, feedback: feedback2, choices: hanziChoices2 },
+        { field: inputField3, feedback: feedback3, choices: hanziChoices3 }
     ];
 
-    inputs.forEach(({ field, feedback }) => {
+    inputs.forEach(({ field, feedback, choices }) => {
         const fieldName = field.dataset.field;
-        const userAnswer = field.value.trim();
         const expectedAnswer = wordData[fieldName];
 
-        // Simple comparison (case-insensitive for now)
-        const isCorrect = userAnswer.toLowerCase() === expectedAnswer.toLowerCase();
+        // Check if this is a hanzi field with multiple choice
+        if (fieldName === 'hanzi' && choices.style.display === 'grid') {
+            const userAnswer = choices.dataset.selected || '';
+            const isCorrect = userAnswer === expectedAnswer;
 
-        if (isCorrect) {
-            field.className = 'answer-input correct';
-            feedback.textContent = '✓ Correct';
-            feedback.className = 'answer-feedback correct';
+            // Mark all choice buttons as correct/wrong
+            choices.querySelectorAll('.hanzi-choice').forEach(btn => {
+                if (btn.textContent === expectedAnswer) {
+                    btn.classList.add('correct');
+                } else if (btn.classList.contains('selected')) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (isCorrect) {
+                feedback.textContent = '✓ Correct';
+                feedback.className = 'answer-feedback correct';
+            } else {
+                feedback.textContent = `✗ Expected: ${expectedAnswer}`;
+                feedback.className = 'answer-feedback wrong';
+            }
         } else {
-            field.className = 'answer-input wrong';
-            feedback.textContent = `✗ Expected: ${expectedAnswer}`;
-            feedback.className = 'answer-feedback wrong';
+            // Regular text input
+            const userAnswer = field.value.trim();
+            const isCorrect = userAnswer.toLowerCase() === expectedAnswer.toLowerCase();
+
+            if (isCorrect) {
+                field.className = 'answer-input correct';
+                feedback.textContent = '✓ Correct';
+                feedback.className = 'answer-feedback correct';
+            } else {
+                field.className = 'answer-input wrong';
+                feedback.textContent = `✗ Expected: ${expectedAnswer}`;
+                feedback.className = 'answer-feedback wrong';
+            }
         }
     });
 

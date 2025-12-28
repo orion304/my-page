@@ -423,3 +423,55 @@ button {
     font-size: 10px;
     font-weight: bold;
 }
+
+/* Hanzi Multiple Choice Grid */
+.hanzi-choices {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.hanzi-choice {
+    padding: 15px 10px;
+    font-size: 28px;
+    text-align: center;
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.hanzi-choice:hover {
+    background: #e9ecef;
+    border-color: #dc3545;
+}
+
+.hanzi-choice.selected {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.hanzi-choice.correct {
+    background: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.hanzi-choice.wrong {
+    background: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.hanzi-choice.correct.selected {
+    background: #28a745;
+    color: white;
+}
+
+.hanzi-choice.wrong.selected {
+    background: #dc3545;
+    color: white;
+}
