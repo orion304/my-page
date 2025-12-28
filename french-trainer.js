@@ -142,27 +142,51 @@ changeDictionaryBtn.addEventListener('click', function(e) {
     showUploadSection();
 });
 
+// Get visible input fields in order
+function getVisibleInputFields() {
+    const allInputs = [inputFieldArticle, inputFieldFrench, inputFieldIpa, inputFieldEnglish];
+    return allInputs.filter(input => {
+        const group = input.closest('.input-group');
+        return group && group.style.display !== 'none';
+    });
+}
+
+// Get next visible input field after the current one
+function getNextVisibleInput(currentInput) {
+    const visibleInputs = getVisibleInputFields();
+    const currentIndex = visibleInputs.indexOf(currentInput);
+    if (currentIndex >= 0 && currentIndex < visibleInputs.length - 1) {
+        return visibleInputs[currentIndex + 1];
+    }
+    return null; // No next field, this is the last one
+}
+
 document.addEventListener('keydown', function(e) {
     if (!trainingSection.classList.contains('active')) return;
 
-    // Handle Enter key in input fields
-    if (e.target.tagName === 'INPUT' && e.code === 'Enter') {
-        e.preventDefault();
-        // If check button is visible, check answers
+    // Handle Tab/Enter in input fields - navigate or check answers
+    if (e.target.tagName === 'INPUT' && (e.code === 'Tab' || e.code === 'Enter')) {
+        // Only handle forward tab, not shift+tab
+        if (e.code === 'Tab' && e.shiftKey) return;
+
+        // Only handle if check button is visible (still answering)
         if (checkBtn.style.display !== 'none' && !checkBtn.disabled) {
-            checkAnswers();
-        }
-        // If judgment buttons are visible, treat as "Got It"
-        else if (judgmentButtons.style.display !== 'none' && !correctBtn.disabled) {
-            handleCorrect();
+            e.preventDefault();
+            const nextInput = getNextVisibleInput(e.target);
+            if (nextInput) {
+                nextInput.focus();
+            } else {
+                // Last field - check answers and blur
+                checkAnswers();
+                document.activeElement.blur();
+            }
         }
         return;
     }
 
-    // Handle Escape key in input fields
+    // Handle Escape key in input fields - mark wrong if judgment visible
     if (e.target.tagName === 'INPUT' && e.code === 'Escape') {
         e.preventDefault();
-        // If judgment buttons are visible, treat as "Didn't Get It"
         if (judgmentButtons.style.display !== 'none' && !wrongBtn.disabled) {
             handleWrong();
         }
@@ -172,12 +196,23 @@ document.addEventListener('keydown', function(e) {
     // Don't handle other shortcuts when in input fields
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
-    if ((e.code === 'Enter' || e.code === 'Numpad1') && checkBtn.style.display !== 'none') {
+    // Enter: check answers OR mark correct (when not in input field)
+    if ((e.code === 'Enter' || e.code === 'Numpad1')) {
         e.preventDefault();
-        if (!checkBtn.disabled) {
+        if (checkBtn.style.display !== 'none' && !checkBtn.disabled) {
             checkAnswers();
+        } else if (judgmentButtons.style.display !== 'none' && !correctBtn.disabled) {
+            handleCorrect();
         }
     }
+    // Escape: mark wrong (when not in input field)
+    else if (e.code === 'Escape') {
+        e.preventDefault();
+        if (judgmentButtons.style.display !== 'none' && !wrongBtn.disabled) {
+            handleWrong();
+        }
+    }
+    // Arrow keys for judgment
     else if ((e.code === 'ArrowRight' || e.code === 'Numpad2') && judgmentButtons.style.display !== 'none') {
         e.preventDefault();
         if (!correctBtn.disabled) {
@@ -638,9 +673,6 @@ function checkAnswers() {
 
     checkBtn.style.display = 'none';
     judgmentButtons.style.display = 'flex';
-
-    // Blur to dismiss mobile keyboard
-    document.activeElement.blur();
 }
 
 function handleCorrect() {

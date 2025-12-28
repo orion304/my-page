@@ -56,15 +56,19 @@ Document for tracking development thoughts, decisions, and the evolution of the 
   - In `chinese-trainer.js:448`, change fields array from `['hanzi', 'pinyin', 'zhuyin', 'english']` to `['hanzi', 'pinyin', 'english']`
   - Single line change, immediately effective
 
-**Priority 1: Mobile UX Improvements**
-- [ ] Enter on last textbox validates/checks answers
-- [ ] After validation on mobile, drop focus from textbox (prevents keyboard popping up)
-- **Scope**: French and Chinese trainers
-- **Implementation notes**:
-  - French: Already has Enter handling in input fields (`french-trainer.js:149-159`)
-  - Need to detect "last visible input field" and trigger validation
-  - After `checkAnswers()`, call `document.activeElement.blur()` to drop focus
-  - Consider using `inputmode` attribute for better mobile behavior
+**Priority 1: Mobile UX Improvements** 🔧 IN PROGRESS
+- [x] Tab/Enter navigates to next input field
+- [x] Tab/Enter on last field checks answers + blurs (dismisses keyboard)
+- [x] Enter when not in input field marks correct
+- [x] Escape marks wrong (in or out of input field)
+- **Scope**: French trainer first, Chinese later
+- **Revised implementation** (French only so far):
+  - Added `getVisibleInputFields()` and `getNextVisibleInput()` helpers (`french-trainer.js:145-162`)
+  - Tab/Enter in input: navigate to next field, or check+blur if last field (`french-trainer.js:167-185`)
+  - Enter/Escape when not in input: judgment handling (`french-trainer.js:199-214`)
+  - Removed blur from `checkAnswers()` - now handled in keyboard handler
+- **Testing**: Awaiting live page verification of French trainer
+- **Previous attempt** (commit dd00a24): Broke desktop Enter/Escape by blurring too early
 
 **Priority 2: Chinese Trainer - Hanzi Multiple Choice**
 - [ ] Change hanzi input from text field to multiple choice (~10 options)
