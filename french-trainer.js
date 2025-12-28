@@ -638,6 +638,9 @@ function checkAnswers() {
 
     checkBtn.style.display = 'none';
     judgmentButtons.style.display = 'flex';
+
+    // Blur to dismiss mobile keyboard
+    document.activeElement.blur();
 }
 
 function handleCorrect() {

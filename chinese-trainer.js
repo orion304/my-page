@@ -145,6 +145,31 @@ changeDictionaryBtn.addEventListener('click', function(e) {
 document.addEventListener('keydown', function(e) {
     if (!trainingSection.classList.contains('active')) return;
 
+    // Handle Enter key in input fields
+    if (e.target.tagName === 'INPUT' && e.code === 'Enter') {
+        e.preventDefault();
+        // If check button is visible, check answers
+        if (checkBtn.style.display !== 'none' && !checkBtn.disabled) {
+            checkAnswers();
+        }
+        // If judgment buttons are visible, treat as "Got It"
+        else if (judgmentButtons.style.display !== 'none' && !correctBtn.disabled) {
+            handleCorrect();
+        }
+        return;
+    }
+
+    // Handle Escape key in input fields
+    if (e.target.tagName === 'INPUT' && e.code === 'Escape') {
+        e.preventDefault();
+        // If judgment buttons are visible, treat as "Didn't Get It"
+        if (judgmentButtons.style.display !== 'none' && !wrongBtn.disabled) {
+            handleWrong();
+        }
+        return;
+    }
+
+    // Don't handle other shortcuts when in input fields
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
     // Enter or Numpad 1: Check answers (if check button is visible)
@@ -537,6 +562,9 @@ function checkAnswers() {
     // Hide check button, show judgment buttons
     checkBtn.style.display = 'none';
     judgmentButtons.style.display = 'flex';
+
+    // Blur to dismiss mobile keyboard
+    document.activeElement.blur();
 }
 
 function handleCorrect() {
