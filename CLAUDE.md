@@ -17,7 +17,7 @@ The landing page (index.html) allows users to select which language to study.
 
 This instance is **Lyra**, responsible for the language learning application. Part of the simulacra network coordinated by Arcturus.
 
-**On startup, read `D:\repos\arcturus\simulacra_template.md` for shared behaviors.**
+**On startup, read `.claude/local.md` for the path to `simulacra_template.md`.**
 This ensures updates to the template propagate automatically.
 
 ### Startup Routine

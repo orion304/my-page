@@ -25,20 +25,29 @@ Document for tracking development thoughts, decisions, and the evolution of the 
 
 ### Active Tasks (from Arcturus handoff 2025-12-27)
 
-**Priority 0: French Diacritics Input System** ⚠️ HIGH PRIORITY
-- [ ] Add French accent shortcuts for the French word input field
-- [ ] Similar to pinyin tone system in Chinese trainer
+**Priority 0: French Article Handling** ⚠️ HIGH PRIORITY
+- [ ] Combine articles with French words when French is an answer field
+- [ ] When prompted "dog", user types "le chien" or "un chien" in French field
+- [ ] When prompted "chien", user types "le" or "un" in separate article field
+- [ ] Accept BOTH definite (le/la) and indefinite (un/une) articles as correct
+- [ ] For elision words, user types non-contracted form ("la orange" not "l'orange")
 - **Implementation notes**:
-  - Chinese trainer pattern: `a1` → `ā` (tone marks)
-  - French needs: é, è, ê, ë, à, â, ù, û, ô, î, ï, ç, œ, æ
-  - Suggested shortcuts:
-    - `e'` or `e1` → é (acute)
-    - `e`` or `e2` → è (grave)
-    - `e^` or `e3` → ê (circumflex)
-    - `c,` or `c1` → ç (cedilla)
-    - etc.
-  - Attach converter to French word input field (like `attachIPAConverter()` but for French field)
-  - Reference: `chinese-trainer.js:175-259` for pinyin implementation pattern
+  - Article field shows ONLY when French is the prompt (currentPromptField === 'french')
+  - When French is answer field: validate as "le/un word" or "la/une word"
+  - When French is prompt: validate article field accepts le/un (m) or la/une (f)
+  - No elision detection needed - always require article for gendered words
+
+**Priority 0: French Diacritics Input System** ✓ COMPLETED
+- [x] Add French accent shortcuts for the French word input field
+- [x] Similar to pinyin tone system in Chinese trainer
+- **Implemented shortcuts** (`french-trainer.js:195-241`):
+  - `e'` → é (acute)
+  - `e`` → è, `a`` → à, `u`` → ù (grave)
+  - `e^` → ê, `a^` → â, `u^` → û, `o^` → ô, `i^` → î (circumflex)
+  - `e:` → ë, `i:` → ï, `u:` → ü (diaeresis)
+  - `c,` → ç (cedilla)
+  - `oe1` → œ, `ae1` → æ (ligatures)
+- Uppercase variants also supported
 
 **Priority 0: Disable Zhuyin on Front End (Temporary)**
 - [ ] Hide zhuyin field from Chinese trainer testing

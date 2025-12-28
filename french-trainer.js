@@ -192,6 +192,55 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
+// French diacritic mapping: letter+modifier → accented character
+const frenchCharMap = {
+    // Acute (')
+    "e'": 'é', "E'": 'É',
+    // Grave (`)
+    'e`': 'è', 'E`': 'È',
+    'a`': 'à', 'A`': 'À',
+    'u`': 'ù', 'U`': 'Ù',
+    // Circumflex (^)
+    'e^': 'ê', 'E^': 'Ê',
+    'a^': 'â', 'A^': 'Â',
+    'u^': 'û', 'U^': 'Û',
+    'o^': 'ô', 'O^': 'Ô',
+    'i^': 'î', 'I^': 'Î',
+    // Diaeresis (:)
+    'e:': 'ë', 'E:': 'Ë',
+    'i:': 'ï', 'I:': 'Ï',
+    'u:': 'ü', 'U:': 'Ü',
+    // Cedilla (,)
+    'c,': 'ç', 'C,': 'Ç',
+    // Ligatures (1)
+    'oe1': 'œ', 'OE1': 'Œ',
+    'ae1': 'æ', 'AE1': 'Æ',
+};
+
+function convertFrench(text) {
+    let result = text;
+    // Sort keys by length (longest first) to handle multi-character sequences
+    const sortedKeys = Object.keys(frenchCharMap).sort((a, b) => b.length - a.length);
+    for (const key of sortedKeys) {
+        // Case-sensitive replacement
+        result = result.split(key).join(frenchCharMap[key]);
+    }
+    return result;
+}
+
+function handleFrenchInput(e) {
+    const input = e.target;
+    const cursorPos = input.selectionStart;
+    const originalLength = input.value.length;
+    const converted = convertFrench(input.value);
+    if (converted !== input.value) {
+        input.value = converted;
+        // Adjust cursor position
+        const lengthDiff = converted.length - originalLength;
+        input.setSelectionRange(cursorPos + lengthDiff, cursorPos + lengthDiff);
+    }
+}
+
 // IPA character mapping: letter+number → IPA character
 const ipaCharMap = {
     // Vowels - A variants
@@ -277,6 +326,12 @@ function handleIPAInput(e) {
         const lengthDiff = converted.length - originalLength;
         input.setSelectionRange(cursorPos + lengthDiff, cursorPos + lengthDiff);
     }
+}
+
+// Attach French diacritic converter to French input field
+function attachFrenchConverter() {
+    inputFieldFrench.removeEventListener('input', handleFrenchInput);
+    inputFieldFrench.addEventListener('input', handleFrenchInput);
 }
 
 // Attach IPA converter to input fields that are for IPA
@@ -491,7 +546,8 @@ function showRandomWord() {
     correctBtn.disabled = false;
     wrongBtn.disabled = false;
 
-    // Attach IPA converter to input fields
+    // Attach converters to input fields
+    attachFrenchConverter();
     attachIPAConverter();
 
     updateProgressTracker();
