@@ -49,10 +49,17 @@ Document for tracking development thoughts, decisions, and the evolution of the 
   - `oe1` → œ, `ae1` → æ (ligatures)
 - Uppercase variants also supported
 
-**Priority 0: Disable Zhuyin on Front End (Temporary)** ✓ COMPLETED
-- [x] Hide zhuyin field from Chinese trainer testing
-- [x] Quick fix until full toggle system is built
-- **Implementation**: Changed fields array in `chinese-trainer.js:528` from `['hanzi', 'pinyin', 'zhuyin', 'english']` to `['hanzi', 'pinyin', 'english']`
+**Priority 0: Replace Zhuyin with IPA in Chinese Trainer** ⚠️ IN PROGRESS
+- [ ] Remove zhuyin field from Chinese trainer
+- [ ] Add IPA field in its place
+- [ ] Need phonological map from pinyin (or zhuyin) to IPA
+  - Previous research was confusing - need to revisit
+  - Mandarin IPA has specific conventions for tones, retroflexes, etc.
+- **Technical blocker**: Code assumes 3 input fields hardcoded. Removing zhuyin broke UI:
+  - Third textbox appeared unlabeled
+  - "Check Answers" didn't transition to judgment buttons
+  - Root cause: `otherFields[2]` is undefined when only 2 answer fields remain
+  - Fix needed: Dynamically show/hide input groups based on number of answer fields
 
 **Priority 1: Mobile UX Improvements** ✓ MOSTLY COMPLETE
 - [x] Tab/Enter navigates to next input field
