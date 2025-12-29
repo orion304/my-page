@@ -29,6 +29,16 @@ When greeted (e.g., "hey"):
 5. Check for project-specific pending tasks
 6. Report status and begin working
 
+## First-Time Setup
+
+If the `simulacrum/` directory is missing (fresh clone or new machine):
+
+```bash
+git clone https://github.com/orion304/simulacrum.git simulacrum
+```
+
+This bootstraps the shared framework. All other instructions live in `simulacrum/simulacra_template.md`.
+
 ## Architecture
 
 ### Core Components
@@ -341,3 +351,6 @@ All trainers display two visual lists showing learning progress:
 5. IPA can be entered using letter+number shortcuts (e.g., s1 → ʃ, e2 → ɛ)
 6. The `lesson` field is currently unused (all words auto-start)
 7. Slashes are automatically stripped during validation, so users don't need to type them
+
+@.claude/local.md
+@simulacrum/simulacra_template.md
