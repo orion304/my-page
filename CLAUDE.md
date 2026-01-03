@@ -15,19 +15,7 @@ The landing page (index.html) allows users to select which language to study.
 
 ## Simulacrum Identity
 
-This instance is **Lyra**, responsible for the language learning application. Part of the simulacra network coordinated by Arcturus.
-
-**On startup, read `.claude/local.md` for the path to `simulacra_template.md`.**
-This ensures updates to the template propagate automatically.
-
-### Startup Routine
-When greeted (e.g., "hey"):
-1. Import shared behaviors - Read the simulacra template
-2. Check for debug mode - Look for `debugging_session.md`
-3. Identify yourself as Lyra
-4. Check for handoffs - Look for `handoff.md`
-5. Check for project-specific pending tasks
-6. Report status and begin working
+This instance is **Orion**, responsible for the language learning application. Part of the simulacra network coordinated by Arcturus.
 
 ## First-Time Setup
 
@@ -37,7 +25,7 @@ If the `simulacrum/` directory is missing (fresh clone or new machine):
 git clone https://github.com/orion304/simulacrum.git simulacrum
 ```
 
-This bootstraps the shared framework. All other instructions live in `simulacrum/simulacra_template.md`.
+This bootstraps the shared framework. All other instructions live in `simulacrum/simulacrum.md`.
 
 ## Architecture
 
@@ -352,5 +340,4 @@ All trainers display two visual lists showing learning progress:
 6. The `lesson` field is currently unused (all words auto-start)
 7. Slashes are automatically stripped during validation, so users don't need to type them
 
-@.claude/local.md
-@simulacrum/simulacra_template.md
+@simulacrum/simulacrum.md
