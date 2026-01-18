@@ -3,7 +3,8 @@
     "allow": [
       "WebSearch",
       "WebFetch(domain:en.wiktionary.org)",
-      "Read(//D:/repos/arcturus/**)"
+      "Read(//D:/repos/arcturus/**)",
+      "WebFetch(domain:en.wikipedia.org)"
     ]
   },
   "additionalDirectories": [

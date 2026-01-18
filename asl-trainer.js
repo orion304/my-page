@@ -1,6 +1,3 @@
-const CLIENT_ID = '47759577064-h3pt7ehhl0n3d2i6dm6je5m2ln4iukn4.apps.googleusercontent.com';
-const SCOPES = 'https://www.googleapis.com/auth/drive.file';
-const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
 const FILE_NAME = 'asl_dictionary.json';
 const DEFAULT_DICTIONARY_URL = 'https://raw.githubusercontent.com/orion304/my-page/main/asl_dictionary.json';
 
@@ -12,8 +9,6 @@ let fileName = '';
 let prefetchFrame = null;
 let googleDriveFileId = null;
 let isGoogleDriveConnected = false;
-let gapiInited = false;
-let tokenClient = null;
 let isSaving = false;
 let needsAnotherSave = false;
 
@@ -42,93 +37,50 @@ const uploadSection = document.querySelector('.upload-section');
 const changeDictionaryLink = document.getElementById('change-dictionary-link');
 const changeDictionaryBtn = document.getElementById('change-dictionary-btn');
 
-// Initialize Google API
-function gapiLoaded() {
-    gapi.load('client', initializeGapiClient);
-}
-
-async function initializeGapiClient() {
-    await gapi.client.init({
-        discoveryDocs: DISCOVERY_DOCS,
-    });
-    gapiInited = true;
-    maybeEnableButtons();
-}
-
-function gisLoaded() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
-        callback: '', // defined later
-    });
-    maybeEnableButtons();
-}
-
+// Wait for auth module to initialize, then enable buttons and check for saved tokens
 function maybeEnableButtons() {
-    if (gapiInited && tokenClient) {
-        googleDriveBtn.disabled = false;
-        // Check if we have a saved token
-        checkIfSignedIn();
-    }
+    // Poll until auth module is initialized
+    const checkInit = setInterval(() => {
+        if (googleDriveAuth.gapiInited && googleDriveAuth.tokenClient) {
+            clearInterval(checkInit);
+            googleDriveBtn.disabled = false;
+            checkIfSignedIn();
+        }
+    }, 100);
 }
 
 async function checkIfSignedIn() {
-    // Try to get saved token from localStorage
-    const savedToken = localStorage.getItem('google_drive_token');
+    const signedIn = await googleDriveAuth.checkIfSignedIn();
 
-    if (savedToken) {
+    if (signedIn) {
+        isGoogleDriveConnected = true;
+        googleBtnText.textContent = 'Loading from Drive...';
+        googleStatus.textContent = 'Reconnecting...';
+        googleStatus.className = 'google-status';
+
         try {
-            const tokenObj = JSON.parse(savedToken);
+            await loadFromGoogleDrive();
+            googleBtnText.textContent = '✓ Connected to Google Drive';
 
-            // Check if token is expired
-            const now = Date.now();
-            if (tokenObj.expiry && now < tokenObj.expiry) {
-                // Token is still valid, set it
-                gapi.client.setToken(tokenObj);
-                isGoogleDriveConnected = true;
-                googleBtnText.textContent = 'Loading from Drive...';
-                googleStatus.textContent = 'Reconnecting...';
-                googleStatus.className = 'google-status';
-
-                await loadFromGoogleDrive();
-                googleBtnText.textContent = '✓ Connected to Google Drive';
-
-                // Only show "auto-saving enabled" if we actually loaded a dictionary
-                if (dictionary) {
-                    googleStatus.textContent = 'Auto-saving enabled';
-                    googleStatus.className = 'google-status success';
-                }
-
-                googleDriveBtn.disabled = true;
-                return;
-            } else {
-                // Token expired, remove it
-                localStorage.removeItem('google_drive_token');
+            // Only show "auto-saving enabled" if we actually loaded a dictionary
+            if (dictionary) {
+                googleStatus.textContent = 'Auto-saving enabled';
+                googleStatus.className = 'google-status success';
             }
+
+            googleDriveBtn.disabled = true;
         } catch (error) {
-            console.error('Error loading saved token:', error);
-            localStorage.removeItem('google_drive_token');
+            console.error('Error loading from Drive:', error);
+            googleStatus.textContent = 'Error loading from Drive';
+            googleStatus.className = 'google-status error';
+            isGoogleDriveConnected = false;
+            googleBtnText.textContent = 'Connect to Google Drive';
         }
     }
 }
 
-function saveTokenToStorage(token) {
-    // Add expiry time (tokens typically last 1 hour)
-    const tokenWithExpiry = {
-        ...token,
-        expiry: Date.now() + (3600 * 1000) // 1 hour from now
-    };
-    localStorage.setItem('google_drive_token', JSON.stringify(tokenWithExpiry));
-}
-
-// Load Google Identity Services
-const script = document.createElement('script');
-script.src = 'https://accounts.google.com/gsi/client';
-script.onload = gisLoaded;
-document.head.appendChild(script);
-
-// Call gapiLoaded when gapi is ready
-setTimeout(gapiLoaded, 100);
+// Call maybeEnableButtons when page loads
+setTimeout(maybeEnableButtons, 200);
 
 fileUpload.addEventListener('change', handleFileUpload);
 showSignBtn.addEventListener('click', toggleIframe);
@@ -512,46 +464,40 @@ function handleWrong() {
 
 async function handleGoogleDrive() {
     if (!isGoogleDriveConnected) {
-        // Connect to Google Drive
-        tokenClient.callback = async (resp) => {
-            if (resp.error !== undefined) {
-                googleStatus.textContent = 'Error: ' + resp.error;
-                googleStatus.className = 'google-status error';
-                return;
-            }
+        googleBtnText.textContent = 'Connecting...';
+        googleStatus.textContent = 'Authorizing...';
+        googleStatus.className = 'google-status';
 
-            // Save token to localStorage
-            saveTokenToStorage(resp);
+        try {
+            await googleDriveAuth.requestAccessToken(async (resp) => {
+                isGoogleDriveConnected = true;
+                googleBtnText.textContent = 'Loading from Drive...';
+                googleStatus.textContent = 'Connecting...';
 
-            isGoogleDriveConnected = true;
-            googleBtnText.textContent = 'Loading from Drive...';
-            googleStatus.textContent = 'Connecting...';
-            googleStatus.className = 'google-status';
+                try {
+                    await loadFromGoogleDrive();
+                    googleBtnText.textContent = '✓ Connected to Google Drive';
 
-            try {
-                await loadFromGoogleDrive();
-                googleBtnText.textContent = '✓ Connected to Google Drive';
+                    // Only show "auto-saving enabled" if we actually loaded a dictionary
+                    if (dictionary) {
+                        googleStatus.textContent = 'Auto-saving enabled';
+                        googleStatus.className = 'google-status success';
+                    }
 
-                // Only show "auto-saving enabled" if we actually loaded a dictionary
-                if (dictionary) {
-                    googleStatus.textContent = 'Auto-saving enabled';
-                    googleStatus.className = 'google-status success';
+                    googleDriveBtn.disabled = true;
+                } catch (error) {
+                    console.error('Error loading from Drive:', error);
+                    googleStatus.textContent = 'Error loading from Drive';
+                    googleStatus.className = 'google-status error';
+                    isGoogleDriveConnected = false;
+                    googleBtnText.textContent = 'Connect to Google Drive';
                 }
-
-                googleDriveBtn.disabled = true;
-            } catch (error) {
-                console.error('Error loading from Drive:', error);
-                googleStatus.textContent = 'Error loading from Drive';
-                googleStatus.className = 'google-status error';
-                isGoogleDriveConnected = false;
-                googleBtnText.textContent = 'Connect to Google Drive';
-            }
-        };
-
-        if (gapi.client.getToken() === null) {
-            tokenClient.requestAccessToken({prompt: 'consent'});
-        } else {
-            tokenClient.requestAccessToken({prompt: ''});
+            });
+        } catch (error) {
+            console.error('OAuth error:', error);
+            googleStatus.textContent = 'Error: ' + error.message;
+            googleStatus.className = 'google-status error';
+            googleBtnText.textContent = 'Connect to Google Drive';
         }
     }
 }
