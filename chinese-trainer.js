@@ -111,6 +111,23 @@ changeDictionaryBtn.addEventListener('click', function(e) {
     showUploadSection();
 });
 
+// Initialize IPA reference table
+let ipaReference = null;
+(function initializeIPATable() {
+    const container = document.getElementById('ipa-reference-container');
+    if (container && window.IPAConverter) {
+        // Generate and insert the IPA reference table
+        const tableHTML = window.IPAConverter.generateIPAReferenceTable();
+        container.innerHTML = tableHTML;
+
+        // Get reference to the generated table
+        ipaReference = document.getElementById('ipa-reference');
+
+        // Attach click handlers for pronunciation tips
+        window.IPAConverter.attachIPATableClickHandlers();
+    }
+})();
+
 // Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
     if (!trainingSection.classList.contains('active')) return;
@@ -318,11 +335,44 @@ function attachFieldConverters() {
             field.addEventListener('input', handlePinyinInput);
             field.addEventListener('keydown', handlePinyinBackspace);
         }
-        // Attach IPA converter if this field is for IPA
+        // Attach IPA converter with Mandarin-specific tone conversion
         else if (label.textContent.includes('IPA')) {
-            window.IPAConverter.attachIPAConverter(field);
+            // Use shared converter with Mandarin tones and table show/hide
+            window.IPAConverter.attachIPAConverterWithTable(field, { mandarin: true });
         }
     });
+}
+
+function positionIPATable() {
+    if (!ipaReference) return;
+
+    // Find which input field is the IPA field
+    const inputGroups = [
+        { group: inputGroup1, label: inputLabel1 },
+        { group: inputGroup2, label: inputLabel2 },
+        { group: inputGroup3, label: inputLabel3 },
+        { group: inputGroup4, label: inputLabel4 }
+    ];
+
+    let ipaInputGroup = null;
+    for (const { group, label } of inputGroups) {
+        if (group.style.display !== 'none' && label.textContent.includes('IPA')) {
+            ipaInputGroup = group;
+            break;
+        }
+    }
+
+    if (ipaInputGroup) {
+        // Position the IPA reference table right after the IPA input group
+        if (ipaInputGroup.nextSibling !== ipaReference) {
+            ipaInputGroup.parentNode.insertBefore(ipaReference, ipaInputGroup.nextSibling);
+        }
+        // Keep hidden initially - will show on focus
+        ipaReference.style.display = 'none';
+    } else {
+        // If IPA field is not visible, hide the reference table
+        ipaReference.style.display = 'none';
+    }
 }
 
 function handleFileUpload(e) {
@@ -560,6 +610,9 @@ function showRandomWord() {
 
     // Attach field converters (pinyin and IPA) to input fields
     attachFieldConverters();
+
+    // Position IPA reference table under IPA input field if visible
+    positionIPATable();
 
     updateProgressTracker();
 }

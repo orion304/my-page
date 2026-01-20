@@ -79,19 +79,49 @@ This guide provides pronunciation examples for IPA symbols used in Mandarin Chin
 | ʅ | Apical vowel (syllabic fricative) | Extension of the "sh" sound in "ship" |
 | ʮ | Apical vowel (syllabic fricative) | Extension of the "r" sound (retroflex position) |
 
-## Tone Numbers
+## Chao Tone Letters
 
-Chinese tones are represented as superscript numbers after each syllable:
+Tones are represented using IPA tone letters (Chao tone letters). These are language-agnostic and describe the actual pitch contour, making them useful across all tonal languages.
 
-| Number | Name | Description | Pitch Contour |
-|--------|------|-------------|---------------|
-| ¹ (!1) | First tone | High level | High and flat (55) |
-| ² (!2) | Second tone | Rising | Mid to high (35) |
-| ³ (!3) | Third tone | Dipping | Low dipping (214) |
-| ⁴ (!4) | Fourth tone | Falling | High to low (51) |
-| ⁵ (!5) | Neutral tone | Light, unstressed | No fixed pitch |
+### The Five Tone Letters
 
-**Input shortcut**: Type `!` followed by the tone number (e.g., `!1` → ¹, `!2` → ²)
+| Letter | Level | Description | Input Shortcuts |
+|--------|-------|-------------|-----------------|
+| ˥ | 5 | Extra high tone | `t5` or `!5` |
+| ˦ | 4 | High tone | `t4` or `!4` |
+| ˧ | 3 | Mid tone | `t3` or `!3` |
+| ˨ | 2 | Low tone | `t2` or `!2` |
+| ˩ | 1 | Extra low tone | `t1` or `!1` |
+
+### Mandarin Chinese Tone Examples
+
+Mandarin tones are represented using combinations of these letters:
+
+| Mandarin Tone | Name | IPA Representation | Pitch Contour |
+|---------------|------|-------------------|---------------|
+| First tone (1st) | High level | ˥˥ | High and flat (55) |
+| Second tone (2nd) | Rising | ˧˥ | Mid to high (35) |
+| Third tone (3rd) | Dipping | ˨˩˦ | Low dipping (214) |
+| Fourth tone (4th) | Falling | ˥˩ | High to low (51) |
+| Neutral tone | Light/unstressed | (unmarked) | No fixed pitch |
+
+**Example**: The word 你好 (nǐ hǎo) in IPA is `/ni˨˩˦ xɑʊ˨˩˦/`
+
+### Input Shortcuts
+
+**Mandarin-Specific Shortcuts (Easiest)**:
+In the Chinese trainer, you can type Mandarin tone numbers (1-4) directly after a syllable, and it will automatically convert to the correct Chao tone letter combination:
+- Type `ni3` → converts to `ni˨˩˦` (3rd tone)
+- Type `xau3` → converts to `xɑʊ˨˩˦` (3rd tone)
+- Type `ka1` → converts to `kʰa˥˥` (1st tone)
+- Type `fu2` → converts to `fu˧˥` (2nd tone)
+
+**Language-Agnostic Shortcuts**:
+For more control, or when learning other tonal languages, use individual tone letters:
+- Type tone letters: `ni t2 t1 t4` → `ni˨˩˦`
+- Or use the `!` prefix: `ni !2 !1 !4` → `ni˨˩˦`
+
+The Mandarin-specific shortcuts are faster for Chinese, while the language-agnostic approach works for any tonal language.
 
 ## Common Combinations
 

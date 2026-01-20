@@ -46,7 +46,7 @@ const loadDefaultBtn = document.getElementById('load-default-btn');
 const uploadSection = document.querySelector('.upload-section');
 const changeDictionaryLink = document.getElementById('change-dictionary-link');
 const changeDictionaryBtn = document.getElementById('change-dictionary-btn');
-const ipaReference = document.getElementById('ipa-reference');
+let ipaReference = document.getElementById('ipa-reference'); // Will be set after IPA table is generated
 
 // Wait for auth module to initialize, then enable buttons and check for saved tokens
 function maybeEnableButtons() {
@@ -103,6 +103,22 @@ changeDictionaryBtn.addEventListener('click', function(e) {
     e.preventDefault();
     showUploadSection();
 });
+
+// Initialize IPA reference table
+(function initializeIPATable() {
+    const container = document.getElementById('ipa-reference-container');
+    if (container && window.IPAConverter) {
+        // Generate and insert the IPA reference table
+        const tableHTML = window.IPAConverter.generateIPAReferenceTable();
+        container.innerHTML = tableHTML;
+
+        // Update ipaReference to point to the generated table
+        ipaReference = document.getElementById('ipa-reference');
+
+        // Attach click handlers for pronunciation tips
+        window.IPAConverter.attachIPATableClickHandlers();
+    }
+})();
 
 // Get visible input fields in order
 function getVisibleInputFields() {
@@ -248,16 +264,8 @@ function attachFrenchConverter() {
 
 // Attach IPA converter to input fields that are for IPA
 function attachIPAConverter() {
-    // Use shared IPA converter module
-    window.IPAConverter.attachIPAConverter(inputFieldIpa);
-
-    // Remove any existing focus/blur listeners first
-    inputFieldIpa.removeEventListener('focus', showIPAReference);
-    inputFieldIpa.removeEventListener('blur', hideIPAReference);
-
-    // Add show/hide handlers for IPA reference tables
-    inputFieldIpa.addEventListener('focus', showIPAReference);
-    inputFieldIpa.addEventListener('blur', hideIPAReference);
+    // Use shared IPA converter module with table show/hide
+    window.IPAConverter.attachIPAConverterWithTable(inputFieldIpa);
 
     // Move the IPA reference to be right after the IPA input group if IPA field is visible
     if (inputGroupIpa.style.display !== 'none' && ipaReference) {
@@ -269,21 +277,6 @@ function attachIPAConverter() {
         // If IPA field is hidden, hide the reference
         ipaReference.style.display = 'none';
     }
-}
-
-function showIPAReference() {
-    if (ipaReference) {
-        ipaReference.style.display = 'block';
-    }
-}
-
-function hideIPAReference() {
-    // Small delay to allow clicking on the reference table
-    setTimeout(() => {
-        if (ipaReference && document.activeElement !== inputFieldIpa) {
-            ipaReference.style.display = 'none';
-        }
-    }, 200);
 }
 
 function handleFileUpload(e) {

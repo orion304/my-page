@@ -483,6 +483,36 @@ button {
     background: #f8f9fa;
 }
 
+/* IPA character cells are clickable for pronunciation tips */
+.ipa-compact-table .ipa-char {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.ipa-compact-table .ipa-char:hover {
+    background-color: #d1ecf1;
+}
+
+/* Pronunciation tip popup */
+.ipa-tip-popup {
+    position: fixed;
+    background: #fff;
+    border: 2px solid #0055A4;
+    border-radius: 8px;
+    padding: 10px 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    z-index: 10000;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.ipa-tip-popup strong {
+    color: #0055A4;
+    font-size: 16px;
+}
+
 @media (max-width: 768px) {
     .ipa-tables {
         grid-template-columns: 1fr;
@@ -493,6 +523,11 @@ button {
     }
 
     .ipa-compact-table td {
+        font-size: 12px;
+    }
+
+    .ipa-tip-popup {
+        max-width: 250px;
         font-size: 12px;
     }
 }
