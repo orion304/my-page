@@ -75,11 +75,34 @@
 
             <div class="action-buttons">
                 <button class="check-btn" id="check-btn">🔍 Check Answers</button>
+                <button class="add-words-btn" id="add-words-btn">➕ Add Words</button>
             </div>
 
             <div class="action-buttons" id="judgment-buttons" style="display: none;">
                 <button class="correct-btn" id="correct-btn">✓ Got It</button>
                 <button class="wrong-btn" id="wrong-btn">✗ Didn't Get It</button>
+            </div>
+
+            <!-- Add Words Section -->
+            <div class="add-words-section" id="add-words-section" style="display: none;">
+                <div class="add-words-header">
+                    <h3>➕ Add Words to Practice</h3>
+                    <button class="close-add-words-btn" id="close-add-words-btn">✕ Back to Training</button>
+                </div>
+
+                <div class="search-container">
+                    <input type="text" id="word-search-input" class="search-input"
+                           placeholder="Search by hanzi, pinyin, or English..."
+                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                    <div class="search-info">
+                        <span id="available-count">0</span> words available  •
+                        <span id="activated-count">0</span> in rotation
+                    </div>
+                </div>
+
+                <div class="word-results" id="word-results">
+                    <em style="color: #999;">Type to search for words...</em>
+                </div>
             </div>
 
             <div class="stats">

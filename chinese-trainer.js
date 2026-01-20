@@ -54,6 +54,13 @@ const loadDefaultBtn = document.getElementById('load-default-btn');
 const uploadSection = document.querySelector('.upload-section');
 const changeDictionaryLink = document.getElementById('change-dictionary-link');
 const changeDictionaryBtn = document.getElementById('change-dictionary-btn');
+const addWordsBtn = document.getElementById('add-words-btn');
+const closeAddWordsBtn = document.getElementById('close-add-words-btn');
+const addWordsSection = document.getElementById('add-words-section');
+const wordSearchInput = document.getElementById('word-search-input');
+const wordResults = document.getElementById('word-results');
+const availableCount = document.getElementById('available-count');
+const activatedCount = document.getElementById('activated-count');
 
 // Wait for auth module to initialize, then enable buttons and check for saved tokens
 function maybeEnableButtons() {
@@ -110,6 +117,9 @@ changeDictionaryBtn.addEventListener('click', function(e) {
     e.preventDefault();
     showUploadSection();
 });
+addWordsBtn.addEventListener('click', showAddWordsSection);
+closeAddWordsBtn.addEventListener('click', hideAddWordsSection);
+wordSearchInput.addEventListener('input', handleWordSearch);
 
 // Initialize IPA reference table
 let ipaReference = null;
@@ -507,24 +517,41 @@ function showRandomWord() {
         const notStartedWords = Object.keys(dictionary).filter(key => dictionary[key].state === 'not_started');
         const learnedWords = Object.keys(dictionary).filter(key => dictionary[key].state === 'learned');
 
-        if (notStartedWords.length > 0) {
-            // Start first lesson automatically
-            notStartedWords.forEach(key => {
-                dictionary[key].state = 'learning';
-                dictionary[key].correctCount = 0;
-            });
-            saveToGoogleDrive();
-            updateProgressTracker();
-            showRandomWord();
-            return;
-        } else if (learnedWords.length > 0) {
-            promptValue.textContent = '🎉 All words learned! You can review by downloading and re-uploading the dictionary.';
+        if (notStartedWords.length > 0 || learnedWords.length > 0) {
+            // Show completion message with options
+            let html = '🎉 All current words complete!';
+
+            // Always show "Add Words" option if there are not_started words
+            if (notStartedWords.length > 0) {
+                html += '<div style="margin-top: 20px;"><p style="color: #666; margin-bottom: 10px;">Add more words to continue learning</p></div>';
+            }
+
+            // Show review option if there are learned words
+            if (learnedWords.length > 0) {
+                const maxReview = learnedWords.length;
+                const defaultReview = Math.min(10, maxReview);
+
+                if (notStartedWords.length > 0) {
+                    html += '<p style="margin: 20px 0; color: #999;">— OR —</p>';
+                }
+
+                html += `<div class="review-section">
+                    <p style="margin-bottom: 10px; font-weight: 600;">Review Learned Words</p>
+                    <div class="review-controls">
+                        <input type="range" id="review-slider" min="1" max="${maxReview}" value="${defaultReview}" oninput="updateReviewCount(this.value)">
+                        <span id="review-count">${defaultReview} words</span>
+                    </div>
+                    <button class="start-review-btn" onclick="startReview()">🔄 Start Review</button>
+                </div>`;
+            }
+
+            promptValue.innerHTML = html;
             promptLabel.style.display = 'none';
             checkBtn.style.display = 'none';
             judgmentButtons.style.display = 'none';
             document.getElementById('input-section').style.display = 'none';
         } else {
-            promptValue.textContent = 'No words to practice';
+            promptValue.textContent = 'No words available';
             promptLabel.style.display = 'none';
             checkBtn.style.display = 'none';
             judgmentButtons.style.display = 'none';
@@ -902,6 +929,147 @@ async function saveToGoogleDrive() {
         }
     }
 }
+
+function showAddWordsSection() {
+    addWordsSection.style.display = 'block';
+    document.getElementById('input-section').style.display = 'none';
+    checkBtn.style.display = 'none';
+    judgmentButtons.style.display = 'none';
+    updateWordCounts();
+    wordSearchInput.focus();
+}
+
+function hideAddWordsSection() {
+    addWordsSection.style.display = 'none';
+    document.getElementById('input-section').style.display = 'block';
+    checkBtn.style.display = 'flex';
+    wordSearchInput.value = '';
+    wordResults.innerHTML = '<em style="color: #999;">Type to search for words...</em>';
+
+    // Refresh the word display in case new words were activated
+    showRandomWord();
+}
+
+function updateWordCounts() {
+    if (!dictionary) return;
+
+    const notStarted = Object.keys(dictionary).filter(key => dictionary[key].state === 'not_started').length;
+    const learning = Object.keys(dictionary).filter(key => dictionary[key].state === 'learning').length;
+    const learned = Object.keys(dictionary).filter(key => dictionary[key].state === 'learned').length;
+
+    availableCount.textContent = notStarted;
+    activatedCount.textContent = learning + learned;
+}
+
+function handleWordSearch(e) {
+    const query = e.target.value.trim().toLowerCase();
+
+    if (!query) {
+        wordResults.innerHTML = '<em style="color: #999;">Type to search for words...</em>';
+        return;
+    }
+
+    // Filter dictionary for not_started words matching query
+    const matches = Object.keys(dictionary).filter(key => {
+        const word = dictionary[key];
+        if (word.state !== 'not_started') return false;
+
+        // Search in hanzi, pinyin (tone-insensitive), and english
+        const hanziMatch = word.hanzi.includes(query);
+        const englishMatch = word.english.toLowerCase().includes(query);
+
+        // Tone-insensitive pinyin search: strip tone marks for comparison
+        const pinyinNormalized = word.pinyin.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        const pinyinMatch = pinyinNormalized.includes(query);
+
+        return hanziMatch || englishMatch || pinyinMatch;
+    });
+
+    if (matches.length === 0) {
+        wordResults.innerHTML = '<em style="color: #999;">No available words found</em>';
+        return;
+    }
+
+    // Display results
+    wordResults.innerHTML = matches
+        .map(key => {
+            const word = dictionary[key];
+            return `
+                <div class="word-result-item">
+                    <div class="word-result-info">
+                        <span class="word-hanzi">${word.hanzi}</span>
+                        <span class="word-pinyin">${word.pinyin}</span>
+                        <span class="word-english">${word.english}</span>
+                    </div>
+                    <button class="activate-word-btn" data-key="${key}">Add</button>
+                </div>
+            `;
+        })
+        .join('');
+
+    // Attach click handlers to activate buttons
+    wordResults.querySelectorAll('.activate-word-btn').forEach(btn => {
+        btn.addEventListener('click', () => activateWord(btn.dataset.key));
+    });
+}
+
+function activateWord(key) {
+    if (!dictionary || !dictionary[key]) return;
+
+    dictionary[key].state = 'learning';
+    dictionary[key].correctCount = 0;
+
+    saveToGoogleDrive();
+    updateWordCounts();
+    updateProgressTracker();
+
+    // Re-run search to update results
+    handleWordSearch({ target: wordSearchInput });
+}
+
+// Update the review count display when slider moves
+function updateReviewCount(value) {
+    const countDisplay = document.getElementById('review-count');
+    if (countDisplay) {
+        countDisplay.textContent = `${value} word${value == 1 ? '' : 's'}`;
+    }
+}
+
+// Start a review session with N randomly selected learned words
+function startReview() {
+    if (!dictionary) return;
+
+    const slider = document.getElementById('review-slider');
+    const reviewCount = slider ? parseInt(slider.value) : 10;
+
+    // Get all learned words
+    const learnedWords = Object.keys(dictionary).filter(key => dictionary[key].state === 'learned');
+
+    // Randomly select N words to review
+    const wordsToReview = [];
+    const shuffled = [...learnedWords].sort(() => Math.random() - 0.5);
+    for (let i = 0; i < Math.min(reviewCount, shuffled.length); i++) {
+        wordsToReview.push(shuffled[i]);
+    }
+
+    // Set selected words to learning with correctCount = 1
+    // (they only need one more correct answer to return to learned)
+    wordsToReview.forEach(key => {
+        dictionary[key].state = 'learning';
+        dictionary[key].correctCount = 1;
+    });
+
+    // Save to Google Drive
+    saveToGoogleDrive();
+
+    // Update UI and show first word
+    updateProgressTracker();
+    showRandomWord();
+}
+
+// Make functions globally available for inline onclick handlers
+window.updateReviewCount = updateReviewCount;
+window.startReview = startReview;
 
 function downloadDictionary() {
     if (!dictionary) return;
