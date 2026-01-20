@@ -288,14 +288,24 @@ function handleFileUpload(e) {
 
     reader.onload = async function(event) {
         try {
-            dictionary = JSON.parse(event.target.result);
+            const userDict = JSON.parse(event.target.result);
+
+            // Merge with repository dictionary
+            const { merged, stats } = await window.DictMerge.mergeWithRepo(userDict, FILE_NAME);
+            dictionary = merged;
+
             fileNameDisplay.textContent = `Loaded: ${fileName}`;
+            if (stats.newWords > 0 || stats.updatedWords > 0) {
+                fileNameDisplay.textContent += ` (${stats.newWords} new, ${stats.updatedWords} updated)`;
+            }
+
             trainingSection.classList.add('active');
             totalCountDisplay.textContent = Object.keys(dictionary).length;
             updateProgressTracker();
             showRandomWord();
             hideUploadSection();
 
+            // Save merged dictionary to Google Drive if connected
             if (isGoogleDriveConnected) {
                 await saveToGoogleDrive();
             }
@@ -677,7 +687,12 @@ async function loadFromGoogleDrive() {
             alt: 'media',
         });
 
-        dictionary = JSON.parse(fileResponse.body);
+        const userDict = JSON.parse(fileResponse.body);
+
+        // Merge with repository dictionary
+        const { merged, stats } = await window.DictMerge.mergeWithRepo(userDict, FILE_NAME);
+        dictionary = merged;
+
         fileNameDisplay.textContent = `Loaded from Google Drive: ${FILE_NAME}`;
         trainingSection.classList.add('active');
         totalCountDisplay.textContent = Object.keys(dictionary).length;
@@ -685,8 +700,15 @@ async function loadFromGoogleDrive() {
         showRandomWord();
         hideUploadSection();
 
-        googleStatus.textContent = '✓ Dictionary loaded from Drive';
+        // Show merge status
+        const mergeMessage = getMergeStatusMessage(stats);
+        googleStatus.textContent = mergeMessage;
         googleStatus.className = 'google-status success';
+
+        // Auto-save merged dictionary back to Drive
+        if (stats.newWords > 0 || stats.updatedWords > 0) {
+            await saveToGoogleDrive();
+        }
     } else {
         googleStatus.textContent = 'No dictionary found in Drive. Please upload a JSON file below.';
         googleStatus.className = 'google-status';
@@ -755,6 +777,23 @@ async function saveToGoogleDrive() {
             saveToGoogleDrive();
         }
     }
+}
+
+// Helper function to generate merge status message
+function getMergeStatusMessage(stats) {
+    if (stats.newWords === 0 && stats.updatedWords === 0) {
+        return '✓ Dictionary loaded from Drive';
+    }
+
+    const parts = [];
+    if (stats.newWords > 0) {
+        parts.push(`Added ${stats.newWords} new word${stats.newWords === 1 ? '' : 's'}`);
+    }
+    if (stats.updatedWords > 0) {
+        parts.push(`Updated ${stats.updatedWords} correction${stats.updatedWords === 1 ? '' : 's'}`);
+    }
+
+    return '✓ Loaded from Drive - ' + parts.join(', ');
 }
 
 function downloadDictionary() {
