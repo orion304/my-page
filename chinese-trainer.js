@@ -20,18 +20,23 @@ const promptValue = document.getElementById('prompt-value');
 const inputField1 = document.getElementById('input-field-1');
 const inputField2 = document.getElementById('input-field-2');
 const inputField3 = document.getElementById('input-field-3');
+const inputField4 = document.getElementById('input-field-4');
 const inputLabel1 = document.getElementById('input-label-1');
 const inputLabel2 = document.getElementById('input-label-2');
 const inputLabel3 = document.getElementById('input-label-3');
+const inputLabel4 = document.getElementById('input-label-4');
 const hanziChoices1 = document.getElementById('hanzi-choices-1');
 const hanziChoices2 = document.getElementById('hanzi-choices-2');
 const hanziChoices3 = document.getElementById('hanzi-choices-3');
+const hanziChoices4 = document.getElementById('hanzi-choices-4');
 const inputGroup1 = document.getElementById('input-group-1');
 const inputGroup2 = document.getElementById('input-group-2');
 const inputGroup3 = document.getElementById('input-group-3');
+const inputGroup4 = document.getElementById('input-group-4');
 const feedback1 = document.getElementById('feedback-1');
 const feedback2 = document.getElementById('feedback-2');
 const feedback3 = document.getElementById('feedback-3');
+const feedback4 = document.getElementById('feedback-4');
 const checkBtn = document.getElementById('check-btn');
 const judgmentButtons = document.getElementById('judgment-buttons');
 const correctBtn = document.getElementById('correct-btn');
@@ -294,12 +299,13 @@ function handlePinyinBackspace(e) {
     }
 }
 
-// Add pinyin conversion to input fields that are for pinyin
-function attachPinyinConverter() {
+// Add pinyin and IPA conversion to input fields
+function attachFieldConverters() {
     const inputs = [
         { field: inputField1, label: inputLabel1 },
         { field: inputField2, label: inputLabel2 },
-        { field: inputField3, label: inputLabel3 }
+        { field: inputField3, label: inputLabel3 },
+        { field: inputField4, label: inputLabel4 }
     ];
 
     inputs.forEach(({ field, label }) => {
@@ -311,6 +317,10 @@ function attachPinyinConverter() {
         if (label.textContent.includes('Pinyin')) {
             field.addEventListener('input', handlePinyinInput);
             field.addEventListener('keydown', handlePinyinBackspace);
+        }
+        // Attach IPA converter if this field is for IPA
+        else if (label.textContent.includes('IPA')) {
+            window.IPAConverter.attachIPAConverter(field);
         }
     });
 }
@@ -487,7 +497,7 @@ function showRandomWord() {
     const wordData = dictionary[randomKey];
 
     // Randomly choose which field to show as prompt
-    const fields = ['hanzi', 'pinyin', 'english'];
+    const fields = ['hanzi', 'pinyin', 'ipa', 'english'];
     currentPromptField = fields[Math.floor(Math.random() * fields.length)];
 
     // Display the prompt
@@ -495,6 +505,7 @@ function showRandomWord() {
         'hanzi': 'Hanzi (汉字)',
         'pinyin': 'Pinyin',
         'zhuyin': 'Zhuyin (ㄅㄆㄇㄈ)',
+        'ipa': 'IPA',
         'english': 'English'
     };
 
@@ -508,7 +519,8 @@ function showRandomWord() {
     const inputGroups = [
         { group: inputGroup1, label: inputLabel1, field: inputField1, feedback: feedback1, choices: hanziChoices1 },
         { group: inputGroup2, label: inputLabel2, field: inputField2, feedback: feedback2, choices: hanziChoices2 },
-        { group: inputGroup3, label: inputLabel3, field: inputField3, feedback: feedback3, choices: hanziChoices3 }
+        { group: inputGroup3, label: inputLabel3, field: inputField3, feedback: feedback3, choices: hanziChoices3 },
+        { group: inputGroup4, label: inputLabel4, field: inputField4, feedback: feedback4, choices: hanziChoices4 }
     ];
 
     // Set up each input group based on available answer fields
@@ -546,8 +558,8 @@ function showRandomWord() {
     correctBtn.disabled = false;
     wrongBtn.disabled = false;
 
-    // Attach pinyin tone converter to input fields
-    attachPinyinConverter();
+    // Attach field converters (pinyin and IPA) to input fields
+    attachFieldConverters();
 
     updateProgressTracker();
 }
@@ -561,7 +573,8 @@ function checkAnswers() {
     const inputs = [
         { field: inputField1, feedback: feedback1, choices: hanziChoices1 },
         { field: inputField2, feedback: feedback2, choices: hanziChoices2 },
-        { field: inputField3, feedback: feedback3, choices: hanziChoices3 }
+        { field: inputField3, feedback: feedback3, choices: hanziChoices3 },
+        { field: inputField4, feedback: feedback4, choices: hanziChoices4 }
     ];
 
     inputs.forEach(({ field, feedback, choices }) => {
@@ -595,8 +608,16 @@ function checkAnswers() {
             }
         } else {
             // Regular text input
-            const userAnswer = field.value.trim();
-            const isCorrect = userAnswer.toLowerCase() === expectedAnswer.toLowerCase();
+            let userAnswer = field.value.trim();
+            let expectedAnswerNormalized = expectedAnswer;
+
+            // For IPA fields, strip slashes from both user input and expected answer
+            if (fieldName === 'ipa') {
+                userAnswer = userAnswer.replace(/^\/|\/$/g, '');
+                expectedAnswerNormalized = expectedAnswer.replace(/^\/|\/$/g, '');
+            }
+
+            const isCorrect = userAnswer.toLowerCase() === expectedAnswerNormalized.toLowerCase();
 
             if (isCorrect) {
                 field.className = 'answer-input correct';
