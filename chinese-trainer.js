@@ -1107,6 +1107,169 @@ function getMergeStatusMessage(stats) {
     return '✓ Loaded from Drive - ' + parts.join(', ');
 }
 
+// ===== TAB SWITCHING =====
+
+const activateTabBtn = document.getElementById('activate-tab-btn');
+const lookupTabBtn = document.getElementById('lookup-tab-btn');
+const activateTabContent = document.getElementById('activate-tab-content');
+const lookupTabContent = document.getElementById('lookup-tab-content');
+const pinyinSearchInput = document.getElementById('pinyin-search-input');
+const lookupResults = document.getElementById('lookup-results');
+
+// Tab switching
+activateTabBtn.addEventListener('click', () => switchTab('activate'));
+lookupTabBtn.addEventListener('click', () => switchTab('lookup'));
+
+function switchTab(tab) {
+    if (tab === 'activate') {
+        activateTabBtn.classList.add('active');
+        lookupTabBtn.classList.remove('active');
+        activateTabContent.classList.add('active');
+        lookupTabContent.classList.remove('active');
+        activateTabContent.style.display = 'block';
+        lookupTabContent.style.display = 'none';
+        wordSearchInput.focus();
+    } else {
+        lookupTabBtn.classList.add('active');
+        activateTabBtn.classList.remove('active');
+        lookupTabContent.classList.add('active');
+        activateTabContent.classList.remove('active');
+        lookupTabContent.style.display = 'block';
+        activateTabContent.style.display = 'none';
+        pinyinSearchInput.focus();
+    }
+}
+
+// ===== PINYIN LOOKUP =====
+
+pinyinSearchInput.addEventListener('input', handlePinyinSearch);
+
+async function handlePinyinSearch() {
+    const query = pinyinSearchInput.value.trim();
+
+    if (!query) {
+        lookupResults.innerHTML = '<em style="color: #999;">Type pinyin to search dictionary...</em>';
+        return;
+    }
+
+    // Show loading state
+    lookupResults.innerHTML = '<em style="color: #999;">Searching...</em>';
+
+    try {
+        const results = await DictLookup.searchByPinyin(query, 20);
+
+        if (results.length === 0) {
+            lookupResults.innerHTML = '<em style="color: #999;">No results found. Try different pinyin or check spelling.</em>';
+            return;
+        }
+
+        // Display results
+        displayLookupResults(results);
+
+    } catch (error) {
+        console.error('Lookup error:', error);
+        lookupResults.innerHTML = '<em style="color: #dc3545;">Error loading dictionary. Please try again.</em>';
+    }
+}
+
+function displayLookupResults(results) {
+    lookupResults.innerHTML = '';
+
+    results.forEach(entry => {
+        const item = document.createElement('div');
+        item.className = 'lookup-result-item';
+
+        const info = document.createElement('div');
+        info.className = 'lookup-result-info';
+
+        const hanzi = document.createElement('div');
+        hanzi.className = 'lookup-result-hanzi';
+        hanzi.textContent = entry.simplified;
+
+        const pinyin = document.createElement('div');
+        pinyin.className = 'lookup-result-pinyin';
+        pinyin.textContent = entry.pinyin;
+
+        const english = document.createElement('div');
+        english.className = 'lookup-result-english';
+        english.textContent = entry.definitions.join('; ');
+
+        info.appendChild(hanzi);
+        info.appendChild(pinyin);
+        info.appendChild(english);
+
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-word-btn';
+        addBtn.textContent = '+ Add';
+
+        // Check if word already exists
+        const existingKey = Object.keys(dictionary).find(key =>
+            dictionary[key].hanzi === entry.simplified
+        );
+
+        if (existingKey) {
+            addBtn.textContent = '✓ Added';
+            addBtn.disabled = true;
+        } else {
+            addBtn.addEventListener('click', () => addNewWordToDictionary(entry, addBtn));
+        }
+
+        item.appendChild(info);
+        item.appendChild(addBtn);
+        lookupResults.appendChild(item);
+    });
+}
+
+async function addNewWordToDictionary(entry, button) {
+    try {
+        // Disable button and show loading state
+        button.disabled = true;
+        button.textContent = '...';
+
+        // Generate zhuyin and IPA from pinyin
+        const zhuyin = PinyinConverter.convertToZhuyin(entry.pinyin);
+        const ipa = PinyinConverter.convertToIPA(entry.pinyin);
+
+        // Create unique key (use simplified hanzi as key)
+        const key = entry.simplified;
+
+        // Check if key already exists (shouldn't happen, but be safe)
+        if (dictionary[key]) {
+            button.textContent = '✓ Already exists';
+            return;
+        }
+
+        // Create dictionary entry
+        dictionary[key] = {
+            hanzi: entry.simplified,
+            pinyin: entry.pinyin,
+            zhuyin: zhuyin,
+            ipa: ipa,
+            english: entry.definitions[0], // Use first definition
+            state: 'learning', // Add directly to learning rotation
+            correctCount: 0,
+            lesson: null
+        };
+
+        // Save to Google Drive
+        await saveDictionary();
+
+        // Update UI
+        button.textContent = '✓ Added';
+        updateWordCounts();
+        updateWordBadges();
+
+        // Show success message (optional)
+        console.log(`Added new word: ${entry.simplified} (${entry.pinyin})`);
+
+    } catch (error) {
+        console.error('Error adding word:', error);
+        button.disabled = false;
+        button.textContent = '+ Add';
+        alert('Failed to add word. Please try again.');
+    }
+}
+
 // Make functions globally available for inline onclick handlers
 window.updateReviewCount = updateReviewCount;
 window.startReview = startReview;

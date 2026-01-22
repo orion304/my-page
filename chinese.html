@@ -90,18 +90,49 @@
                     <button class="close-add-words-btn" id="close-add-words-btn">✕ Back to Training</button>
                 </div>
 
-                <div class="search-container">
-                    <input type="text" id="word-search-input" class="search-input"
-                           placeholder="Search by hanzi, pinyin, or English..."
-                           autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-                    <div class="search-info">
-                        <span id="available-count">0</span> words available  •
-                        <span id="activated-count">0</span> in rotation
+                <!-- Tab Navigation -->
+                <div class="add-words-tabs">
+                    <button class="tab-btn active" id="activate-tab-btn" data-tab="activate">
+                        📚 Activate Pre-loaded
+                    </button>
+                    <button class="tab-btn" id="lookup-tab-btn" data-tab="lookup">
+                        🔍 Add New Word
+                    </button>
+                </div>
+
+                <!-- Activate Pre-loaded Words Tab -->
+                <div class="tab-content active" id="activate-tab-content">
+                    <div class="search-container">
+                        <input type="text" id="word-search-input" class="search-input"
+                               placeholder="Search by hanzi, pinyin, or English..."
+                               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                        <div class="search-info">
+                            <span id="available-count">0</span> words available  •
+                            <span id="activated-count">0</span> in rotation
+                        </div>
+                    </div>
+
+                    <div class="word-results" id="word-results">
+                        <em style="color: #999;">Type to search for words...</em>
                     </div>
                 </div>
 
-                <div class="word-results" id="word-results">
-                    <em style="color: #999;">Type to search for words...</em>
+                <!-- Add New Word Tab -->
+                <div class="tab-content" id="lookup-tab-content" style="display: none;">
+                    <div class="search-container">
+                        <input type="text" id="pinyin-search-input" class="search-input"
+                               placeholder="Enter pinyin (e.g., 'guo3 zhi1' or 'guo zhi')..."
+                               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+                        <div class="search-info">
+                            <small style="color: #999;">
+                                💡 Tip: Include tone numbers (1-4) for exact match, or omit for flexible matching
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="lookup-results" id="lookup-results">
+                        <em style="color: #999;">Type pinyin to search dictionary...</em>
+                    </div>
                 </div>
             </div>
 
@@ -165,6 +196,8 @@
     <script src="auth.js"></script>
     <script src="ipa-converter.js"></script>
     <script src="dict-merge.js"></script>
+    <script src="dict-lookup.js"></script>
+    <script src="pinyin-converter.js"></script>
     <script src="chinese-trainer.js"></script>
 </body>
 </html>

@@ -597,6 +597,109 @@ button {
     background: #5a6268;
 }
 
+.add-words-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.tab-btn {
+    background: transparent;
+    color: #666;
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    color: #dc3545;
+}
+
+.tab-btn.active {
+    color: #dc3545;
+    border-bottom-color: #dc3545;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.lookup-results {
+    max-height: 400px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.lookup-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background 0.3s;
+}
+
+.lookup-result-item:hover {
+    background: #e9ecef;
+}
+
+.lookup-result-info {
+    flex: 1;
+}
+
+.lookup-result-hanzi {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.lookup-result-pinyin {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.lookup-result-english {
+    font-size: 14px;
+    color: #999;
+}
+
+.add-word-btn {
+    background: #28a745;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.add-word-btn:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+.add-word-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .add-words-btn {
     background: #28a745;
     color: white;
