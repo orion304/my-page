@@ -1252,7 +1252,7 @@ async function addNewWordToDictionary(entry, button) {
         };
 
         // Save to Google Drive
-        await saveDictionary();
+        await saveToGoogleDrive();
 
         // Update UI
         button.textContent = '✓ Added';
