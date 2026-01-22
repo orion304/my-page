@@ -6,7 +6,7 @@
     "ipa": "/uɔ˨˩˦/",
     "english": "I/me",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "you": {
@@ -16,7 +16,7 @@
     "ipa": "/ni˨˩˦/",
     "english": "you",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "he": {
@@ -26,7 +26,7 @@
     "ipa": "/tʰa˥˥/",
     "english": "he/him",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "she": {
@@ -36,7 +36,7 @@
     "ipa": "/tʰa˥˥/",
     "english": "she/her",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "we": {
@@ -46,7 +46,7 @@
     "ipa": "/uɔ˨˩˦ mən/",
     "english": "we/us",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "they": {
@@ -56,7 +56,7 @@
     "ipa": "/tʰa˥˥ mən/",
     "english": "they/them",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "is": {
@@ -66,7 +66,7 @@
     "ipa": "/ʂɨ˥˩/",
     "english": "is/am/are",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "have": {
@@ -76,7 +76,7 @@
     "ipa": "/joʊ˨˩˦/",
     "english": "have/has",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "not": {
@@ -86,7 +86,7 @@
     "ipa": "/pu˥˩/",
     "english": "not/no",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "one": {
@@ -96,7 +96,7 @@
     "ipa": "/i˥˥/",
     "english": "one/1",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "two": {
@@ -106,7 +106,7 @@
     "ipa": "/əɻ˥˩/",
     "english": "two/2",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "three": {
@@ -116,7 +116,7 @@
     "ipa": "/san˥˥/",
     "english": "three/3",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "four": {
@@ -126,7 +126,7 @@
     "ipa": "/sɨ˥˩/",
     "english": "four/4",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "five": {
@@ -136,7 +136,7 @@
     "ipa": "/u˨˩˦/",
     "english": "five/5",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "six": {
@@ -146,7 +146,7 @@
     "ipa": "/ljoʊ˥˩/",
     "english": "six/6",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "seven": {
@@ -156,7 +156,7 @@
     "ipa": "/tɕʰi˥˥/",
     "english": "seven/7",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "eight": {
@@ -166,7 +166,7 @@
     "ipa": "/pa˥˥/",
     "english": "eight/8",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "nine": {
@@ -176,7 +176,7 @@
     "ipa": "/tɕjoʊ˨˩˦/",
     "english": "nine/9",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "ten": {
@@ -186,7 +186,7 @@
     "ipa": "/ʂɨ˧˥/",
     "english": "ten/10",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "man": {
@@ -196,7 +196,7 @@
     "ipa": "/nan˧˥ ʐən˧˥/",
     "english": "man",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "woman": {
@@ -206,7 +206,7 @@
     "ipa": "/ny˨˩˦ ʐən˧˥/",
     "english": "woman",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "child": {
@@ -216,7 +216,7 @@
     "ipa": "/xaɪ˧˥ tsɨ/",
     "english": "child",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "person": {
@@ -226,7 +226,7 @@
     "ipa": "/ʐən˧˥/",
     "english": "person",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "water": {
@@ -236,7 +236,7 @@
     "ipa": "/ʂueɪ˨˩˦/",
     "english": "water",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "eat": {
@@ -246,7 +246,7 @@
     "ipa": "/ʈʂʰɨ˥˥/",
     "english": "eat",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "drink": {
@@ -256,7 +256,7 @@
     "ipa": "/xɤ˥˥/",
     "english": "drink",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "rice": {
@@ -266,7 +266,7 @@
     "ipa": "/mi˨˩˦ fan˥˩/",
     "english": "rice (cooked)",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "food": {
@@ -276,7 +276,7 @@
     "ipa": "/ʂɨ˧˥ u˥˩/",
     "english": "food",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "good": {
@@ -286,7 +286,7 @@
     "ipa": "/xɑʊ˨˩˦/",
     "english": "good",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "hello": {
@@ -296,7 +296,7 @@
     "ipa": "/ni˨˩˦ xɑʊ˨˩˦/",
     "english": "hello",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "thanks": {
@@ -306,7 +306,7 @@
     "ipa": "/ɕjɛ˥˩ ɕjɛ/",
     "english": "thank you",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "sorry": {
@@ -316,7 +316,7 @@
     "ipa": "/tuei˥˩ pu tɕʰi˨˩˦/",
     "english": "sorry",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "go": {
@@ -326,7 +326,7 @@
     "ipa": "/tɕʰy˥˩/",
     "english": "go",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "come": {
@@ -336,7 +336,7 @@
     "ipa": "/laɪ˧˥/",
     "english": "come",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "big": {
@@ -346,7 +346,7 @@
     "ipa": "/ta˥˩/",
     "english": "big",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "small": {
@@ -356,7 +356,7 @@
     "ipa": "/ɕjɑʊ˨˩˦/",
     "english": "small",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "many": {
@@ -366,7 +366,7 @@
     "ipa": "/tuɔ˥˥/",
     "english": "many/much",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "few": {
@@ -376,7 +376,7 @@
     "ipa": "/ʂɑʊ˨˩˦/",
     "english": "few/little",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "see": {
@@ -386,7 +386,7 @@
     "ipa": "/kʰan˥˩/",
     "english": "see/look/watch",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "want": {
@@ -396,7 +396,7 @@
     "ipa": "/jɑʊ˥˩/",
     "english": "want",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "like": {
@@ -406,7 +406,7 @@
     "ipa": "/ɕi˨˩˦ xuan/",
     "english": "like",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "book": {
@@ -416,7 +416,7 @@
     "ipa": "/ʂu˥˥/",
     "english": "book",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "home": {
@@ -426,7 +426,7 @@
     "ipa": "/tɕja˥˥/",
     "english": "home/family",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "school": {
@@ -436,7 +436,7 @@
     "ipa": "/ɕyɛ˧˥ ɕjɑʊ˥˩/",
     "english": "school",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "student": {
@@ -446,7 +446,7 @@
     "ipa": "/ɕyɛ˧˥ ʂɤŋ/",
     "english": "student",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "teacher": {
@@ -456,7 +456,7 @@
     "ipa": "/lɑʊ˨˩˦ ʂɨ˥˥/",
     "english": "teacher",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "friend": {
@@ -466,7 +466,7 @@
     "ipa": "/pʰɤŋ˧˥ joʊ/",
     "english": "friend",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "now": {
@@ -476,7 +476,7 @@
     "ipa": "/ɕjɛn˥˩ tsaɪ˥˩/",
     "english": "now",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "today": {
@@ -486,7 +486,7 @@
     "ipa": "/tɕin˥˥ tʰjɛn˥˥/",
     "english": "today",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "tomorrow": {
@@ -496,7 +496,7 @@
     "ipa": "/miŋ˧˥ tʰjɛn˥˥/",
     "english": "tomorrow",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "yesterday": {
@@ -506,7 +506,7 @@
     "ipa": "/tsuɔ˧˥ tʰjɛn˥˥/",
     "english": "yesterday",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "year": {
@@ -516,7 +516,7 @@
     "ipa": "/njɛn˧˥/",
     "english": "year",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "month": {
@@ -526,7 +526,7 @@
     "ipa": "/yɛ˥˩/",
     "english": "month/moon",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "day": {
@@ -536,7 +536,7 @@
     "ipa": "/tʰjɛn˥˥/",
     "english": "day/sky",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "time": {
@@ -546,7 +546,7 @@
     "ipa": "/ʂɨ˧˥ tɕjɛn˥˥/",
     "english": "time",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "what": {
@@ -556,7 +556,7 @@
     "ipa": "/ʂən˧˥ mɤ/",
     "english": "what",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "who": {
@@ -566,7 +566,7 @@
     "ipa": "/ʂeɪ˧˥/",
     "english": "who",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "where": {
@@ -576,7 +576,7 @@
     "ipa": "/na˨˩˦ li/",
     "english": "where",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "how": {
@@ -586,7 +586,7 @@
     "ipa": "/tsən˨˩˦ mɤ/",
     "english": "how",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "why": {
@@ -596,7 +596,7 @@
     "ipa": "/ueɪ˥˩ ʂən˧˥ mɤ/",
     "english": "why",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "this": {
@@ -606,7 +606,7 @@
     "ipa": "/ʈʂɤ˥˩/",
     "english": "this",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "that": {
@@ -616,7 +616,7 @@
     "ipa": "/na˥˩/",
     "english": "that",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "here": {
@@ -626,7 +626,7 @@
     "ipa": "/ʈʂɤ˥˩ li/",
     "english": "here",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "there": {
@@ -636,7 +636,7 @@
     "ipa": "/na˥˩ li/",
     "english": "there",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "can": {
@@ -646,7 +646,7 @@
     "ipa": "/nɤŋ˧˥/",
     "english": "can/able to",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "do": {
@@ -656,7 +656,7 @@
     "ipa": "/tsuɔ˥˩/",
     "english": "do/make",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "say": {
@@ -666,7 +666,7 @@
     "ipa": "/ʂuɔ˥˥/",
     "english": "say/speak",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "know": {
@@ -676,7 +676,7 @@
     "ipa": "/ʈʂɨ˥˥ tɑʊ˥˩/",
     "english": "know",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "think": {
@@ -686,7 +686,7 @@
     "ipa": "/ɕjɑŋ˨˩˦/",
     "english": "think/want to",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "give": {
@@ -696,7 +696,7 @@
     "ipa": "/keɪ˨˩˦/",
     "english": "give",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "take": {
@@ -706,7 +706,7 @@
     "ipa": "/na˧˥/",
     "english": "take/hold",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "buy": {
@@ -716,7 +716,7 @@
     "ipa": "/maɪ˨˩˦/",
     "english": "buy",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "sell": {
@@ -726,7 +726,7 @@
     "ipa": "/maɪ˥˩/",
     "english": "sell",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "money": {
@@ -736,7 +736,7 @@
     "ipa": "/tɕʰjɛn˧˥/",
     "english": "money",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "thing": {
@@ -746,7 +746,7 @@
     "ipa": "/tuŋ˥˥ ɕi/",
     "english": "thing",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "name": {
@@ -756,7 +756,7 @@
     "ipa": "/miŋ˧˥ tsɨ/",
     "english": "name",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "doctor": {
@@ -766,7 +766,7 @@
     "ipa": "/i˥˥ ʂɤŋ˥˥/",
     "english": "doctor",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "work": {
@@ -776,7 +776,7 @@
     "ipa": "/kuŋ˥˥ tsuɔ˥˩/",
     "english": "work/job",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "car": {
@@ -786,7 +786,7 @@
     "ipa": "/ʈʂʰɤ˥˥/",
     "english": "car/vehicle",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "hot": {
@@ -796,7 +796,7 @@
     "ipa": "/ʐɤ˥˩/",
     "english": "hot",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "cold": {
@@ -806,7 +806,7 @@
     "ipa": "/lɤŋ˨˩˦/",
     "english": "cold",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "new": {
@@ -816,7 +816,7 @@
     "ipa": "/ɕin˥˥/",
     "english": "new",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "old": {
@@ -826,7 +826,7 @@
     "ipa": "/lɑʊ˨˩˦/",
     "english": "old",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "happy": {
@@ -836,7 +836,7 @@
     "ipa": "/kɑʊ˥˥ ɕiŋ˥˩/",
     "english": "happy",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "love": {
@@ -846,7 +846,7 @@
     "ipa": "/aɪ˥˩/",
     "english": "love",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "sleep": {
@@ -856,7 +856,7 @@
     "ipa": "/ʂueɪ˥˩ tɕjɑʊ˥˩/",
     "english": "sleep",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "read": {
@@ -866,7 +866,7 @@
     "ipa": "/tu˧˥/",
     "english": "read",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "write": {
@@ -876,7 +876,7 @@
     "ipa": "/ɕjɛ˨˩˦/",
     "english": "write",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "listen": {
@@ -886,7 +886,7 @@
     "ipa": "/tʰiŋ˥˥/",
     "english": "listen",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "speak": {
@@ -896,7 +896,7 @@
     "ipa": "/ʂuɔ˥˥ xua˥˩/",
     "english": "speak",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "ask": {
@@ -906,7 +906,7 @@
     "ipa": "/uən˥˩/",
     "english": "ask",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "answer": {
@@ -916,7 +916,7 @@
     "ipa": "/xueɪ˧˥ ta˧˥/",
     "english": "answer",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "understand": {
@@ -926,7 +926,7 @@
     "ipa": "/miŋ˧˥ paɪ/",
     "english": "understand",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "tea": {
@@ -936,7 +936,7 @@
     "ipa": "/ʈʂʰa˧˥/",
     "english": "tea",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "coffee": {
@@ -946,7 +946,7 @@
     "ipa": "/kʰa˥˥ fei˥˥/",
     "english": "coffee",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "milk": {
@@ -956,7 +956,7 @@
     "ipa": "/njoʊ˧˥ naɪ˨˩˦/",
     "english": "milk",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "bread": {
@@ -966,7 +966,7 @@
     "ipa": "/mjɛn˥˩ pɑʊ˥˥/",
     "english": "bread",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "fruit": {
@@ -976,7 +976,7 @@
     "ipa": "/ʂueɪ˨˩˦ kuɔ˨˩˦/",
     "english": "fruit",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "apple": {
@@ -986,7 +986,7 @@
     "ipa": "/pʰiŋ˧˥ kuɔ˨˩˦/",
     "english": "apple",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   },
   "correct": {
@@ -996,7 +996,7 @@
     "ipa": "/tuei˥˩/",
     "english": "correct/yes",
     "state": "not_started",
-    "correctCount": 0,
+    "correctPrompts": [],
     "lesson": null
   }
 }

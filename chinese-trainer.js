@@ -12,6 +12,45 @@ let isGoogleDriveConnected = false;
 let isSaving = false;
 let needsAnotherSave = false;
 
+// ===== DICTIONARY MIGRATION =====
+
+/**
+ * Migrate dictionary from old format (correctCount) to new format (correctPrompts)
+ * @param {Object} dict - Dictionary object to migrate
+ * @returns {Object} - Migrated dictionary
+ */
+function migrateDictionary(dict) {
+    const PROMPT_FIELDS = ['hanzi', 'pinyin', 'ipa', 'english'];
+
+    Object.keys(dict).forEach(key => {
+        const entry = dict[key];
+
+        // Check if already migrated (has correctPrompts array)
+        if (Array.isArray(entry.correctPrompts)) {
+            return; // Already migrated
+        }
+
+        // Migrate from old correctCount to new correctPrompts
+        if (entry.correctCount !== undefined) {
+            if (entry.state === 'learned') {
+                // If already learned, set all prompts as completed
+                entry.correctPrompts = [...PROMPT_FIELDS];
+            } else {
+                // Reset to empty (we don't know which prompts were answered)
+                entry.correctPrompts = [];
+            }
+
+            // Remove old correctCount field
+            delete entry.correctCount;
+        } else {
+            // No correctCount field (fresh entry)
+            entry.correctPrompts = [];
+        }
+    });
+
+    return dict;
+}
+
 const fileUpload = document.getElementById('file-upload');
 const fileNameDisplay = document.getElementById('file-name');
 const trainingSection = document.getElementById('training-section');
@@ -398,7 +437,9 @@ function handleFileUpload(e) {
 
             // Merge with repository dictionary
             const { merged, stats } = await window.DictMerge.mergeWithRepo(userDict, FILE_NAME);
-            dictionary = merged;
+
+            // Migrate dictionary from old format to new format
+            dictionary = migrateDictionary(merged);
 
             const mergeMessage = getMergeStatusMessage(stats);
             fileNameDisplay.textContent = `Loaded: ${fileName}`;
@@ -445,6 +486,10 @@ async function loadDefaultDictionary() {
         }
 
         dictionary = await response.json();
+
+        // Migrate dictionary from old format to new format
+        dictionary = migrateDictionary(dictionary);
+
         fileName = 'chinese_dictionary.json';
         fileNameDisplay.textContent = 'Loaded: Default Chinese Dictionary';
         trainingSection.classList.add('active');
@@ -731,25 +776,36 @@ function checkAnswers() {
 }
 
 function handleCorrect() {
-    if (!currentWord) return;
+    if (!currentWord || !currentPromptField) return;
 
     correctCount++;
     correctCountDisplay.textContent = correctCount;
 
     const wordData = dictionary[currentWord];
 
-    if (wordData.correctCount === undefined) {
-        wordData.correctCount = 0;
+    // Initialize correctPrompts if not exists
+    if (!Array.isArray(wordData.correctPrompts)) {
+        wordData.correctPrompts = [];
     }
 
-    wordData.correctCount++;
+    // Add current prompt field to correctPrompts if not already there
+    if (!wordData.correctPrompts.includes(currentPromptField)) {
+        wordData.correctPrompts.push(currentPromptField);
+    }
 
-    if (wordData.correctCount >= 2) {
+    // Check if all 4 prompt fields have been answered correctly
+    const PROMPT_FIELDS = ['hanzi', 'pinyin', 'ipa', 'english'];
+    const hasAllPrompts = PROMPT_FIELDS.every(field =>
+        wordData.correctPrompts.includes(field)
+    );
+
+    if (hasAllPrompts) {
         wordData.state = 'learned';
     } else {
         wordData.state = 'learning';
     }
 
+    updateProgressTracker();
     saveToGoogleDrive();
     showRandomWord();
 }
@@ -762,9 +818,11 @@ function handleWrong() {
 
     const wordData = dictionary[currentWord];
 
-    wordData.correctCount = 0;
+    // Reset progress - clear all correct prompts
+    wordData.correctPrompts = [];
     wordData.state = 'learning';
 
+    updateProgressTracker();
     saveToGoogleDrive();
     showRandomWord();
 }
@@ -780,7 +838,8 @@ function updateProgressTracker() {
         if (word.state === 'learned') {
             learned.push(word.english);
         } else if (word.state === 'learning') {
-            learning.push({ english: word.english, count: word.correctCount || 0 });
+            const promptsCompleted = Array.isArray(word.correctPrompts) ? word.correctPrompts.length : 0;
+            learning.push({ english: word.english, promptsCompleted: promptsCompleted });
         }
     });
 
@@ -795,10 +854,8 @@ function updateProgressTracker() {
     if (learning.length > 0) {
         learningList.innerHTML = learning
             .map(item => {
-                const badge = item.count === 1
-                    ? `<span class="word-badge learning-progress">${item.english} <span class="progress-indicator">●○</span></span>`
-                    : `<span class="word-badge learning">${item.english}</span>`;
-                return badge;
+                const fraction = `${item.promptsCompleted}/4`;
+                return `<span class="word-badge learning-progress">${item.english} <span class="progress-indicator">(${fraction})</span></span>`;
             })
             .join('');
     } else {
@@ -865,7 +922,9 @@ async function loadFromGoogleDrive() {
 
         // Merge with repository dictionary
         const { merged, stats } = await window.DictMerge.mergeWithRepo(userDict, FILE_NAME);
-        dictionary = merged;
+
+        // Migrate dictionary from old format to new format
+        dictionary = migrateDictionary(merged);
 
         fileNameDisplay.textContent = `Loaded from Google Drive: ${FILE_NAME}`;
         trainingSection.classList.add('active');
@@ -1040,7 +1099,7 @@ function activateWord(key) {
     if (!dictionary || !dictionary[key]) return;
 
     dictionary[key].state = 'learning';
-    dictionary[key].correctCount = 0;
+    dictionary[key].correctPrompts = [];
 
     saveToGoogleDrive();
     updateWordCounts();
@@ -1075,11 +1134,15 @@ function startReview() {
         wordsToReview.push(shuffled[i]);
     }
 
-    // Set selected words to learning with correctCount = 1
-    // (they only need one more correct answer to return to learned)
+    // Set selected words to learning with 3 out of 4 prompts completed
+    // (they only need one more prompt to return to learned)
+    const PROMPT_FIELDS = ['hanzi', 'pinyin', 'ipa', 'english'];
     wordsToReview.forEach(key => {
         dictionary[key].state = 'learning';
-        dictionary[key].correctCount = 1;
+
+        // Randomly select 3 of 4 prompts to keep (user needs to answer the 4th one correctly)
+        const shuffledPrompts = [...PROMPT_FIELDS].sort(() => Math.random() - 0.5);
+        dictionary[key].correctPrompts = shuffledPrompts.slice(0, 3);
     });
 
     // Save to Google Drive
@@ -1247,7 +1310,7 @@ async function addNewWordToDictionary(entry, button) {
             ipa: ipa,
             english: entry.definitions[0], // Use first definition
             state: 'learning', // Add directly to learning rotation
-            correctCount: 0,
+            correctPrompts: [],
             lesson: null
         };
 
