@@ -1257,7 +1257,7 @@ async function addNewWordToDictionary(entry, button) {
         // Update UI
         button.textContent = '✓ Added';
         updateWordCounts();
-        updateWordBadges();
+        updateProgressTracker();
 
         // Show success message (optional)
         console.log(`Added new word: ${entry.simplified} (${entry.pinyin})`);
