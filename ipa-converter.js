@@ -167,13 +167,17 @@ function convertIPA(text, options = {}) {
     }
 
     // Second, convert Mandarin-specific tones if enabled
-    // This allows typing "nit3" to get "ni˨˩˦" (Mandarin 3rd tone)
+    // This allows typing ".3" to get "˨˩˦" (Mandarin 3rd tone)
+    // Uses period prefix to avoid conflict with IPA character shortcuts (t2, s2, etc.)
     if (options.mandarin) {
-        // Look for consonant/vowel + single digit (1-4)
-        // Match pattern: any non-digit followed by digit 1-4
-        result = result.replace(/([^\d\s])([1-4])(?=\s|\/|$)/g, (match, char, tone) => {
-            return char + mandarinToneMap[tone];
+        // Match: period followed by tone number 1-4
+        // Example: "ni.3" → "ni˨˩˦", "t2s2ha.2" → "ʈʂʰa˧˥"
+        result = result.replace(/\.([1-4])/g, (match, tone) => {
+            return mandarinToneMap[tone];
         });
+
+        // Remove .5 (neutral tone - no mark added)
+        result = result.replace(/\.5/g, '');
     }
 
     // Third, convert tone letters (Chao tone letters for tonal languages)
@@ -279,7 +283,7 @@ function attachIPAConverterWithTable(inputField, options = {}) {
 }
 
 // Generate IPA reference table HTML
-function generateIPAReferenceTable() {
+function generateIPAReferenceTable(options = {}) {
     // Group IPA characters by base letter for display
     const letterGroups = {};
 
@@ -351,6 +355,36 @@ function generateIPAReferenceTable() {
     html += '</tbody></table></div>';
 
     html += '</div>'; // Close ipa-tables
+
+    // Add Mandarin tone shortcuts if Mandarin mode
+    if (options.mandarin) {
+        html += '<div class="ipa-tone-section" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">';
+        html += '<h5 style="font-size: 14px; margin-bottom: 10px; color: #666;">Mandarin Tones (type period + number)</h5>';
+        html += '<table class="ipa-compact-table"><thead><tr>';
+        html += '<th>Input</th><th>Result</th><th>Description</th>';
+        html += '</tr></thead><tbody>';
+
+        const toneInfo = [
+            { input: '.1', result: '˥˥', desc: '1st tone: high level (55)' },
+            { input: '.2', result: '˧˥', desc: '2nd tone: rising (35)' },
+            { input: '.3', result: '˨˩˦', desc: '3rd tone: dipping (214)' },
+            { input: '.4', result: '˥˩', desc: '4th tone: falling (51)' },
+            { input: '.5', result: '(none)', desc: 'neutral tone' }
+        ];
+
+        for (const tone of toneInfo) {
+            html += '<tr>';
+            html += `<td style="font-family: monospace; font-weight: bold;">${tone.input}</td>`;
+            html += `<td class="ipa-char" style="font-size: 18px;">${tone.result}</td>`;
+            html += `<td style="font-size: 12px; color: #666;">${tone.desc}</td>`;
+            html += '</tr>';
+        }
+
+        html += '</tbody></table>';
+        html += '<div style="margin-top: 10px; font-size: 12px; color: #999;">Example: t2s2ha.2 → ʈʂʰa˧˥</div>';
+        html += '</div>'; // Close ipa-tone-section
+    }
+
     html += '</div>'; // Close ipa-reference
 
     return html;

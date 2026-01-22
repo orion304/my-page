@@ -165,8 +165,8 @@ let ipaReference = null;
 (function initializeIPATable() {
     const container = document.getElementById('ipa-reference-container');
     if (container && window.IPAConverter) {
-        // Generate and insert the IPA reference table
-        const tableHTML = window.IPAConverter.generateIPAReferenceTable();
+        // Generate and insert the IPA reference table (with Mandarin tones)
+        const tableHTML = window.IPAConverter.generateIPAReferenceTable({ mandarin: true });
         container.innerHTML = tableHTML;
 
         // Get reference to the generated table

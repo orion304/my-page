@@ -110,18 +110,22 @@ Mandarin tones are represented using combinations of these letters:
 ### Input Shortcuts
 
 **Mandarin-Specific Shortcuts (Easiest)**:
-In the Chinese trainer, you can type Mandarin tone numbers (1-4) directly after a syllable, and it will automatically convert to the correct Chao tone letter combination:
-- Type `ni3` → converts to `ni˨˩˦` (3rd tone)
-- Type `xau3` → converts to `xɑʊ˨˩˦` (3rd tone)
-- Type `ka1` → converts to `kʰa˥˥` (1st tone)
-- Type `fu2` → converts to `fu˧˥` (2nd tone)
+In the Chinese trainer, you can type a period (`.`) followed by a Mandarin tone number (1-5) to add the correct Chao tone letter combination:
+- Type `ni.3` → converts to `ni˨˩˦` (3rd tone)
+- Type `xau.3` → converts to `xɑʊ˨˩˦` (3rd tone)
+- Type `ka.1` → converts to `kʰa˥˥` (1st tone)
+- Type `fu.2` → converts to `fu˧˥` (2nd tone)
+- Type `.5` → neutral tone (no mark added)
+
+**Why period?** The period prefix avoids conflicts with IPA character shortcuts (like `t2` → `ʈ`, `s2` → `ʂ`), allowing you to type both retroflex characters AND tones in the same input:
+- Type `t2s2ha.2` → converts to `ʈʂʰa˧˥` (retroflex "cha" with 2nd tone)
 
 **Language-Agnostic Shortcuts**:
 For more control, or when learning other tonal languages, use individual tone letters:
 - Type tone letters: `ni t2 t1 t4` → `ni˨˩˦`
 - Or use the `!` prefix: `ni !2 !1 !4` → `ni˨˩˦`
 
-The Mandarin-specific shortcuts are faster for Chinese, while the language-agnostic approach works for any tonal language.
+**Note**: The `t` and `!` shortcuts for individual tone letters (t2 = ˨, t3 = ˧, etc.) are different from Mandarin tone combinations. Use `.1` through `.5` for complete Mandarin tones, and `t1`-`t5` for building custom tone patterns in other tonal languages.
 
 ## Common Combinations
 
