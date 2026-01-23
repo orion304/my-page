@@ -155,51 +155,60 @@ class PinyinField extends BaseField {
     convertTones(text) {
         const syllables = text.split(' ');
         const converted = syllables.map(syllable => {
-            // Check if syllable ends with a tone number (1-5)
-            const match = syllable.match(/^(.*)([aeiouüv])([1-5])(.*)$/i);
-            if (!match) return syllable;
+            // Support compound words: repeatedly convert first vowel group + tone number
+            // Process left-to-right by working through remaining unconverted portion
+            // Example: "nan2ren2" → process "nan2" → process remaining "ren2" → "nánrén"
+            let result = '';
+            let remaining = syllable;
+            let maxIterations = 10; // Safety limit
+            let iterations = 0;
 
-            const before = match[1];
-            const vowel = match[2].toLowerCase();
-            const tone = match[3];
-            const after = match[4];
-
-            // Find which vowel should get the tone mark (pinyin rules)
-            const fullSyllable = before + vowel + after;
-            let targetVowel = vowel;
-            let targetIndex = before.length;
-
-            // Rule 1: If 'a' or 'e' is present, it gets the tone mark
-            const aIndex = fullSyllable.indexOf('a');
-            const eIndex = fullSyllable.indexOf('e');
-            if (aIndex !== -1) {
-                targetVowel = 'a';
-                targetIndex = aIndex;
-            } else if (eIndex !== -1) {
-                targetVowel = 'e';
-                targetIndex = eIndex;
-            } else {
-                // Rule 2: If 'ou' is present, 'o' gets the tone mark
-                const ouIndex = fullSyllable.indexOf('ou');
-                if (ouIndex !== -1) {
-                    targetVowel = 'o';
-                    targetIndex = ouIndex;
-                } else {
-                    // Rule 3: Otherwise, the last vowel gets the tone mark
-                    const vowels = ['i', 'o', 'u', 'ü', 'v'];
-                    for (let i = fullSyllable.length - 1; i >= 0; i--) {
-                        if (vowels.includes(fullSyllable[i].toLowerCase())) {
-                            targetVowel = fullSyllable[i].toLowerCase();
-                            targetIndex = i;
-                            break;
-                        }
-                    }
+            while (remaining.length > 0 && iterations < maxIterations) {
+                // Match: consonants + vowels + optional finals (n/ng) + tone number
+                // Pattern handles: "nan2" (with final n), "ni3" (no final), "zhong1" (with final ng)
+                const match = remaining.match(/^([^aeiouüv]*)([aeiouüv]+)(n(?!g)|ng)?([1-5])/i);
+                if (!match) {
+                    // No more tone conversions found, append rest as-is
+                    result += remaining;
+                    break;
                 }
-            }
 
-            // Replace target vowel with accented version
-            const accentedVowel = this.toneMap[targetVowel + tone] || targetVowel;
-            const result = fullSyllable.substring(0, targetIndex) + accentedVowel + fullSyllable.substring(targetIndex + 1);
+                iterations++;
+                const consonants = match[1];
+                const vowelGroup = match[2].toLowerCase();
+                const finals = match[3] || ''; // optional 'n' or 'ng'
+                const tone = match[4];
+
+                // Apply pinyin tone placement rules to vowel group
+                let targetVowel = vowelGroup[vowelGroup.length - 1]; // default: last
+                let targetIndex = vowelGroup.length - 1;
+
+                // Rule 1: 'a' or 'e' gets the tone mark
+                if (vowelGroup.includes('a')) {
+                    targetVowel = 'a';
+                    targetIndex = vowelGroup.indexOf('a');
+                } else if (vowelGroup.includes('e')) {
+                    targetVowel = 'e';
+                    targetIndex = vowelGroup.indexOf('e');
+                } else if (vowelGroup === 'ou') {
+                    // Rule 2: in 'ou', 'o' gets the tone
+                    targetVowel = 'o';
+                    targetIndex = 0;
+                }
+                // Rule 3: last vowel (already set as default)
+
+                // Replace target vowel with accented version
+                const accentedVowel = this.toneMap[targetVowel + tone] || targetVowel;
+                const convertedVowelGroup = vowelGroup.substring(0, targetIndex) +
+                                           accentedVowel +
+                                           vowelGroup.substring(targetIndex + 1);
+
+                // Append converted portion to result
+                result += consonants + convertedVowelGroup + finals;
+
+                // Continue with what's after the match
+                remaining = remaining.substring(match[0].length);
+            }
 
             return result;
         });
