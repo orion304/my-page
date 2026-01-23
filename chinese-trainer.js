@@ -12,6 +12,9 @@ let isGoogleDriveConnected = false;
 let isSaving = false;
 let needsAnotherSave = false;
 
+// Field component instances (created per word)
+let fieldComponents = [];
+
 // ===== DICTIONARY MIGRATION =====
 
 /**
@@ -233,164 +236,7 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Pinyin tone number to diacritic conversion
-const pinyinToneMap = {
-    'a1': 'ā', 'a2': 'á', 'a3': 'ǎ', 'a4': 'à', 'a5': 'a',
-    'e1': 'ē', 'e2': 'é', 'e3': 'ě', 'e4': 'è', 'e5': 'e',
-    'i1': 'ī', 'i2': 'í', 'i3': 'ǐ', 'i4': 'ì', 'i5': 'i',
-    'o1': 'ō', 'o2': 'ó', 'o3': 'ǒ', 'o4': 'ò', 'o5': 'o',
-    'u1': 'ū', 'u2': 'ú', 'u3': 'ǔ', 'u4': 'ù', 'u5': 'u',
-    'ü1': 'ǖ', 'ü2': 'ǘ', 'ü3': 'ǚ', 'ü4': 'ǜ', 'ü5': 'ü',
-    'v1': 'ǖ', 'v2': 'ǘ', 'v3': 'ǚ', 'v4': 'ǜ', 'v5': 'ü'
-};
-
-function convertPinyinTones(text) {
-    // Split by spaces to handle each syllable separately
-    const syllables = text.split(' ');
-    const converted = syllables.map(syllable => {
-        // Check if syllable ends with a tone number (1-5)
-        const match = syllable.match(/^(.*)([aeiouüv])([1-5])(.*)$/i);
-        if (!match) return syllable;
-
-        const before = match[1];
-        const vowel = match[2].toLowerCase();
-        const tone = match[3];
-        const after = match[4];
-
-        // Find which vowel should get the tone mark following pinyin rules
-        const fullSyllable = before + vowel + after;
-        let targetVowel = vowel;
-        let targetIndex = before.length;
-
-        // Rule 1: If 'a' or 'e' is present, it gets the tone mark
-        const aIndex = fullSyllable.indexOf('a');
-        const eIndex = fullSyllable.indexOf('e');
-        if (aIndex !== -1) {
-            targetVowel = 'a';
-            targetIndex = aIndex;
-        } else if (eIndex !== -1) {
-            targetVowel = 'e';
-            targetIndex = eIndex;
-        } else {
-            // Rule 2: If 'ou' is present, 'o' gets the tone mark
-            const ouIndex = fullSyllable.indexOf('ou');
-            if (ouIndex !== -1) {
-                targetVowel = 'o';
-                targetIndex = ouIndex;
-            } else {
-                // Rule 3: Otherwise, the last vowel gets the tone mark
-                const vowels = ['i', 'o', 'u', 'ü', 'v'];
-                for (let i = fullSyllable.length - 1; i >= 0; i--) {
-                    if (vowels.includes(fullSyllable[i].toLowerCase())) {
-                        targetVowel = fullSyllable[i].toLowerCase();
-                        targetIndex = i;
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Replace the target vowel with its accented version
-        const accentedVowel = pinyinToneMap[targetVowel + tone] || targetVowel;
-        const result = fullSyllable.substring(0, targetIndex) + accentedVowel + fullSyllable.substring(targetIndex + 1);
-
-        return result;
-    });
-
-    return converted.join(' ');
-}
-
-function handlePinyinInput(e) {
-    const input = e.target;
-    const cursorPos = input.selectionStart;
-    const originalLength = input.value.length;
-
-    // First convert u: to ü
-    let text = input.value.replace(/u:/g, 'ü');
-
-    // Then convert tone numbers to diacritics
-    const converted = convertPinyinTones(text);
-
-    if (converted !== input.value) {
-        input.value = converted;
-        // Adjust cursor position
-        const lengthDiff = converted.length - originalLength;
-        input.setSelectionRange(cursorPos + lengthDiff, cursorPos + lengthDiff);
-    }
-}
-
-// Reverse mapping: accented vowel → previous state
-const pinyinBackspaceMap = {
-    // Vowels with umlaut AND tone → just umlaut
-    'ǖ': 'ü', 'ǘ': 'ü', 'ǚ': 'ü', 'ǜ': 'ü',
-    // Vowels with tones → plain vowels
-    'ā': 'a', 'á': 'a', 'ǎ': 'a', 'à': 'a',
-    'ē': 'e', 'é': 'e', 'ě': 'e', 'è': 'e',
-    'ī': 'i', 'í': 'i', 'ǐ': 'i', 'ì': 'i',
-    'ō': 'o', 'ó': 'o', 'ǒ': 'o', 'ò': 'o',
-    'ū': 'u', 'ú': 'u', 'ǔ': 'u', 'ù': 'u',
-    // Just umlaut → plain u
-    'ü': 'u'
-};
-
-function handlePinyinBackspace(e) {
-    // Only handle backspace key
-    if (e.key !== 'Backspace') {
-        return;
-    }
-
-    const input = e.target;
-    const cursorPos = input.selectionStart;
-    const cursorEnd = input.selectionEnd;
-
-    // Only handle if no text is selected and cursor is not at the start
-    if (cursorPos !== cursorEnd || cursorPos === 0) {
-        return;
-    }
-
-    // Get the character before the cursor
-    const charBefore = input.value[cursorPos - 1];
-
-    // Check if it's a diacritic character we should handle
-    if (pinyinBackspaceMap[charBefore]) {
-        e.preventDefault();
-
-        // Replace the accented character with its simpler form
-        const newValue = input.value.substring(0, cursorPos - 1) +
-                        pinyinBackspaceMap[charBefore] +
-                        input.value.substring(cursorPos);
-
-        input.value = newValue;
-        input.setSelectionRange(cursorPos, cursorPos);
-    }
-}
-
-// Add pinyin and IPA conversion to input fields
-function attachFieldConverters() {
-    const inputs = [
-        { field: inputField1, label: inputLabel1 },
-        { field: inputField2, label: inputLabel2 },
-        { field: inputField3, label: inputLabel3 },
-        { field: inputField4, label: inputLabel4 }
-    ];
-
-    inputs.forEach(({ field, label }) => {
-        // Remove any existing listeners first
-        field.removeEventListener('input', handlePinyinInput);
-        field.removeEventListener('keydown', handlePinyinBackspace);
-
-        // Only add converter if this field is for pinyin
-        if (label.textContent.includes('Pinyin')) {
-            field.addEventListener('input', handlePinyinInput);
-            field.addEventListener('keydown', handlePinyinBackspace);
-        }
-        // Attach IPA converter with Mandarin-specific tone conversion
-        else if (label.textContent.includes('IPA')) {
-            // Use shared converter with Mandarin tones and table show/hide
-            window.IPAConverter.attachIPAConverterWithTable(field, { mandarin: true });
-        }
-    });
-}
+// ===== FIELD POSITIONING =====
 
 function positionIPATable() {
     if (!ipaReference) return;
@@ -560,6 +406,37 @@ function resetHanziChoices(choicesContainer, inputField) {
     inputField.style.display = 'block';
 }
 
+/**
+ * Create the appropriate field component based on field name
+ * @param {string} fieldName - The name of the field ('hanzi', 'pinyin', 'ipa', 'english')
+ * @param {HTMLElement} input - The input element
+ * @param {HTMLElement} label - The label element
+ * @param {HTMLElement} feedback - The feedback element
+ * @param {HTMLElement} choicesContainer - The choices container (for hanzi only)
+ * @returns {BaseField} - The appropriate field component
+ */
+function createFieldComponent(fieldName, input, label, feedback, choicesContainer) {
+    const { BaseField, EnglishField, PinyinField, IPAField, HanziField } = window.FieldComponents;
+
+    switch (fieldName) {
+        case 'hanzi':
+            return new HanziField(input, label, feedback, choicesContainer, getHanziDistractors);
+
+        case 'pinyin':
+            return new PinyinField(input, label, feedback);
+
+        case 'ipa':
+            return new IPAField(input, label, feedback, { mandarin: true });
+
+        case 'english':
+            return new EnglishField(input, label, feedback);
+
+        default:
+            // Fallback to base field
+            return new BaseField(input, label, feedback);
+    }
+}
+
 function showRandomWord() {
     if (!dictionary) return;
 
@@ -656,6 +533,10 @@ function showRandomWord() {
         { group: inputGroup4, label: inputLabel4, field: inputField4, feedback: feedback4, choices: hanziChoices4 }
     ];
 
+    // Clear old field components
+    fieldComponents.forEach(fc => fc.detach());
+    fieldComponents = [];
+
     // Set up each input group based on available answer fields
     inputGroups.forEach((input, index) => {
         if (index < otherFields.length) {
@@ -671,10 +552,25 @@ function showRandomWord() {
             // Reset hanzi choices
             resetHanziChoices(input.choices, input.field);
 
+            // Create field component
+            const fieldComponent = createFieldComponent(
+                fieldName,
+                input.field,
+                input.label,
+                input.feedback,
+                input.choices
+            );
+
             // Set up hanzi multiple choice if this is the hanzi field
             if (fieldName === 'hanzi') {
-                setupHanziChoices(input.choices, input.field, wordData.hanzi);
+                fieldComponent.setupChoices(wordData.hanzi);
             }
+
+            // Attach field behavior (event listeners, converters, etc.)
+            fieldComponent.attach();
+
+            // Store field component for later use
+            fieldComponents.push(fieldComponent);
         } else {
             // Hide unused input groups
             input.group.style.display = 'none';
@@ -691,9 +587,6 @@ function showRandomWord() {
     correctBtn.disabled = false;
     wrongBtn.disabled = false;
 
-    // Attach field converters (pinyin and IPA) to input fields
-    attachFieldConverters();
-
     // Position IPA reference table under IPA input field if visible
     positionIPATable();
 
@@ -705,65 +598,24 @@ function checkAnswers() {
 
     const wordData = dictionary[currentWord];
 
-    // Check each input field
-    const inputs = [
-        { field: inputField1, feedback: feedback1, choices: hanziChoices1 },
-        { field: inputField2, feedback: feedback2, choices: hanziChoices2 },
-        { field: inputField3, feedback: feedback3, choices: hanziChoices3 },
-        { field: inputField4, feedback: feedback4, choices: hanziChoices4 }
-    ];
-
-    inputs.forEach(({ field, feedback, choices }) => {
-        const fieldName = field.dataset.field;
-
-        // Skip hidden/unused input groups
-        if (!fieldName) return;
-
+    // Validate each field using field components
+    fieldComponents.forEach(fieldComponent => {
+        const fieldName = fieldComponent.input.dataset.field;
         const expectedAnswer = wordData[fieldName];
 
-        // Check if this is a hanzi field with multiple choice
-        if (fieldName === 'hanzi' && choices.style.display === 'grid') {
-            const userAnswer = choices.dataset.selected || '';
-            const isCorrect = userAnswer === expectedAnswer;
+        // Validate and show feedback
+        const isCorrect = fieldComponent.validate(expectedAnswer);
+        fieldComponent.showFeedback(isCorrect, expectedAnswer);
 
-            // Mark all choice buttons as correct/wrong
-            choices.querySelectorAll('.hanzi-choice').forEach(btn => {
+        // For hanzi fields with multiple choice, mark correct/wrong choices
+        if (fieldComponent instanceof window.FieldComponents.HanziField) {
+            fieldComponent.choicesContainer.querySelectorAll('.hanzi-choice').forEach(btn => {
                 if (btn.textContent === expectedAnswer) {
                     btn.classList.add('correct');
                 } else if (btn.classList.contains('selected')) {
                     btn.classList.add('wrong');
                 }
             });
-
-            if (isCorrect) {
-                feedback.textContent = '✓ Correct';
-                feedback.className = 'answer-feedback correct';
-            } else {
-                feedback.textContent = `✗ Expected: ${expectedAnswer}`;
-                feedback.className = 'answer-feedback wrong';
-            }
-        } else {
-            // Regular text input
-            let userAnswer = field.value.trim();
-            let expectedAnswerNormalized = expectedAnswer;
-
-            // For IPA fields, strip slashes from both user input and expected answer
-            if (fieldName === 'ipa') {
-                userAnswer = userAnswer.replace(/^\/|\/$/g, '');
-                expectedAnswerNormalized = expectedAnswer.replace(/^\/|\/$/g, '');
-            }
-
-            const isCorrect = userAnswer.toLowerCase() === expectedAnswerNormalized.toLowerCase();
-
-            if (isCorrect) {
-                field.className = 'answer-input correct';
-                feedback.textContent = '✓ Correct';
-                feedback.className = 'answer-feedback correct';
-            } else {
-                field.className = 'answer-input wrong';
-                feedback.textContent = `✗ Expected: ${expectedAnswer}`;
-                feedback.className = 'answer-feedback wrong';
-            }
         }
     });
 

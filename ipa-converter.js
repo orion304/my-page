@@ -58,18 +58,14 @@ const ipaCharMap = {
 
 // Chao tone letter shortcuts for IPA (language-agnostic tone representation)
 // These are the standard IPA tone diacritics used across tonal languages
+// NOTE: Use !1-!5 format to avoid conflict with IPA consonant shortcuts (t1=θ, t2=ʈ)
 const toneLetterMap = {
-    't5': '˥',  // Extra high tone (tone 5)
-    't4': '˦',  // High tone (tone 4)
-    't3': '˧',  // Mid tone (tone 3)
-    't2': '˨',  // Low tone (tone 2)
-    't1': '˩',  // Extra low tone (tone 1)
-    // Alternative shortcuts with ! prefix for consistency
-    '!5': '˥',
-    '!4': '˦',
-    '!3': '˧',
-    '!2': '˨',
-    '!1': '˩',
+    // Tone marks with ! prefix (safe namespace, no conflicts)
+    '!5': '˥',  // Extra high tone (tone 5)
+    '!4': '˦',  // High tone (tone 4)
+    '!3': '˧',  // Mid tone (tone 3)
+    '!2': '˨',  // Low tone (tone 2)
+    '!1': '˩',  // Extra low tone (tone 1)
 };
 
 // Mandarin-specific tone shortcuts (single digits convert to Mandarin tone patterns)
@@ -181,8 +177,8 @@ function convertIPA(text, options = {}) {
     }
 
     // Third, convert tone letters (Chao tone letters for tonal languages)
-    // Example: t5 → ˥ (extra high), t3 → ˧ (mid), t1 → ˩ (extra low)
-    // Also supports !5, !3, !1 format
+    // Example: !5 → ˥ (extra high), !3 → ˧ (mid), !1 → ˩ (extra low)
+    // Uses ! prefix to avoid conflict with IPA consonant shortcuts (t1, t2)
     for (const [key, value] of Object.entries(toneLetterMap)) {
         result = result.split(key).join(value);
     }

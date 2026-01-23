@@ -85,13 +85,13 @@ Tones are represented using IPA tone letters (Chao tone letters). These are lang
 
 ### The Five Tone Letters
 
-| Letter | Level | Description | Input Shortcuts |
-|--------|-------|-------------|-----------------|
-| ˥ | 5 | Extra high tone | `t5` or `!5` |
-| ˦ | 4 | High tone | `t4` or `!4` |
-| ˧ | 3 | Mid tone | `t3` or `!3` |
-| ˨ | 2 | Low tone | `t2` or `!2` |
-| ˩ | 1 | Extra low tone | `t1` or `!1` |
+| Letter | Level | Description | Input Shortcut |
+|--------|-------|-------------|----------------|
+| ˥ | 5 | Extra high tone | `!5` |
+| ˦ | 4 | High tone | `!4` |
+| ˧ | 3 | Mid tone | `!3` |
+| ˨ | 2 | Low tone | `!2` |
+| ˩ | 1 | Extra low tone | `!1` |
 
 ### Mandarin Chinese Tone Examples
 
@@ -121,11 +121,11 @@ In the Chinese trainer, you can type a period (`.`) followed by a Mandarin tone 
 - Type `t2s2ha.2` → converts to `ʈʂʰa˧˥` (retroflex "cha" with 2nd tone)
 
 **Language-Agnostic Shortcuts**:
-For more control, or when learning other tonal languages, use individual tone letters:
-- Type tone letters: `ni t2 t1 t4` → `ni˨˩˦`
-- Or use the `!` prefix: `ni !2 !1 !4` → `ni˨˩˦`
+For more control, or when learning other tonal languages, use individual tone letters with the `!` prefix:
+- Type tone letters: `ni !2 !1 !4` → `ni˨˩˦`
+- Build custom tone patterns: `!5 !5` for high level, `!3 !5` for rising, etc.
 
-**Note**: The `t` and `!` shortcuts for individual tone letters (t2 = ˨, t3 = ˧, etc.) are different from Mandarin tone combinations. Use `.1` through `.5` for complete Mandarin tones, and `t1`-`t5` for building custom tone patterns in other tonal languages.
+**Note**: The `!` shortcuts for individual tone letters (!2 = ˨, !3 = ˧, etc.) are different from Mandarin tone combinations. Use `.1` through `.5` for complete Mandarin tones (easier), or `!1`-`!5` for building custom tone patterns in other tonal languages.
 
 ## Common Combinations
 
