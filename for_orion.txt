@@ -1,0 +1,5 @@
+I've been using this and I've noticed a lot more issues.
+
+Firstly, I think maybe your input fields aren't having their behaviors cleared when we move to the next word? I'm still running into the issue where pinyin turns to IPA input and so on, I think it's only happening when i move to the next word, and I looked at your code and that sounds like a reasonable guess.
+
+Another issue I'm having is with your IPA transcription. If you look at my copy of the dictionary @"D:\Google Drive\chinese_dictionary.json" you'll see bao4 zhi3, and it is very wrong. The pinyin has numbers and not accents, the IPA transcription is terrible, it should be /pau ʈʂ˭/ at most, pulling from wikipedia's bopomofo page which we've assumed is our source of truth.

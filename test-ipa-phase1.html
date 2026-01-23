@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1: IPA Converter Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; max-width: 800px; margin: 0 auto; }
+        h1 { color: #333; }
+        .test { margin: 10px 0; padding: 10px; border-left: 3px solid #ccc; }
+        .test.pass { border-color: #4CAF50; background: #f1f8f4; }
+        .test.fail { border-color: #f44336; background: #fef1f1; }
+        .result { font-weight: bold; }
+        .pass .result { color: #4CAF50; }
+        .fail .result { color: #f44336; }
+        .summary { margin-top: 20px; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Phase 1: IPA Converter Namespace Fix Tests</h1>
+    <div id="tests"></div>
+    <div id="summary" class="summary"></div>
+
+    <script src="ipa-converter.js"></script>
+    <script>
+        // Simple test framework
+        const tests = [];
+        let passed = 0;
+        let failed = 0;
+
+        function test(description, input, expected, options = {}) {
+            const result = window.IPAConverter.convertIPA(input, options);
+            const pass = result === expected;
+
+            if (pass) passed++;
+            else failed++;
+
+            tests.push({
+                description,
+                input,
+                expected,
+                result,
+                pass
+            });
+        }
+
+        // Phase 1 Tests: Namespace Collision Fixed
+
+        // Test 1: IPA consonant shortcuts now work (were blocked by tone shortcuts)
+        test('t1 → θ (IPA theta)', 't1', 'θ');
+        test('t2 → ʈ (IPA retroflex)', 't2', 'ʈ');
+
+        // Test 2: Tone marks still work with ! prefix
+        test('!1 → ˩ (extra low tone)', '!1', '˩');
+        test('!2 → ˨ (low tone)', '!2', '˨');
+        test('!3 → ˧ (mid tone)', '!3', '˧');
+        test('!4 → ˦ (high tone)', '!4', '˦');
+        test('!5 → ˥ (extra high tone)', '!5', '˥');
+
+        // Test 3: Mandarin-specific tones still work
+        test('.1 → ˥˥ (Mandarin 1st tone)', '.1', '˥˥', { mandarin: true });
+        test('.2 → ˧˥ (Mandarin 2nd tone)', '.2', '˧˥', { mandarin: true });
+        test('.3 → ˨˩˦ (Mandarin 3rd tone)', '.3', '˨˩˦', { mandarin: true });
+        test('.4 → ˥˩ (Mandarin 4th tone)', '.4', '˥˩', { mandarin: true });
+        test('.5 → (neutral tone, no mark)', '.5', '', { mandarin: true });
+
+        // Test 4: Combined IPA characters still work
+        test('s1 → ʃ (IPA sh)', 's1', 'ʃ');
+        test('z1 → ʒ (IPA zh)', 'z1', 'ʒ');
+        test('n1 → ŋ (IPA ng)', 'n1', 'ŋ');
+
+        // Test 5: Aspiration still works
+        test('ph → pʰ (aspirated p)', 'ph', 'pʰ');
+        test('th → tʰ (aspirated t)', 'th', 'tʰ');
+        test('kh → kʰ (aspirated k)', 'kh', 'kʰ');
+
+        // Test 6: Complex combinations
+        test('ni.3 → ni˨˩˦ (IPA + Mandarin tone)', 'ni.3', 'ni˨˩˦', { mandarin: true });
+        test('t2s2 → ʈʂ (retroflex affricate)', 't2s2', 'ʈʂ');
+        test('t2s2ha.2 → ʈʂʰa˧˥ (retroflex + tone)', 't2s2ha.2', 'ʈʂʰa˧˥', { mandarin: true });
+        test('!3!5 → ˧˥ (rising tone pattern)', '!3!5', '˧˥');
+
+        // Test 7: Verify old t1-t5 format NO LONGER converts to tones
+        test('t3 should not convert to tone', 't3', 't3'); // No mapping = unchanged
+        test('t4 should not convert to tone', 't4', 't4'); // No mapping = unchanged
+        test('t5 should not convert to tone', 't5', 't5'); // No mapping = unchanged
+
+        // Render results
+        const testsDiv = document.getElementById('tests');
+        tests.forEach(t => {
+            const div = document.createElement('div');
+            div.className = `test ${t.pass ? 'pass' : 'fail'}`;
+            div.innerHTML = `
+                <div class="result">${t.pass ? '✓ PASS' : '✗ FAIL'}</div>
+                <div><strong>${t.description}</strong></div>
+                <div>Input: "${t.input}" → Expected: "${t.expected}" → Got: "${t.result}"</div>
+            `;
+            testsDiv.appendChild(div);
+        });
+
+        // Render summary
+        const summaryDiv = document.getElementById('summary');
+        const total = passed + failed;
+        summaryDiv.innerHTML = `
+            <strong>Summary:</strong> ${passed}/${total} tests passed
+            ${failed > 0 ? `<span style="color: #f44336;"> (${failed} failed)</span>` : ' <span style="color: #4CAF50;">✓ All tests passed!</span>'}
+        `;
+    </script>
+</body>
+</html>
