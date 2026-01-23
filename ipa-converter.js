@@ -1,6 +1,9 @@
 // Shared IPA Character Converter
 // Used by French and Chinese trainers for IPA input field conversion
 
+// WeakMap to track attached event listeners for proper cleanup
+const attachedListeners = new WeakMap();
+
 // IPA character mapping: letter+number → IPA character
 const ipaCharMap = {
     // Vowels - A variants
@@ -223,15 +226,42 @@ function handleMandarinIPAInput(e) {
 function attachIPAConverter(inputField, options = {}) {
     if (!inputField) return;
 
+    // Remove any existing listeners first
+    detachIPAConverter(inputField);
+
     // Choose the appropriate handler based on options
     const handler = options.mandarin ? handleMandarinIPAInput : handleIPAInput;
 
-    // Remove any existing listeners first
-    inputField.removeEventListener('input', handleIPAInput);
-    inputField.removeEventListener('input', handleMandarinIPAInput);
-
     // Add IPA converter
     inputField.addEventListener('input', handler);
+
+    // Store handler reference for cleanup
+    const listeners = { inputHandler: handler };
+    attachedListeners.set(inputField, listeners);
+}
+
+// Detach IPA converter from an input field
+function detachIPAConverter(inputField) {
+    if (!inputField) return;
+
+    // Retrieve stored listeners
+    const listeners = attachedListeners.get(inputField);
+    if (listeners) {
+        // Remove input handler
+        if (listeners.inputHandler) {
+            inputField.removeEventListener('input', listeners.inputHandler);
+        }
+        // Remove focus/blur handlers (if attached with table)
+        if (listeners.focusHandler) {
+            inputField.removeEventListener('focus', listeners.focusHandler);
+        }
+        if (listeners.blurHandler) {
+            inputField.removeEventListener('blur', listeners.blurHandler);
+        }
+    }
+
+    // Clean up WeakMap entry
+    attachedListeners.delete(inputField);
 }
 
 // Create show/hide handlers for IPA reference table
@@ -267,15 +297,18 @@ function attachIPAConverterWithTable(inputField, options = {}) {
     // Create and attach focus/blur handlers
     const { showHandler, hideHandler } = createIPATableHandlers(inputField);
 
-    // Remove any existing listeners first
-    inputField.removeEventListener('focus', showHandler);
-    inputField.removeEventListener('blur', hideHandler);
-
     // Add show/hide handlers
     inputField.addEventListener('focus', showHandler);
     inputField.addEventListener('blur', hideHandler);
 
-    return { showHandler, hideHandler };
+    // Store focus/blur handlers in WeakMap (append to existing listeners object)
+    const listeners = attachedListeners.get(inputField) || {};
+    listeners.focusHandler = showHandler;
+    listeners.blurHandler = hideHandler;
+    attachedListeners.set(inputField, listeners);
+
+    // Position the table under the input field
+    positionIPATable(inputField);
 }
 
 // Generate IPA reference table HTML
@@ -458,6 +491,7 @@ window.IPAConverter = {
     handleIPAInput,
     handleMandarinIPAInput,
     attachIPAConverter,
+    detachIPAConverter,
     attachIPAConverterWithTable,
     createIPATableHandlers,
     ipaCharMap,

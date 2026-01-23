@@ -19,8 +19,10 @@ class MockElement {
 // Mock IPAConverter
 const mockIPAConverter = {
     attachCalled: false,
+    detachCalled: false,
     attachOptions: null,
     attachInput: null,
+    detachInput: null,
 
     attachIPAConverterWithTable(input, options) {
         this.attachCalled = true;
@@ -28,10 +30,17 @@ const mockIPAConverter = {
         this.attachOptions = options;
     },
 
+    detachIPAConverter(input) {
+        this.detachCalled = true;
+        this.detachInput = input;
+    },
+
     reset() {
         this.attachCalled = false;
+        this.detachCalled = false;
         this.attachOptions = null;
         this.attachInput = null;
+        this.detachInput = null;
     }
 };
 
@@ -72,6 +81,10 @@ class IPAField extends BaseField {
 
     detach() {
         super.detach();
+        // Properly remove IPA converter event listeners
+        if (mockIPAConverter && mockIPAConverter.detachIPAConverter) {
+            mockIPAConverter.detachIPAConverter(this.input);
+        }
     }
 
     validate(expected) {
@@ -216,6 +229,43 @@ test('attach: default options (no Mandarin)', () => {
 
     assert(mockIPAConverter.attachCalled);
     assertEqual(Object.keys(mockIPAConverter.attachOptions).length, 0);
+});
+
+// Test detach behavior
+test('detach: calls IPAConverter.detachIPAConverter', () => {
+    mockIPAConverter.reset();
+    const input = new MockElement();
+    const field = new IPAField(input, new MockElement(), new MockElement());
+
+    field.attach();
+    field.detach();
+
+    assert(mockIPAConverter.detachCalled, 'IPAConverter.detachIPAConverter should be called');
+    assertEqual(mockIPAConverter.detachInput, input);
+});
+
+test('detach: removes attached state', () => {
+    mockIPAConverter.reset();
+    const input = new MockElement();
+    const field = new IPAField(input, new MockElement(), new MockElement());
+
+    field.attach();
+    assert(field.attached, 'Field should be attached');
+
+    field.detach();
+    assert(!field.attached, 'Field should not be attached after detach');
+});
+
+test('detach: can be called multiple times safely', () => {
+    mockIPAConverter.reset();
+    const input = new MockElement();
+    const field = new IPAField(input, new MockElement(), new MockElement());
+
+    field.attach();
+    field.detach();
+    field.detach(); // Should not throw
+
+    assert(mockIPAConverter.detachCalled);
 });
 
 console.log('\n' + '='.repeat(50));

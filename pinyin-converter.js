@@ -276,11 +276,66 @@ const PinyinConverter = (function() {
         return '/' + ipaSyllables.join(' ') + '/';
     }
 
+    /**
+     * Convert pinyin with diacritics to tone numbers
+     * Inverse of the PinyinField converter (which goes numbers → diacritics)
+     * 'bào zhǐ' -> 'bao4 zhi3'
+     */
+    function stripPinyinDiacritics(pinyin) {
+        // Diacritic to tone number mapping
+        const diacriticMap = {
+            // First tone (high level)
+            'ā': 'a1', 'ē': 'e1', 'ī': 'i1', 'ō': 'o1', 'ū': 'u1', 'ǖ': 'ü1',
+            // Second tone (rising)
+            'á': 'a2', 'é': 'e2', 'í': 'i2', 'ó': 'o2', 'ú': 'u2', 'ǘ': 'ü2',
+            // Third tone (dipping)
+            'ǎ': 'a3', 'ě': 'e3', 'ǐ': 'i3', 'ǒ': 'o3', 'ǔ': 'u3', 'ǚ': 'ü3',
+            // Fourth tone (falling)
+            'à': 'a4', 'è': 'e4', 'ì': 'i4', 'ò': 'o4', 'ù': 'u4', 'ǜ': 'ü4',
+            // Neutral tone (no diacritic, but handle ü)
+            'ü': 'ü5'
+        };
+
+        const syllables = pinyin.trim().split(/\s+/);
+        const converted = syllables.map(syllable => {
+            let result = syllable;
+            let toneFound = false;
+
+            // Check each character for diacritic
+            for (let i = 0; i < syllable.length; i++) {
+                const char = syllable[i];
+                if (diacriticMap[char]) {
+                    const replacement = diacriticMap[char];
+                    // Extract vowel and tone
+                    const vowel = replacement.slice(0, -1);
+                    const tone = replacement.slice(-1);
+
+                    // Replace diacritic vowel with plain vowel
+                    result = result.substring(0, i) + vowel + result.substring(i + 1);
+                    // Append tone number at end
+                    result = result + tone;
+                    toneFound = true;
+                    break;
+                }
+            }
+
+            // If no tone found, assume neutral tone (5)
+            if (!toneFound && result.length > 0) {
+                result = result + '5';
+            }
+
+            return result;
+        });
+
+        return converted.join(' ');
+    }
+
     // Public API
     return {
         convertToZhuyin,
         convertToIPA,
         pinyinToZhuyin,
+        stripPinyinDiacritics,
     };
 })();
 

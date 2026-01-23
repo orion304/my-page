@@ -1141,9 +1141,13 @@ async function addNewWordToDictionary(entry, button) {
         button.disabled = true;
         button.textContent = '...';
 
-        // Generate zhuyin and IPA from pinyin
-        const zhuyin = PinyinConverter.convertToZhuyin(entry.pinyin);
-        const ipa = PinyinConverter.convertToIPA(entry.pinyin);
+        // Convert pinyin from diacritics to tone numbers (CC-CEDICT provides diacritics)
+        // Example: "bào zhǐ" → "bao4 zhi3"
+        const pinyinWithNumbers = PinyinConverter.stripPinyinDiacritics(entry.pinyin);
+
+        // Generate zhuyin and IPA from tone-number pinyin
+        const zhuyin = PinyinConverter.convertToZhuyin(pinyinWithNumbers);
+        const ipa = PinyinConverter.convertToIPA(pinyinWithNumbers);
 
         // Create unique key (use simplified hanzi as key)
         const key = entry.simplified;
@@ -1157,7 +1161,7 @@ async function addNewWordToDictionary(entry, button) {
         // Create dictionary entry
         dictionary[key] = {
             hanzi: entry.simplified,
-            pinyin: entry.pinyin,
+            pinyin: pinyinWithNumbers, // Use tone-number format for consistency
             zhuyin: zhuyin,
             ipa: ipa,
             english: entry.definitions[0], // Use first definition

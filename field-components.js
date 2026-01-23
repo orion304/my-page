@@ -291,8 +291,10 @@ class IPAField extends BaseField {
 
     detach() {
         super.detach();
-        // Note: ipa-converter.js doesn't provide a detach method currently
-        // This is acceptable as fields are recreated each word
+        // Properly remove IPA converter event listeners
+        if (window.IPAConverter && window.IPAConverter.detachIPAConverter) {
+            window.IPAConverter.detachIPAConverter(this.input);
+        }
     }
 
     /**
