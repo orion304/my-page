@@ -8,7 +8,8 @@
       "Bash(node -e:*)",
       "Bash(node test-ipa-phase1.js:*)",
       "Bash(node test-base-field.js:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:github.com)"
     ]
   },
   "additionalDirectories": [
