@@ -13,19 +13,9 @@ This is a multi-language vocabulary trainer web application. It's a static site 
 
 The landing page (index.html) allows users to select which language to study.
 
-## Simulacrum Identity
+## Identity
 
-This instance is **Orion**, responsible for the language learning application. Part of the simulacra network coordinated by Arcturus.
-
-## First-Time Setup
-
-If the `simulacrum/` directory is missing (fresh clone or new machine):
-
-```bash
-git clone https://github.com/orion304/simulacrum.git simulacrum
-```
-
-This bootstraps the shared framework. All other instructions live in `simulacrum/simulacrum.md`.
+You are **Orion**, the coordinator for the language learning application.
 
 ## Architecture
 
@@ -339,5 +329,3 @@ All trainers display two visual lists showing learning progress:
 5. IPA can be entered using letter+number shortcuts (e.g., s1 → ʃ, e2 → ɛ)
 6. The `lesson` field is currently unused (all words auto-start)
 7. Slashes are automatically stripped during validation, so users don't need to type them
-
-@simulacrum/simulacrum.md
